@@ -1,0 +1,8 @@
+D:\TMS\homework\bin\Debug\homework.exe.config
+D:\TMS\homework\bin\Debug\homework.exe
+D:\TMS\homework\bin\Debug\homework.pdb
+D:\TMS\homework\obj\Debug\homework.csproj.AssemblyReference.cache
+D:\TMS\homework\obj\Debug\homework.csproj.SuggestedBindingRedirects.cache
+D:\TMS\homework\obj\Debug\homework.csproj.CoreCompileInputs.cache
+D:\TMS\homework\obj\Debug\homework.exe
+D:\TMS\homework\obj\Debug\homework.pdb
