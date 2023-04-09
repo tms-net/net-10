@@ -1,0 +1,15 @@
+C:\Users\Ryu\source\repos\Calc\Calc\bin\Debug\net7.0\Calc.exe
+C:\Users\Ryu\source\repos\Calc\Calc\bin\Debug\net7.0\Calc.deps.json
+C:\Users\Ryu\source\repos\Calc\Calc\bin\Debug\net7.0\Calc.runtimeconfig.json
+C:\Users\Ryu\source\repos\Calc\Calc\bin\Debug\net7.0\Calc.dll
+C:\Users\Ryu\source\repos\Calc\Calc\bin\Debug\net7.0\Calc.pdb
+C:\Users\Ryu\source\repos\Calc\Calc\obj\Debug\net7.0\Calc.csproj.AssemblyReference.cache
+C:\Users\Ryu\source\repos\Calc\Calc\obj\Debug\net7.0\Calc.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ryu\source\repos\Calc\Calc\obj\Debug\net7.0\Calc.AssemblyInfoInputs.cache
+C:\Users\Ryu\source\repos\Calc\Calc\obj\Debug\net7.0\Calc.AssemblyInfo.cs
+C:\Users\Ryu\source\repos\Calc\Calc\obj\Debug\net7.0\Calc.csproj.CoreCompileInputs.cache
+C:\Users\Ryu\source\repos\Calc\Calc\obj\Debug\net7.0\Calc.dll
+C:\Users\Ryu\source\repos\Calc\Calc\obj\Debug\net7.0\refint\Calc.dll
+C:\Users\Ryu\source\repos\Calc\Calc\obj\Debug\net7.0\Calc.pdb
+C:\Users\Ryu\source\repos\Calc\Calc\obj\Debug\net7.0\Calc.genruntimeconfig.cache
+C:\Users\Ryu\source\repos\Calc\Calc\obj\Debug\net7.0\ref\Calc.dll
