@@ -1,0 +1,15 @@
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\bin\Release\net7.0\dfcef_dz_3.exe
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\bin\Release\net7.0\dfcef_dz_3.deps.json
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\bin\Release\net7.0\dfcef_dz_3.runtimeconfig.json
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\bin\Release\net7.0\dfcef_dz_3.dll
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\bin\Release\net7.0\dfcef_dz_3.pdb
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\obj\Release\net7.0\dfcef_dz_3.csproj.AssemblyReference.cache
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\obj\Release\net7.0\dfcef_dz_3.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\obj\Release\net7.0\dfcef_dz_3.AssemblyInfoInputs.cache
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\obj\Release\net7.0\dfcef_dz_3.AssemblyInfo.cs
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\obj\Release\net7.0\dfcef_dz_3.csproj.CoreCompileInputs.cache
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\obj\Release\net7.0\dfcef_dz_3.dll
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\obj\Release\net7.0\refint\dfcef_dz_3.dll
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\obj\Release\net7.0\dfcef_dz_3.pdb
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\obj\Release\net7.0\dfcef_dz_3.genruntimeconfig.cache
+C:\Users\user\source\repos\dfcef_dz_3\dfcef_dz_3\obj\Release\net7.0\ref\dfcef_dz_3.dll
