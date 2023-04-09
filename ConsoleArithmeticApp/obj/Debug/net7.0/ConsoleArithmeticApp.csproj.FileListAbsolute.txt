@@ -1,0 +1,15 @@
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\bin\Debug\net7.0\ConsoleArithmeticApp.exe
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\bin\Debug\net7.0\ConsoleArithmeticApp.deps.json
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\bin\Debug\net7.0\ConsoleArithmeticApp.runtimeconfig.json
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\bin\Debug\net7.0\ConsoleArithmeticApp.dll
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\bin\Debug\net7.0\ConsoleArithmeticApp.pdb
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\obj\Debug\net7.0\ConsoleArithmeticApp.csproj.AssemblyReference.cache
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\obj\Debug\net7.0\ConsoleArithmeticApp.GeneratedMSBuildEditorConfig.editorconfig
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\obj\Debug\net7.0\ConsoleArithmeticApp.AssemblyInfoInputs.cache
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\obj\Debug\net7.0\ConsoleArithmeticApp.AssemblyInfo.cs
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\obj\Debug\net7.0\ConsoleArithmeticApp.csproj.CoreCompileInputs.cache
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\obj\Debug\net7.0\ConsoleArithmeticApp.dll
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\obj\Debug\net7.0\refint\ConsoleArithmeticApp.dll
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\obj\Debug\net7.0\ConsoleArithmeticApp.pdb
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\obj\Debug\net7.0\ConsoleArithmeticApp.genruntimeconfig.cache
+D:\Work\Projects\ConsoleArithmeticApp\ConsoleArithmeticApp\obj\Debug\net7.0\ref\ConsoleArithmeticApp.dll
