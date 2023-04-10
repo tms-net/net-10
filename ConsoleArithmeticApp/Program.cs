@@ -2,7 +2,7 @@
 {
     private static void Main(string[] args)
     {
-        //Реализовать следующие операции +, -, *, /, ^  (остаток от деления)
+        //Realise next operations +, -, *, /, ^, %
 
         string firstNumberString = "";
         string secondNumberString = "";
@@ -130,6 +130,7 @@
                 break;
             }
             Console.WriteLine($"\n{firstNumberDouble} {mathOperatorString} {secondNumberDouble} = {answer}");
+
             Console.WriteLine("\nDo you want to use this answer for next operation? (y/n)");
             try
             {
