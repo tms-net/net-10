@@ -43,5 +43,8 @@ switch (oper)
     case " mod ":
         res = opd1 % opd2;
         break;
+    default:
+        Console.WriteLine("Will be added soon")
+        break;
 }
 Console.WriteLine(res);
