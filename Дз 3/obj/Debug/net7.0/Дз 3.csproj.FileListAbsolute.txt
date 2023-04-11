@@ -1,0 +1,15 @@
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\obj\Debug\net7.0\Дз 3.csproj.AssemblyReference.cache
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\obj\Debug\net7.0\Дз 3.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\obj\Debug\net7.0\Дз 3.AssemblyInfoInputs.cache
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\obj\Debug\net7.0\Дз 3.AssemblyInfo.cs
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\obj\Debug\net7.0\Дз 3.csproj.CoreCompileInputs.cache
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\bin\Debug\net7.0\Дз 3.exe
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\bin\Debug\net7.0\Дз 3.deps.json
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\bin\Debug\net7.0\Дз 3.runtimeconfig.json
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\bin\Debug\net7.0\Дз 3.dll
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\bin\Debug\net7.0\Дз 3.pdb
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\obj\Debug\net7.0\Дз 3.dll
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\obj\Debug\net7.0\refint\Дз 3.dll
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\obj\Debug\net7.0\Дз 3.pdb
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\obj\Debug\net7.0\Дз 3.genruntimeconfig.cache
+C:\Users\qwert\OneDrive\Рабочий стол\Учёба блеат\Дз 3\obj\Debug\net7.0\ref\Дз 3.dll
