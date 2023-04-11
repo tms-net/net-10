@@ -1,34 +1,16 @@
-﻿using System.ComponentModel.Design;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-double a;
-double b;
-double result;
-char operations;
 
-Console.WriteLine("Ведите первое число");
-a = Convert.ToDouble(Console.ReadLine());
 
-Console.WriteLine("Ведите опервтор");
-operations = Convert.ToChar(Console.ReadLine());
 
-Console.WriteLine("Ведите второе чисто");
-b = Convert.ToDouble(Console.ReadLine());
-
-if (operations == '+')
+int[] nums = {1, 2, 3, 4};
 {
-    result = a + b;
-    Console.WriteLine(a + b = result);
+    for (int i = nums.Length - 1; i >= 0; i--)
+        Console.WriteLine(nums[i]);
+    Console.ReadLine();
+
 }
-else if (operations == '-') ;}
-{
-    Console.WriteLine(a - b = result); }
-
-else if (operations == '*') ;
-{ Console.WriteLine(a * b = result); }
-
-else if (operations == '/') ;
-{ Console.WtiteLine(a / b = result); }
-
-
-
-
