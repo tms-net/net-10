@@ -4,6 +4,12 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        SolveArrayTask();
+        Console.ReadLine();
+    }
+
+    public static void SolveArrayTask()
+    {
         var rand = new Random();
         int[] arrayOfNumbers = new int[rand.Next(3, 13)];
         int[] operativeArrayOfNumbers = new int[arrayOfNumbers.Length];
@@ -96,11 +102,9 @@ internal class Program
             catch (Exception e)
             {
                 Console.WriteLine("\nInputed text isn't correct: " + e.Message);
-            }               
-        }       
-        Console.ReadLine();
+            }
+        }
     }
-
     public static void PrintArray(int[] array)
     {
         string outputArray = "";
