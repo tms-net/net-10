@@ -32,31 +32,32 @@ namespace hw_4
             //    Console.Write(array[i]+" ");
             //}
 
-            //2)
-            //      Найдите четные (нечетные) элементы массива
-            //         Пример:
-            //         Исходный массив: nums = [1,2,3,4]
-            //         Результат выполнения: [2,4]
+            ////2)
+            ////      Найдите четные (нечетные) элементы массива
+            ////         Пример:
+            ////         Исходный массив: nums = [1,2,3,4]
+            ////         Результат выполнения: [2,4]
 
-            //инициализация массива
-            int[] array = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            //вывод массива
-            foreach (var item in array)
-            {
-                Console.Write($"{item} ");
-            }
-            Console.WriteLine();
-            Console.WriteLine("enter what do you want to find:\n" +
-                "1)Odd numbers\n" +
-                "2)Not odd numbers");
-            string chooseMessage = Console.ReadLine();
-            //вызов метода,который находит четные числа.
-            if (chooseMessage =="1")
-                findOddNumbersInArray(array);
-            //вызов метода,который находит не четные числа.
-            if (chooseMessage =="2")
-                findNotOddNumbersInArray(array);
+            ////инициализация массива
+            //int[] array = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            ////вывод массива
+            //foreach (var item in array)
+            //{
+            //    Console.Write($"{item} ");
+            //}
+            //Console.WriteLine();
+            //Console.WriteLine("enter what do you want to find:\n" +
+            //    "1)Odd numbers\n" +
+            //    "2)Not odd numbers");
+            //string chooseMessage = Console.ReadLine();
+            ////вызов метода,который находит четные числа.
+            //if (chooseMessage =="1")
+            //    findOddNumbersInArray(array);
+            ////вызов метода,который находит не четные числа.
+            //if (chooseMessage =="2")
+            //    findNotOddNumbersInArray(array);
 
+            //3)
 
 
 
@@ -74,6 +75,7 @@ namespace hw_4
             for (int i = 0; i < array.Length; i++)
             {
                 arr[i] = array[array.Length - i - 1];
+                
             }
             array = arr;
         }
