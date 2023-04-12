@@ -58,31 +58,31 @@ namespace hw_4
             //if (chooseMessage =="2")
             //    findNotOddNumbersInArray(array);
 
-            ////3)
-            ////       Найти бегущую сумму массива
-            ////Пример:
-            ////Исходный массив: nums = [1, 2, 3, 4]
-            //// Результат выполнения: [1,3,6,10] // [1,1+2,1+2+3,1+2+3+4]
-            ////Объяснение:
-            //// Бегущая сумма массива - это массив,
-            //// который хранит сумму всех элементов до текущего элемента в
-            //// исходном массиве(включая его).
+            //3)
+            //       Найти бегущую сумму массива
+            //Пример:
+            //Исходный массив: nums = [1, 2, 3, 4]
+            // Результат выполнения: [1,3,6,10] // [1,1+2,1+2+3,1+2+3+4]
+            //Объяснение:
+            // Бегущая сумма массива - это массив,
+            // который хранит сумму всех элементов до текущего элемента в
+            // исходном массиве(включая его).
 
-            ////инициал. массива
-            //int[] array = { 1, 2, 3, 4 ,5};
-            ////вывод массива
-            //foreach (var item in array)
-            //{
-            //    Console.Write($"{item} ");
-            //}
-            //Console.WriteLine();
-            ////присваивание метода,который ещет бегущую сумму массива
-            //int[] runArray = RunnigArray(array);
-            ////выводим новый массив
-            //foreach (var item in runArray)
-            //{
-            //    Console.Write($"{item} ");
-            //}
+            //инициал. массива
+            int[] array = { 1, 2, 3, 4, 5 };
+            //вывод массива
+            foreach (var item in array)
+            {
+                Console.Write($"{item} ");
+            }
+            Console.WriteLine();
+            //присваивание метода,который ещет бегущую сумму массива
+            int[] runArraySum = RunnigArraySum(array);
+            //выводим новый массив
+            foreach (var item in runArraySum)
+            {
+                Console.Write($"{item} ");
+            }
 
 
 
@@ -93,20 +93,20 @@ namespace hw_4
         /// </summary>
         /// <param name="array"></param>
         /// <returns></returns>
-        static int[] RunnigArray(int[] array)
+        static int[] RunnigArraySum(int[] array)
         {
             int sum = 0;
-            int[] runArray = new int[array.Length];
+            int[] runArraySum = new int[array.Length];
             for (int i = 0; i < array.Length; i++)
             {
                 for (int j = 1; j <= array[i]; j++)
                 {
                     sum+=j;
-                    runArray[i] = sum;
+                    runArraySum[i] = sum;
                 }
                 sum=0;
             }
-            return runArray;
+            return runArraySum;
         }
 
 
