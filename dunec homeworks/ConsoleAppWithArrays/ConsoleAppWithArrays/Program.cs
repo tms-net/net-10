@@ -5,29 +5,48 @@ internal class Program
     private static void Main(string[] args)
     {
         var rand = new Random();
-        double[] arrayOfNumbers = new double[rand.Next(3, 10)];
-        double[] operativeArrayOfNumbers = new double[arrayOfNumbers.Length];
+        int[] arrayOfNumbers = new int[rand.Next(3, 13)];
+        int[] operativeArrayOfNumbers = new int[arrayOfNumbers.Length];
+        string evenElementsOfArray = "";
+        string oddElementsOfArray = "";
 
         for (int i = 0; i < arrayOfNumbers.Length; i++)
         {
-            arrayOfNumbers[i] = Math.Round(rand.NextDouble() * 10, 5);
+            arrayOfNumbers[i] = rand.Next(0, 21);
         }
-        operativeArrayOfNumbers = (double[])arrayOfNumbers.Clone();
+        operativeArrayOfNumbers = (int[])arrayOfNumbers.Clone();
 
         Console.WriteLine($"Created array of {arrayOfNumbers.Length} elements: ");
         PrintArray(arrayOfNumbers);
 
-        Array.Reverse(operativeArrayOfNumbers);
+        //First task
         Console.WriteLine("\nReversed array: ");
+        Array.Reverse(operativeArrayOfNumbers);
         PrintArray(operativeArrayOfNumbers);
+
+        //Second task        
+        for (int i = 0; i < arrayOfNumbers.Length; i++)
+        {
+            if (arrayOfNumbers[i] % 2 == 0)
+            {
+                evenElementsOfArray = evenElementsOfArray + " " + Convert.ToString(arrayOfNumbers[i]);
+            }
+            else
+            {
+                oddElementsOfArray = oddElementsOfArray + " " + Convert.ToString(arrayOfNumbers[i]);
+            }
+        }
+        Console.WriteLine($"\nEven elements of array:\n{evenElementsOfArray}");
+        Console.WriteLine($"\nOdd elements of array:\n{oddElementsOfArray}");
+
 
         Console.ReadLine();
     }
 
-    static void PrintArray(double[] array)
+    public static void PrintArray(int[] array)
     {
-        string outputArray = Convert.ToString(array[0]);
-        for (int i = 1; i < array.Length; i++)
+        string outputArray = "";
+        for (int i = 0; i < array.Length; i++)
         {
             outputArray = outputArray + " " + Convert.ToString(array[i]);
         }  
