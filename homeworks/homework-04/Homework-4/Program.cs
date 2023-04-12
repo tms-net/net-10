@@ -63,57 +63,30 @@ int[] ArrayReverse(int[] nums)
 int[] OddNumbers(int[] nums)
 {
     int oddNum = 0;
+    int[] temp = new int[nums.Length];
     for (int i = 0; i < nums.Length; i++)
     {
         if (nums[i] % 2 != 0)
         {
-            oddNum++;
-        }
-
-    }
-    int[] temp = new int[oddNum];
-    oddNum = 0;
-    for (int i = 0; i < nums.Length; i++)
-    {
-        if (nums[i] % 2 != 0)
-        {
-            temp[oddNum] = nums[i];
-            oddNum++;
+            temp[oddNum++] = nums[i];
         }
     }
+    Array.Resize(ref temp, oddNum);
     return temp;
-    //int oddNum = 0;
-    //int[] temp = new int[nums.Length];
-    //for (int i = 0; i < nums.Length; i++)
-    //{
-    //    if (nums[i] % 2 != 0)
-    //    {
-    //        temp[oddNum++] = nums[i];
-    //    }
-    //}
 }
 
 int[] EvenNumbers(int[] nums)
 {
-    int oddNum = 0;
+    int EvenNum = 0;
+    int[] temp = new int[nums.Length];
     for (int i = 0; i < nums.Length; i++)
     {
         if (nums[i] % 2 == 0)
         {
-            oddNum++;
-        }
-
-    }
-    int[] temp = new int[oddNum];
-    oddNum = 0;
-    for (int i = 0; i < nums.Length; i++)
-    {
-        if (nums[i] % 2 == 0)
-        {
-            temp[oddNum] = nums[i];
-            oddNum++;
+            temp[EvenNum++] = nums[i];
         }
     }
+    Array.Resize(ref temp, EvenNum);
     return temp;
 }
 
