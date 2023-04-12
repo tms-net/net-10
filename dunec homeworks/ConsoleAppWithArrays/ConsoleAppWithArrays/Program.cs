@@ -39,6 +39,15 @@ internal class Program
         Console.WriteLine($"\nEven elements of array:\n{evenElementsOfArray}");
         Console.WriteLine($"\nOdd elements of array:\n{oddElementsOfArray}");
 
+        //Third task
+        Array.Reverse(operativeArrayOfNumbers);
+        for (int i = 1; i < operativeArrayOfNumbers.Length; i++)
+        {
+            operativeArrayOfNumbers[i] = operativeArrayOfNumbers[i - 1] + operativeArrayOfNumbers[i];
+        }
+        Console.WriteLine("\nRunning sum of the array:");
+        PrintArray(operativeArrayOfNumbers);
+
 
         Console.ReadLine();
     }
