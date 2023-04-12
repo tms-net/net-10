@@ -7,6 +7,8 @@
 
             //1)Измените порядок массива на противоположный
 
+            //инициализация массива
+
             Console.WriteLine("enter array length: ");
             int arrLength = Convert.ToInt32(Console.ReadLine());
             int[] array = new int[arrLength];
@@ -18,7 +20,10 @@
             } 
             Console.WriteLine();
             Console.WriteLine(new String('-', 50));
+            
+            //вызов метода
             ArrayRevers(ref array);
+            //вывод измененного массива
             for (int i = 0; i < array.Length; i++)
             {
                 Console.Write(array[i]+" ");
@@ -29,7 +34,10 @@
             //Console.ReadKey();
 
         }
-
+        /// <summary>
+        /// метод делает реверс массива
+        /// </summary>
+        /// <param name="array"></param>
         static void ArrayRevers(ref int[] array)
         {
             int[] arr = new int[array.Length];
