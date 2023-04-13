@@ -1,59 +1,83 @@
 ﻿using System;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        SolveArrayTask();
-        Console.ReadLine();
-    }
-
-    public static void SolveArrayTask()
-    {
         var rand = new Random();
         int[] arrayOfNumbers = new int[rand.Next(3, 13)];
-        int[] operativeArrayOfNumbers = new int[arrayOfNumbers.Length];
-        string evenElementsOfArray = "";
-        string oddElementsOfArray = "";
-
         for (int i = 0; i < arrayOfNumbers.Length; i++)
         {
             arrayOfNumbers[i] = rand.Next(0, 21);
         }
-        operativeArrayOfNumbers = (int[])arrayOfNumbers.Clone();
-
         Console.WriteLine($"Created array of {arrayOfNumbers.Length} elements: ");
         PrintArray(arrayOfNumbers);
 
-        //First task
         Console.WriteLine("\nReversed array: ");
-        Array.Reverse(operativeArrayOfNumbers);
-        PrintArray(operativeArrayOfNumbers);
+        PrintArray(SolveArrayTask1(arrayOfNumbers));
 
-        //Second task        
-        for (int i = 0; i < arrayOfNumbers.Length; i++)
+        Console.WriteLine($"\nEven elements of the array:");
+        PrintArray(SolveArrayTask2(arrayOfNumbers, true));
+        Console.WriteLine($"\nOdd elements of the array:");
+        PrintArray(SolveArrayTask2(arrayOfNumbers, false));
+
+        Console.WriteLine("\nRunning sum of the array:");
+        PrintArray(SolveArrayTask3(arrayOfNumbers));
+
+        PrintArray(SolveArrayTask4(arrayOfNumbers));
+
+        Array.Clear(arrayOfNumbers);
+        Console.ReadLine();
+    }
+
+    public static int[] SolveArrayTask1(int[] array)    //First task 
+    {
+        int[] operativeArrayOfNumbers = new int[array.Length];        
+        operativeArrayOfNumbers = (int[])array.Clone();
+               
+        Array.Reverse(operativeArrayOfNumbers);
+
+        return operativeArrayOfNumbers;
+    }
+
+    public static int[] SolveArrayTask2(int[] array, bool isEven)   //Second task 
+    {
+        int[] operativeArrayOfNumbers = new int[array.Length];
+        int countOfNeedNumber = 0;
+               
+        for (int i = 0; i < array.Length; i++)
         {
-            if (arrayOfNumbers[i] % 2 == 0)
+            if (array[i] % 2 == 0 && isEven)
             {
-                evenElementsOfArray = evenElementsOfArray + " " + Convert.ToString(arrayOfNumbers[i]);
+                operativeArrayOfNumbers[countOfNeedNumber++] = array[i];
             }
-            else
+
+            if (array[i] % 2 == 1 && !isEven)
             {
-                oddElementsOfArray = oddElementsOfArray + " " + Convert.ToString(arrayOfNumbers[i]);
+                operativeArrayOfNumbers[countOfNeedNumber++] = array[i];
             }
         }
-        Console.WriteLine($"\nEven elements of array:\n{evenElementsOfArray}");
-        Console.WriteLine($"\nOdd elements of array:\n{oddElementsOfArray}");
 
-        //Third task
-        Array.Reverse(operativeArrayOfNumbers);
+        return operativeArrayOfNumbers[0..countOfNeedNumber];
+    }
+
+    public static int[] SolveArrayTask3(int[] array)    //Third task
+    {
+        int[] operativeArrayOfNumbers = new int[array.Length];
+
+        operativeArrayOfNumbers[0] = array[0];
         for (int i = 1; i < operativeArrayOfNumbers.Length; i++)
         {
-            operativeArrayOfNumbers[i] = operativeArrayOfNumbers[i - 1] + operativeArrayOfNumbers[i];
+            operativeArrayOfNumbers[i] = operativeArrayOfNumbers[i - 1] + array[i];
         }
-        Console.WriteLine("\nRunning sum of the array:");
-        PrintArray(operativeArrayOfNumbers);
+        
+        return operativeArrayOfNumbers;
+    }
 
+    public static int[] SolveArrayTask4(int[] array)
+    {
+        int[] operativeArrayOfNumbers = new int[array.Length];
         //Fourth task
         bool flagOfCorrectChoice = false;
         while (!flagOfCorrectChoice)
@@ -66,30 +90,28 @@ internal class Program
                 countOfStepsToMoveInArrayString = Console.ReadLine();
                 if (int.TryParse(countOfStepsToMoveInArrayString, out countOfStepsToMoveInArray))
                 {
-                    if (countOfStepsToMoveInArray >= arrayOfNumbers.Length)
+                    if (Math.Abs(countOfStepsToMoveInArray) >= array.Length)
                     {
-                        countOfStepsToMoveInArray = countOfStepsToMoveInArray % arrayOfNumbers.Length;
+                        countOfStepsToMoveInArray = countOfStepsToMoveInArray % array.Length;
                     }
                     if (countOfStepsToMoveInArray != 0)
                     {
                         if (countOfStepsToMoveInArray > 0)
                         {
-                            Array.Copy(arrayOfNumbers, arrayOfNumbers.Length - countOfStepsToMoveInArray, operativeArrayOfNumbers, 0, countOfStepsToMoveInArray);
-                            Array.Copy(arrayOfNumbers, 0, operativeArrayOfNumbers, countOfStepsToMoveInArray, arrayOfNumbers.Length - countOfStepsToMoveInArray);
+                            Array.Copy(array, array.Length - countOfStepsToMoveInArray, operativeArrayOfNumbers, 0, countOfStepsToMoveInArray);
+                            Array.Copy(array, 0, operativeArrayOfNumbers, countOfStepsToMoveInArray, array.Length - countOfStepsToMoveInArray);
 
                             Console.WriteLine($"\nThe array has moved to {countOfStepsToMoveInArrayString} steps to the right:");
-                            PrintArray(operativeArrayOfNumbers);
 
                             flagOfCorrectChoice = true;
                         }
                         else
                         {
-                            Array.Copy(arrayOfNumbers, Math.Abs(countOfStepsToMoveInArray), operativeArrayOfNumbers, 0, arrayOfNumbers.Length + countOfStepsToMoveInArray);
-                            Array.Copy(arrayOfNumbers, 0, operativeArrayOfNumbers, arrayOfNumbers.Length + countOfStepsToMoveInArray, Math.Abs(countOfStepsToMoveInArray));
-
-                            Console.WriteLine($"\nThe array has moved to {countOfStepsToMoveInArrayString} steps to the left:");
-                            PrintArray(operativeArrayOfNumbers);
-
+                            Array.Copy(array, Math.Abs(countOfStepsToMoveInArray), operativeArrayOfNumbers, 0, array.Length + countOfStepsToMoveInArray);
+                            Array.Copy(array, 0, operativeArrayOfNumbers, array.Length + countOfStepsToMoveInArray, Math.Abs(countOfStepsToMoveInArray));
+                            
+                            Console.WriteLine($"\nThe array has moved to " + countOfStepsToMoveInArrayString.Substring(1, countOfStepsToMoveInArrayString.Length - 1) + " steps to the left:");
+                            
                             flagOfCorrectChoice = true;
                         }
                     }
@@ -103,7 +125,8 @@ internal class Program
             {
                 Console.WriteLine("\nInputed text isn't correct: " + e.Message);
             }
-        }
+        }       
+        return operativeArrayOfNumbers;
     }
     public static void PrintArray(int[] array)
     {
