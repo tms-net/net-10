@@ -20,7 +20,9 @@ int shift = Int32.Parse(Console.ReadLine());
 int[] result = SolveArrayTask(myArray,shift);
 
 int[] SolveArrayTask(int[] nums,int shift)
-{  
-    throw new NotImplementedException();
+{
+    Console.WriteLine("Choose the operation:");
+    Console.WriteLine("1.Reverse array");
+    Console.WriteLine("Choose the operation:");
 }
 
