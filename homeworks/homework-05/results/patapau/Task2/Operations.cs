@@ -1,12 +1,16 @@
-﻿namespace patapau.Task2
+﻿using System;
+
+namespace patapau.Task2
 {
     public interface IOperations
     {
         void Deposit(double sum);// Депозит на банковский счет
         void Withdrawal(double sum);// Вывод из банковского счета
         void CheckBalance();// Проверка баланса
-        void Transfer();//Перевод
+        void Transfer(IOperations toClient, double sum);//Перевод
+        string name { get; }//Имя клиента выполняющего операцию
     }
+
 
 
     public interface IAccount
@@ -18,43 +22,33 @@
     //Базовый класс 
     public abstract class ClientBank : IAccount, IOperations
     {
-        protected string bankAccount; //Банковской счет
+        protected string bankAccount = "000000"; //Банковской счет
         protected DateTime dateRegistrations;
-        protected string name; //Имя клиента или название организации
         protected double balance;
+        public string name { get; }//Имя клиента или название организации
 
-        public virtual void Deposit(double sum)
+        protected ClientBank(string Name)
         {
-            balance += sum;
-            Console.WriteLine($"Счет пополнен на {sum}");
+            name = Name;
+            dateRegistrations = DateTime.Now;
+            balance = 0;
         }
-        public virtual void Withdrawal(double sum)
+        public abstract void Deposit(double sum);
+        public abstract void Withdrawal(double sum);
+        public abstract void CheckBalance();
+ 
+        public virtual void Transfer(IOperations toClient, double sum)
         {
-            if (balance < sum)
-            {
-                Console.WriteLine("Недостаточно средств!");
-            }
-            else
-            {
-                balance -= sum;
-                Console.Write($"Вывод средств {sum} ");
-                Console.WriteLine("Текущий баланс физического лица равен " + balance);
-            }
-        }
-        public virtual void CheckBalance()
-        {
-            Console.WriteLine("Текущий баланс физического лица равен " + balance);
+            Console.WriteLine($"Перевод средств от {this.name} к {toClient.name} выполнен");
+            this.Withdrawal(sum);
+            toClient.Deposit(sum);
         }
         public virtual void GetBankAccount()
         {
             Console.WriteLine($"Имя - {name}; Номер счета - {bankAccount}; Дата регистрации - {dateRegistrations.ToString()}");
         }
-        public void CloseAccount()
-        {
-            throw new NotImplementedException();
-        }
 
-        public void Transfer()
+        public void CloseAccount()
         {
             throw new NotImplementedException();
         }
@@ -68,15 +62,33 @@
     //Класс физических лиц
     public class PhysicalСlients : ClientBank
     {
-        private static Random random = new Random();
-        public PhysicalСlients(string Name)
+        public PhysicalСlients(string name) : base(name)
         {
-            name = Name;
-            bankAccount = $"PHY-{random.Next(100000, 1000000)}";
-            dateRegistrations = DateTime.Now;
-            balance = 0;
+            bankAccount = $"PHY-{new Random().Next(100000, 1000000)}";
         }
-
+        public override void Deposit(double sum)
+        {
+            balance += sum;
+            Console.Write($"Счет пополнен на {sum} ");
+            CheckBalance();
+        }
+        public override void Withdrawal(double sum)
+        {
+            if (balance < sum)
+            {
+                Console.WriteLine("Недостаточно средств!");
+            }
+            else
+            {
+                balance -= sum;
+                Console.Write($"Вывод средств {sum} ");
+                CheckBalance();
+            }
+        }
+        public override void CheckBalance()
+        {
+            Console.WriteLine("Текущий баланс физического лица равен " + balance);
+        }
         public override void GetBankAccount()
         {
             Console.WriteLine("Счет физического лица");
@@ -94,28 +106,18 @@
     //Класс  юридических лиц
     internal class LegalСlients : ClientBank
     {
-        private double percentForOperation = 2;
-        private static Random random = new Random();
-        public LegalСlients(string Name)
-        {
-            name = Name;
-            bankAccount = $"LEG-{random.Next(100000, 1000000)}";
-            dateRegistrations = DateTime.Now;
-            balance = 0;
-        }
+        private readonly double percentForOperation = 2;//комиссия банка за операции
 
-        public override void GetBankAccount()
+        public LegalСlients(string name) : base(name)
         {
-            Console.WriteLine("Счет юридического лица");
-            base.GetBankAccount();
+            bankAccount = $"LEG-{new Random().Next(100000, 1000000)}";
         }
-
         public override void Deposit(double sum)
         {
             balance += sum / 100 * (100 - percentForOperation);
-            Console.WriteLine($"Счет пополнен на {sum / 100 * (100 - percentForOperation)}");
+            Console.Write($"Счет пополнен на {sum} с учетом комиссии {sum / 100 * (100 - percentForOperation)} ");
+            Console.WriteLine("Текущий баланс юридического лица равен " + balance);
         }
-
         public override void Withdrawal(double sum)
         {
             if (balance < (sum / 100 * percentForOperation + sum))
@@ -124,14 +126,18 @@
             }
             else { 
             balance -= (sum / 100 * percentForOperation + sum);
-                Console.Write($"Вывод средств {sum / 100 * percentForOperation + sum} ");
+                Console.Write($"Вывод средств {sum} с учетом комиссии {sum / 100 * percentForOperation + sum} ");
                 Console.WriteLine("Текущий баланс юридического лица равен " + balance);
             }
         }
-
         public override void CheckBalance()
         {
             Console.WriteLine("Текущий баланс юридического лица равен " + balance);
+        }
+        public override void GetBankAccount()
+        {
+            Console.WriteLine("Счет юридического лица");
+            base.GetBankAccount();
         }
     }
 }

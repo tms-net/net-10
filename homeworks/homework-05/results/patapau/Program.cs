@@ -26,19 +26,21 @@ namespace patapau
             }
             Console.WriteLine("TASK2");
             //Task 2 
+            Console.WriteLine("---------------------------------------------------------------------");
             //Создаем клиентов банка
             PhysicalСlients physicalСlients = new PhysicalСlients("Patapau");
             physicalСlients.GetBankAccount();
             LegalСlients legalСlients = new LegalСlients("БГУ");
             legalСlients.GetBankAccount();
-            //Выполним банковские операции
+            //Выполним банковские операции(Зачислим всем клиентам 100 рублей)
             IOperations[] operations = new IOperations[] { physicalСlients, legalСlients };
-            foreach(var operation in operations)
+            foreach (var operation in operations)
             {
-                operation.CheckBalance();
                 operation.Deposit(100);
-                operation.Withdrawal(50);
             }
+            //Выполним перевод денег между клиентами
+            physicalСlients.Transfer(legalСlients, 20);
+
         }
     }
 }
