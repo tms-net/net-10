@@ -22,7 +22,7 @@
         {
             CurrentSpeed = 0;
         }
-        public void GetCurrentSpeed() => Console.WriteLine(CurrentSpeed);
+        public void GetCurrentSpeed() => Console.WriteLine("Текущая скорость " + CurrentSpeed);
 
         public virtual void HalfTank()
         {
