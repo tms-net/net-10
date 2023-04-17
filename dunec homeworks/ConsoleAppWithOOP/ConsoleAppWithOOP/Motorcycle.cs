@@ -6,25 +6,41 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppWithOOP
 {
-    internal class Motorcycle : Vehicle
+    internal class Motorcycle : Vehicle, IHaveEngine
     {
         private bool _tripodEjected;
 
-        public Motorcycle(int year) : base(year)
+        public Motorcycle(string make, string model, int year) : base(make, model, year)
         {
         }
 
-        override internal void Start()
+        public bool succesStart()
+        {
+            Random ran = new Random();
+            if (ran.Next(1, 20) > 5)
+            { return true; }
+            else
+            { return false; }
+        }
+        public bool succesStop()
+        {
+            Random ran = new Random();
+            if (ran.Next(1, 5) > 2)
+            { return true; }
+            else
+            { return false; }
+        }
+
+        override public void Start()
         {
             CurrentSpeed = 21;
-            throw new NotImplementedException();
+            _tripodEjected = false;
         }
 
-        override internal void Stop()
-        {
+        override public void Stop()
+        {   
             base.Stop();
             _tripodEjected = true;
-            throw new NotImplementedException();
-        }
+        }        
     }
 }

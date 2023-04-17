@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppWithOOP
 {
-    internal interface IMovable
+    internal interface IHaveEngine
     {
-        public void Start();
-        public void Stop();
-
-        public double CheckCurrentSpeed();
+        public bool succesStart();
+        public bool succesStop();
     }
 }

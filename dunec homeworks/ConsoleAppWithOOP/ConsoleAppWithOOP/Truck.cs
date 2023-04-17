@@ -6,16 +6,32 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppWithOOP
 {
-    internal class Truck : Vehicle
+    internal class Truck : Vehicle, IHaveEngine
     {
-        public Truck(int year) : base(year)
+        public Truck(string make, string model, int year) : base(make, model, year)
         {
         }
 
-        override internal void Start()
+        public bool succesStart()
+        {
+            Random ran = new Random();
+            if (ran.Next(1, 20) > 15)
+            { return true; }
+            else
+            { return false; }
+        }
+        public bool succesStop()
+        {
+            Random ran = new Random();
+            if (ran.Next(1, 5) > 4)
+            { return true; }
+            else
+            { return false; }
+        }
+
+        override public void Start()
         {
             CurrentSpeed = 8;
-            throw new NotImplementedException();
         }
     }
 }

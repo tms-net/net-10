@@ -9,20 +9,27 @@ namespace ConsoleAppWithOOP
     internal abstract class Vehicle : IMovable
     {
         private readonly int _year; 
-        protected int CurrentSpeed;
+        protected double CurrentSpeed;
 
-        protected Vehicle(int year)
+        protected Vehicle(string make, string model, int year)
         {
-            Year = year;
+            Make = make;
+            Model = model;
+            Year = year;           
             // _year  = year;
         }
 
-        internal string Make { get; set; } // Производитель
-        internal string Model { get; set; } // Модель
-        internal int Year { get; } // Год выпуска
+        public string Make { get; set; } // Производитель
+        public string Model { get; set; } // Модель
+        public int Year { get; } // Год выпуска
 
-        abstract internal void Start();
-        virtual internal void Stop()
+        virtual public double CheckCurrentSpeed()
+        {
+            return CurrentSpeed;
+        }
+
+        abstract public void Start();
+        virtual public void Stop()
         {
             CurrentSpeed = 0;
         }
