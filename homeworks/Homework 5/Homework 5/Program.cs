@@ -1,0 +1,193 @@
+﻿// See https://aka.ms/new-console-template for more information
+Console.WriteLine("Hello, World!");
+
+
+
+internal abstract class Vehicle : IMovable, IRefuel
+{
+    protected int CurrentSpeed;
+    protected int MaxFuelLevel;
+    protected int CurrentFuelLevel;
+    private bool _isFuelCapOpen;
+    private readonly int _year;
+
+    public string Make { get; }
+    public string Model { get; }
+    public string Year { get; }
+
+    protected Vehicle (string year, string make, string model)
+    {
+        Year = year;
+        Make = make;
+        Model = model;
+    }
+
+    public abstract void Start();
+
+    public virtual void Stop()
+    {
+        CurrentSpeed = 0;
+    }
+
+    private void OpenFuelCap()
+    {
+        _isFuelCapOpen = true;
+    }
+
+    private void CloseFuelCap()
+    {
+        _isFuelCapOpen = false;
+    }
+
+    public void Refuel()
+    {
+        OpenFuelCap();
+        CurrentFuelLevel = MaxFuelLevel;
+        CloseFuelCap();
+    }
+}
+
+interface IMovable
+{
+    void Start();
+    void Stop();
+}
+
+interface IHaveDoors
+{
+    void OpenDoor(int doorId);
+    void CloseDoor(int doorId);
+}
+
+interface IHaveHood
+{
+    void OpenHood();
+    void CloseHood();
+}
+
+interface IHaveTrunk
+{
+    void OpenTrunk();
+    void CloseTrunk();
+}
+
+interface IRefuel
+{
+    void Refuel();
+}
+
+internal class Car : Vehicle, IHaveDoors, IHaveHood, IHaveTrunk
+{
+    bool[] _isDoorOpen = new bool[4];
+    bool _isHoodOpen;
+    bool _isTrunkOpen;
+
+    public Car(string year, string make, string model) : base(year, make, model)
+    {
+
+    }
+
+    public void OpenDoor(int doorId)
+    {
+        if(doorId < _isDoorOpen.Length)
+        {
+            _isDoorOpen[doorId] = true;
+        }
+    }
+
+    public void CloseDoor(int doorId)
+    {
+        if(doorId < _isDoorOpen.Length)
+        {
+            _isDoorOpen[doorId] = false;
+        }
+    }
+
+    public void OpenHood()
+    {
+        _isHoodOpen = true;
+    }
+
+    public void CloseHood()
+    {
+        _isHoodOpen = false;
+    }
+
+    public void OpenTrunk()
+    {
+        _isTrunkOpen = true;
+    }
+
+    public void CloseTrunk()
+    {
+        _isTrunkOpen = false;
+    }
+
+    public override void Start()
+    {
+        CurrentSpeed = 10;
+    }
+}
+
+internal class Truck : Vehicle, IHaveDoors, IHaveHood
+{
+    bool[] _isDoorOpen = new bool[2];
+    bool _isHoodOpen;
+
+    public Truck(string year, string make, string model) : base(year, make, model)
+    {
+
+    }
+
+    public void OpenDoor(int doorId)
+    {
+        if (doorId < _isDoorOpen.Length)
+        {
+            _isDoorOpen[doorId] = true;
+        }
+    }
+
+    public void CloseDoor(int doorId)
+    {
+        if (doorId < _isDoorOpen.Length)
+        {
+            _isDoorOpen[doorId] = false;
+        }
+    }
+
+    public void OpenHood()
+    {
+        _isHoodOpen = true;
+    }
+
+    public void CloseHood()
+    {
+        _isHoodOpen = false;
+    }
+
+    public override void Start()
+    {
+        CurrentSpeed = 8;
+    }
+}
+
+internal class Motorcycle : Vehicle
+{
+    private bool _tripodEjected;
+
+    public Motorcycle(string year, string make, string model) : base(year, make, model)
+    {
+
+    }
+
+    public override void Start()
+    {
+        CurrentSpeed = 50;
+    }
+
+    public override void Stop()
+    {
+        base.Stop();
+        _tripodEjected = true;
+    }
+}
