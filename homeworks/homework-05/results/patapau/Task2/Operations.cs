@@ -116,7 +116,7 @@ namespace patapau.Task2
         {
             balance += sum / 100 * (100 - percentForOperation);
             Console.Write($"Счет пополнен на {sum} с учетом комиссии {sum / 100 * (100 - percentForOperation)} ");
-            Console.WriteLine("Текущий баланс юридического лица равен " + balance);
+            CheckBalance();
         }
         public override void Withdrawal(double sum)
         {
@@ -127,7 +127,7 @@ namespace patapau.Task2
             else { 
             balance -= (sum / 100 * percentForOperation + sum);
                 Console.Write($"Вывод средств {sum} с учетом комиссии {sum / 100 * percentForOperation + sum} ");
-                Console.WriteLine("Текущий баланс юридического лица равен " + balance);
+                CheckBalance() ;
             }
         }
         public override void CheckBalance()
