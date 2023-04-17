@@ -33,9 +33,9 @@ internal class Program
 
     public static int[] SolveArrayTask1(int[] array)    //First task 
     {
-        int[] operativeArrayOfNumbers = new int[array.Length];        
+        int[] operativeArrayOfNumbers = new int[array.Length];
         operativeArrayOfNumbers = (int[])array.Clone();
-               
+
         Array.Reverse(operativeArrayOfNumbers);
 
         return operativeArrayOfNumbers;
@@ -45,7 +45,7 @@ internal class Program
     {
         int[] operativeArrayOfNumbers = new int[array.Length];
         int countOfNeedNumber = 0;
-               
+
         for (int i = 0; i < array.Length; i++)
         {
             if (array[i] % 2 == 0 && isEven)
@@ -71,7 +71,7 @@ internal class Program
         {
             operativeArrayOfNumbers[i] = operativeArrayOfNumbers[i - 1] + array[i];
         }
-        
+
         return operativeArrayOfNumbers;
     }
 
@@ -109,9 +109,9 @@ internal class Program
                         {
                             Array.Copy(array, Math.Abs(countOfStepsToMoveInArray), operativeArrayOfNumbers, 0, array.Length + countOfStepsToMoveInArray);
                             Array.Copy(array, 0, operativeArrayOfNumbers, array.Length + countOfStepsToMoveInArray, Math.Abs(countOfStepsToMoveInArray));
-                            
+
                             Console.WriteLine($"\nThe array has moved to " + countOfStepsToMoveInArrayString.Substring(1, countOfStepsToMoveInArrayString.Length - 1) + " steps to the left:");
-                            
+
                             flagOfCorrectChoice = true;
                         }
                     }
@@ -125,7 +125,7 @@ internal class Program
             {
                 Console.WriteLine("\nInputed text isn't correct: " + e.Message);
             }
-        }       
+        }
         return operativeArrayOfNumbers;
     }
     public static void PrintArray(int[] array)
@@ -134,7 +134,7 @@ internal class Program
         for (int i = 0; i < array.Length; i++)
         {
             outputArray = outputArray + " " + Convert.ToString(array[i]);
-        }  
+        }
         Console.WriteLine(outputArray);
     }
 }
