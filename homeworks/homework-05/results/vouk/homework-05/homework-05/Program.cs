@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace homework_05
+﻿namespace homeworks.homework_05.results.vouk.homework_05.homework_05
 {
     internal class Program
     {
