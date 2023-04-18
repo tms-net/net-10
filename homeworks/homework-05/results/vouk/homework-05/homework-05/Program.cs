@@ -1,161 +1,54 @@
-﻿namespace homeworks.homework_05.results.vouk.homework_05.homework_05
+﻿using homework_05.vehicles;
+
+namespace homeworks.homework_05.results.vouk.homework_05.homework_05
 {
     internal class Program
     {
         static void Main()
         {
             // Create different vehicle models
-            var ducatiStreetfighter = new Motorcycle("Ducati", "Streetfighter V4", "2023", 208);
-            var porscheTurbo = new Car("porsche", "911 Turbo", "2022", 640, 2);
-            var freightliner = new Truck("Freightliner", "FLA 9664", "1984", 500, 2);
+            var ducatiStreetfighter = new Motorcycle("Ducati", "Streetfighter V4", "2023", 208, 250);
+            var porscheTurbo = new Car("porsche", "911 Turbo", "2022", 640, 280, 2);
+            var freightliner = new Truck("Freightliner", "FLA 9664", "1984", 500, 120, 8);
 
             // Write description of all vehicles
             Console.WriteLine(ducatiStreetfighter);
-            Console.WriteLine("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             Console.WriteLine(porscheTurbo);
-            Console.WriteLine("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             Console.WriteLine(freightliner);
-            Console.WriteLine("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
             // Turn On engine of bike
-            ducatiStreetfighter.Start();
+            ducatiStreetfighter.StartEngine();
             Console.WriteLine(ducatiStreetfighter.GetCurrentStateOfVehicle());
-            Console.WriteLine("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
             // Turn Off engine of bike
-            ducatiStreetfighter.Stop();
+            ducatiStreetfighter.StopEngine();
             Console.WriteLine(ducatiStreetfighter.GetCurrentStateOfVehicle());
-            Console.WriteLine("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        }
-    }
 
-    public interface IMovable
-    {
-        void Start();
-        void Stop();
-    }
+            // Turn On engine of bike
+            ducatiStreetfighter.StartEngine();
+            Console.WriteLine(ducatiStreetfighter.GetCurrentStateOfVehicle());
 
-    public interface IHaveEngine
-    {
-        void TurnOnEngine();
-        void TurnOffEngine();
-    }
+            // Increase speed of bike
+            ducatiStreetfighter.IncreaseSpeed(10);
+            Console.WriteLine(ducatiStreetfighter.GetCurrentStateOfVehicle());
 
-    internal abstract class Vehicle : IMovable, IHaveEngine
-    {
-        protected int CurrentSpeed;
-        public string Mark { get; set; }
-        public string Model { get; set; }
-        public string Year { get; set; }
-        public int Horsepower { get; set; }
-        private bool IsEngineTurnedOn { get; set; }
+            // Increase speed of bike on value bigger, than maximal and check, that its become not bigger than maximal
+            ducatiStreetfighter.IncreaseSpeed(ducatiStreetfighter.MaxSpeed * 2);
+            Console.WriteLine(ducatiStreetfighter.GetCurrentStateOfVehicle());
 
-        protected Vehicle(string mark, string model, string year, int horsepower)
-        {
-            CurrentSpeed = 0;
-            Mark = mark;
-            Model = model;
-            Year = year;
-            IsEngineTurnedOn = false;
-            Horsepower = horsepower;
-        }
+            // Turn On engine of Porsche and reach top speed
+            porscheTurbo.StartEngine();
+            porscheTurbo.IncreaseSpeed(porscheTurbo.MaxSpeed);
+            Console.WriteLine(porscheTurbo.GetCurrentStateOfVehicle());
 
-        public virtual void Start()
-        {
-            TurnOnEngine();
-        }
+            // Decrease speed of Porsche and check that it not less than 0
+            porscheTurbo.DecreaseSpeed(porscheTurbo.MaxSpeed * 2);
+            Console.WriteLine(porscheTurbo.GetCurrentStateOfVehicle());
 
-        public virtual void Stop()
-        {
-            TurnOffEngine();
-            CurrentSpeed = 0;
-        }
-
-        public void TurnOnEngine()
-        {
-            IsEngineTurnedOn = true;
-        }
-
-        public void TurnOffEngine()
-        {
-            IsEngineTurnedOn = false;
-        }
-
-        public override string ToString()
-        {
-            var stringValue =
-                @$" Vehicle type: {this.GetType().Name}
-                    Vehicle mark: {Mark}
-                    Vehicle model: {Model}
-                    Vehicle creation year: {Year}
-                    Vehicle engine power: {Horsepower}
-                    ";
-
-            return stringValue;
-        }
-
-        public string GetCurrentStateOfVehicle()
-        {
-            var stringValue =
-                @$" Is {Mark} {Model} engine turned on: {IsEngineTurnedOn}
-                    Current vehicle speed: {CurrentSpeed}";
-
-            return stringValue;
-        }
-    }
-
-    class Motorcycle : Vehicle
-    {
-        private bool _tripodEjected;
-
-        public Motorcycle(string mark, string model, string year, int horsepower) : base(mark, model, year, horsepower)
-        {
-        }
-
-        public void Start()
-        {
-            base.Start();
-            CurrentSpeed = 50;
-            _tripodEjected = false;
-        }
-
-        public void Stop()
-        {
-            base.Stop();
-            _tripodEjected = true;
-        }
-    }
-
-    class Car : Vehicle
-    {
-        private int _sittingPlacesCount;
-
-        public Car(string mark, string model, string year, int horsepower, int sittingPlacesCount) : base(mark, model, year, horsepower)
-        {
-            _sittingPlacesCount = sittingPlacesCount;
-        }
-
-        public override void Start()
-        {
-            base.Start();
-            CurrentSpeed = 10;
-        }
-
-    }
-
-    class Truck : Vehicle
-    {
-        private int _maxWeight;
-
-        public Truck(string mark, string model, string year, int horsepower, int maxWeight) : base(mark, model, year, horsepower)
-        {
-            _maxWeight = maxWeight;
-        }
-
-        public override void Start()
-        {
-            base.Start();
-            CurrentSpeed = 5;
+            // Check that it impossible to increase speed of Truck with turned off engine
+            freightliner.StopEngine();
+            freightliner.IncreaseSpeed(freightliner.MaxSpeed);
+            Console.WriteLine(freightliner.GetCurrentStateOfVehicle());
         }
     }
 }
