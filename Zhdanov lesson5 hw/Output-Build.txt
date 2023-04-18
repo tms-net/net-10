@@ -1,0 +1,6 @@
+﻿Build started...
+1>------ Build started: Project: Zhdanov lesson5 hw, Configuration: Debug Any CPU ------
+1>D:\TMS\Zhdanov lesson5 hw\Program.cs(53,30,53,44): warning CS0414: The field 'Program.Vehicle.Motorcycle._tripodEjected' is assigned but its value is never used
+1>  Zhdanov lesson5 hw -> D:\TMS\Zhdanov lesson5 hw\bin\Debug\Zhdanov lesson5 hw.exe
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+========== Build started at 10:23 PM and took 00,176 seconds ==========
