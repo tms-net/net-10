@@ -26,7 +26,7 @@ namespace patapau
             }
             Console.WriteLine("TASK2");
             //Task 2 
-            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("-----------------------------------------------------------");
             //Создаем клиентов банка
             PhysicalСlients physicalСlients = new PhysicalСlients("Patapau");
             physicalСlients.GetBankAccount();
@@ -39,8 +39,20 @@ namespace patapau
                 operation.Deposit(100);
             }
             //Выполним перевод денег между клиентами
+            legalСlients.Transfer(physicalСlients, 50);
             physicalСlients.Transfer(legalСlients, 20);
-
+            //Сделаем депозиты
+            physicalСlients.Deposit(100);
+            physicalСlients.Deposit(100);
+            //Загрузим весь журнал логов и просмотрим только на Пополнение
+            var logs = physicalСlients.GetHistoryLog();
+            foreach (var log in logs.Where(x=>x._category == "Пополнение"))
+            {
+                Console.WriteLine($"{log.GetLog()}");
+            }
+            Console.WriteLine(physicalСlients.CheckBalance());
+            Console.WriteLine(physicalСlients.GetBankAccount());
         }
+
     }
 }

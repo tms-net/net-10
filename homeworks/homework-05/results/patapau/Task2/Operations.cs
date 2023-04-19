@@ -1,12 +1,35 @@
-﻿using System;
-
-namespace patapau.Task2
+﻿namespace patapau.Task2
 {
+    //Класс для 
+    public class Log
+    {
+        public DateTime _date { get; }// Дата лога
+        public string _message { get; }// Описание события 
+        public string _category { get; }// Тип события (Перевод, Пополнение, Ошибка, Вывод)
+        public double _balance { get; }// Баланс после операции
+        public Log(DateTime date, string message, string category, double balance)
+        {
+            _date = date;
+            _message = message;
+            _category = category;
+            _balance = balance;
+        }
+        public string GetLog()
+        {
+            return $"Log: Дата - {_date} Категория - {_category} \nСообщение - {_message} \nТекущий баланс - {_balance}\n-----------------------------------------------------------";
+        }
+    }
+
+    public interface IHistory
+    {
+        IEnumerable<Log> GetHistoryLog();// Загрузка по
+    }
+
     public interface IOperations
     {
         void Deposit(double sum);// Депозит на банковский счет
         void Withdrawal(double sum);// Вывод из банковского счета
-        void CheckBalance();// Проверка баланса
+        string CheckBalance();// Проверка баланса
         void Transfer(IOperations toClient, double sum);//Перевод
         string name { get; }//Имя клиента выполняющего операцию
     }
@@ -16,15 +39,16 @@ namespace patapau.Task2
     public interface IAccount
     {
         void CloseAccount(); // Закрытие счета
-        void GetBankAccount();// Получить информацию о счете
+        string GetBankAccount();// Получить информацию о счете
     }
 
     //Базовый класс 
-    public abstract class ClientBank : IAccount, IOperations
+    public abstract class ClientBank : IAccount, IOperations, IHistory
     {
         protected string bankAccount = "000000"; //Банковской счет
         protected DateTime dateRegistrations;
         protected double balance;
+        protected List<Log> logs = new List<Log>();
         public string name { get; }//Имя клиента или название организации
 
         protected ClientBank(string Name)
@@ -35,22 +59,35 @@ namespace patapau.Task2
         }
         public abstract void Deposit(double sum);
         public abstract void Withdrawal(double sum);
-        public abstract void CheckBalance();
- 
+        public abstract string CheckBalance();
+
         public virtual void Transfer(IOperations toClient, double sum)
         {
-            Console.WriteLine($"Перевод средств от {this.name} к {toClient.name} выполнен");
-            this.Withdrawal(sum);
-            toClient.Deposit(sum);
+            if (balance < sum)
+            {
+                logs.Add(new Log(DateTime.Now, $"Недостаточно средств для перевода {sum}", "Ошибка", balance));
+                throw new InvalidOperationException("Недостаточно средств для перевода!");
+            }
+            else
+            {
+                Withdrawal(sum);
+                toClient.Deposit(sum);
+                logs.Add(new Log(DateTime.Now, $"Перевод средств от {this.name} к {toClient.name} выполнен", "Перевод", balance));
+            }
         }
-        public virtual void GetBankAccount()
+        public virtual string GetBankAccount()
         {
-            Console.WriteLine($"Имя - {name}; Номер счета - {bankAccount}; Дата регистрации - {dateRegistrations.ToString()}");
+            return $"Имя - {name}; Номер счета - {bankAccount}; Дата регистрации - {dateRegistrations.ToString()}";
         }
 
         public void CloseAccount()
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<Log> GetHistoryLog()
+        {
+            return logs;
         }
     }
 
@@ -69,30 +106,24 @@ namespace patapau.Task2
         public override void Deposit(double sum)
         {
             balance += sum;
-            Console.Write($"Счет пополнен на {sum} ");
-            CheckBalance();
+            logs.Add(new Log(DateTime.Now, $"Счет пополнен на {sum} ", "Пополнение", balance));
         }
         public override void Withdrawal(double sum)
         {
             if (balance < sum)
             {
-                Console.WriteLine("Недостаточно средств!");
+                logs.Add(new Log(DateTime.Now, $"Недостаточно средств для вывода {sum}", "Ошибка", balance));
+                throw new InvalidOperationException("Недостаточно средств для вывода!");
             }
             else
             {
                 balance -= sum;
-                Console.Write($"Вывод средств {sum} ");
-                CheckBalance();
+                logs.Add(new Log(DateTime.Now, $"Со счета снято {sum} ", "Вывод", balance));
             }
         }
-        public override void CheckBalance()
+        public override string CheckBalance()
         {
-            Console.WriteLine("Текущий баланс физического лица равен " + balance);
-        }
-        public override void GetBankAccount()
-        {
-            Console.WriteLine("Счет физического лица");
-            base.GetBankAccount();
+            return $"Текущий баланс физического лица равен " + balance;
         }
     }
 
@@ -115,29 +146,24 @@ namespace patapau.Task2
         public override void Deposit(double sum)
         {
             balance += sum / 100 * (100 - percentForOperation);
-            Console.Write($"Счет пополнен на {sum} с учетом комиссии {sum / 100 * (100 - percentForOperation)} ");
-            CheckBalance();
+            logs.Add(new Log(DateTime.Now, $"Счет пополнен на {sum} с учетом комиссии {sum / 100 * (100 - percentForOperation)} ", "Пополнение", balance));
         }
         public override void Withdrawal(double sum)
         {
             if (balance < (sum / 100 * percentForOperation + sum))
-                {
-                Console.WriteLine("Недостаточно средств!");
+            {
+                logs.Add(new Log(DateTime.Now, $"Недостаточно средств для вывода с учетом комиссии {(sum / 100 * percentForOperation + sum)}", "Ошибка", balance));
+                throw new InvalidOperationException("Недостаточно средств для вывода!");
             }
-            else { 
-            balance -= (sum / 100 * percentForOperation + sum);
-                Console.Write($"Вывод средств {sum} с учетом комиссии {sum / 100 * percentForOperation + sum} ");
-                CheckBalance() ;
+            else
+            {
+                balance -= (sum / 100 * percentForOperation + sum);
+                logs.Add(new Log(DateTime.Now, $"Вывод средств {sum} с учетом комиссии {sum / 100 * percentForOperation + sum} ", "Вывод", balance));
             }
         }
-        public override void CheckBalance()
+        public override string CheckBalance()
         {
-            Console.WriteLine("Текущий баланс юридического лица равен " + balance);
-        }
-        public override void GetBankAccount()
-        {
-            Console.WriteLine("Счет юридического лица");
-            base.GetBankAccount();
+            return "Текущий баланс юридического лица равен " + balance;
         }
     }
 }
