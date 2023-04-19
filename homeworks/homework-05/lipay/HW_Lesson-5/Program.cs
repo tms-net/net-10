@@ -1,12 +1,7 @@
 ﻿using System.Reflection;
 
-internal class Program
+internal partial class Program
 {
-    public interface IMovable
-    {
-        void Start();
-        void Stop();
-    }
     private static void Main(string[] args)
     {
         Car BMW = new Car(10, 230, 60000, "X6", "BMW");
@@ -18,111 +13,177 @@ internal class Program
 
         Truck Volvo = new Truck(7, 130, 100000, "FH16", "Volvo");
 
+    
+
         Console.WriteLine("Выберите свое средство передвижения:");
         Console.WriteLine("1 - BMW X6, 2 - Alfa Romeo Stelvio, 3 - Audi F7, 4 - BMW F 800 ST, 5 - Yamaha YZF-R1 2020, 6 - Volvo FH16");
-        string option = Console.ReadLine();
-        switch (option)
+        string option1 = Console.ReadLine();
+        switch (option1)
         {
             case "1":
-                BMW.GetInfo();
-                break;
+                BMW.PrintInfo();
+                BMW.PrintRoadLengs();
+                Console.WriteLine();
+                Console.WriteLine("Введите 1 - для увеличения скорости на, 2 - для уменьшения скорости");
+
+                while (BMW.GetCurrentRoad() >= -20)
+                {
+                    string option2 = Console.ReadLine();
+                    switch (option2)
+                    {
+                        case "1":
+                            BMW.Start();
+                            BMW.State();
+                            break;
+                        case "2":
+                            BMW.Stop();
+                            BMW.State();
+                            break;
+                        default:
+                            Console.WriteLine("Ввели неправильное значение.");
+                            break;
+                    };
+                }
+                    break;
             case "2":
-                AlfaRomeo.GetInfo();
+                AlfaRomeo.PrintInfo();
+                AlfaRomeo.PrintRoadLengs();
+                Console.WriteLine();
+                Console.WriteLine("Введите 1 - для увеличения скорости на, 2 - для уменьшения скорости");
+
+                while (AlfaRomeo.GetCurrentRoad() >= 0)
+                {
+                    string option2 = Console.ReadLine();
+                    switch (option2)
+                    {
+                        case "1":
+                            AlfaRomeo.Start();
+                            AlfaRomeo.State();
+                            break;
+                        case "2":
+                            AlfaRomeo.Stop();
+                            AlfaRomeo.State();
+                            break;
+                        default:
+                            Console.WriteLine("Ввели неправильное значение.");
+                            break;
+                    };
+                }
                 break;
             case "3":
-                Audi.GetInfo();
+                Audi.PrintInfo();
+                Audi.PrintRoadLengs();
+                Console.WriteLine();
+                Console.WriteLine("Введите 1 - для увеличения скорости на, 2 - для уменьшения скорости");
+
+                while (Audi.GetCurrentRoad() >= 0)
+                {
+                    string option2 = Console.ReadLine();
+                    switch (option2)
+                    {
+                        case "1":
+                            Audi.Start();
+                            Audi.State();
+                            break;
+                        case "2":
+                            Audi.Stop();
+                            Audi.State();
+                            break;
+                        default:
+                            Console.WriteLine("Ввели неправильное значение.");
+                            break;
+                    };
+                }
                 break;
             case "4":
-                BMWF.GetInfo();
+                BMWF.PrintInfo();
+                BMWF.PrintRoadLengs();
+                Console.WriteLine();
+                Console.WriteLine("Введите 1 - для увеличения скорости на, 2 - для уменьшения скорости");
+
+                while (BMWF.GetCurrentRoad() >= 0)
+                {
+                    string option2 = Console.ReadLine();
+                    switch (option2)
+                    {
+                        case "1":
+                            BMWF.Start();
+                            BMWF.State();
+                            break;
+                        case "2":
+                            BMWF.Stop();
+                            BMWF.State();
+                            break;
+                        default:
+                            Console.WriteLine("Ввели неправильное значение.");
+                            break;
+                    };
+                }
                 break;
             case "5":
-                Yamaha.GetInfo();
+                Yamaha.PrintInfo();
+                Yamaha.PrintRoadLengs();
+                Console.WriteLine();
+                Console.WriteLine("Введите 1 - для увеличения скорости на, 2 - для уменьшения скорости");
+
+                while (Yamaha.GetCurrentRoad() >= 0)
+                {
+                    string option2 = Console.ReadLine();
+                    switch (option2)
+                    {
+                        case "1":
+                            Yamaha.Start();
+                            Yamaha.State();
+                            break;
+                        case "2":
+                            Yamaha.Stop();
+                            Yamaha.State();
+                            break;
+                        default:
+                            Console.WriteLine("Ввели неправильное значение.");
+                            break;
+                    };
+                }
                 break;
             case "6":
-                Volvo.GetInfo();
+                Volvo.PrintInfo();
+                Volvo.PrintRoadLengs();
+                Console.WriteLine();
+                Console.WriteLine("Введите 1 - для увеличения скорости на, 2 - для уменьшения скорости");
+
+                while (Volvo.GetCurrentRoad() >= 0)
+                {
+                    string option2 = Console.ReadLine();
+                    switch (option2)
+                    {
+                        case "1":
+                            Volvo.Start();
+                            Volvo.State();
+                            break;
+                        case "2":
+                            Volvo.Stop();
+                            Volvo.State();
+                            break;
+                        default:
+                            Console.WriteLine("Ввели неправильное значение.");
+                            break;
+                    };
+                }
                 break;
             default:
                 Console.WriteLine("Ввели неправильное значение.");
                 break;
         };
-    }
-    internal abstract class Vehicle : IMovable
-    {
-        protected int _currentSpeed;
-        protected Vehicle(int year, int maxSpeed,int price, string model, string make)
-        {
-            Year = year;
-            MaxSpeed = maxSpeed;
-            Price = price;
-            Model = model;
-            Make = make;
-        }
-        string Make { get; } // Производитель
-        string Model { get; } // Модель
-        int Year { get; } // Год выпуска
-        int MaxSpeed { get; } //Максимальная скорость
-        int Price { get; } // Цена
-        public abstract void Start();
-        public virtual void Stop()
-        {
-            _currentSpeed = 0;
-        }
-        public virtual void GetInfo()
-        {
-            Console.WriteLine($"Средство передвижения:{Model}, производитель:{Make}, Цена: {Price}, Максимальная скорость: {MaxSpeed}, Год выпуска: {Year}");
-        }
-        public virtual void GetInfoLittle()
-        {
-            Console.WriteLine($"Средство передвижения:{Model}, производитель:{Make}, Максимальная скорость: {MaxSpeed}");
-        }
-        public virtual void State()
-        {
-            GetInfoLittle();
-            Console.WriteLine($"Скорость: {_currentSpeed}");
-        }
 
-    }
-    internal class Car : Vehicle
-    {
-        public Car(int year, int maxSpeed, int price, string model, string make) : base(year, maxSpeed, price, model, make)
-        {
+        
         }
-        public override void Start()
-        {
-            _currentSpeed = 20; // устанавливаем скорость движения
-        }
-    }
+        
 
-    internal class Truck : Vehicle
-    {
-        public Truck(int year, int maxSpeed, int price, string model, string make) : base(year, maxSpeed, price, model, make)
-        {
-        }
-        public override void Start()
-        {
-            _currentSpeed = 15; // устанавливаем скорость движения
-        }
-    }
-
-    internal class Motorcycle : Vehicle
-    {
-        public Motorcycle(int year, int maxSpeed, int price, string model, string make) : base(year, maxSpeed, price, model, make)
-        {
-        }
-        private bool _tripodEjected;
-        public override void Start()
-        {
-            _currentSpeed = 25; // устанавливаем скорость движения
-            _tripodEjected = false;
-        }
-        public override void Stop()
-        {
-            base.Stop(); // сбрасываем скорость движения
-            _tripodEjected = true;
-        }
-        public override void State()
-        {
-            Console.WriteLine($"Скорость: {_currentSpeed}, Подножка выставлена: {_tripodEjected}");
-        }
-    }
 }
+
+    
+
+
+
+
+    
