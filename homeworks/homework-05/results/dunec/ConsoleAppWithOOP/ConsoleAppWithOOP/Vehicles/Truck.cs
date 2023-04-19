@@ -32,10 +32,6 @@ namespace ConsoleAppWithOOP.Vehicles
 
         override public void Start()
         {
-            while (!SuccesStart())
-            {
-                Console.WriteLine("Failed");
-            }
             CurrentSpeed = 21;
         }
     }

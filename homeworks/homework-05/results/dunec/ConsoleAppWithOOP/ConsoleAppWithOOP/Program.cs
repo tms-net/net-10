@@ -15,16 +15,28 @@ internal class Program
         Console.WriteLine($"Motorcycle: {motorcycle.Make}-{motorcycle.Model} ({motorcycle.Year.ToString()});\nCar: {car.Make}-{car.Model} ({car.Year.ToString()});\nTruck: {truck.Make}-{truck.Model} ({truck.Year.ToString()}).");
 
         Console.WriteLine($"\nTry to start {motorcycle.Make}-{motorcycle.Model} engine");
+        while (!motorcycle.SuccesStart()) 
+        {
+            Console.WriteLine("Failed");
+        }
         motorcycle.Start();
         Console.WriteLine($"{motorcycle.Make}-{motorcycle.Model} start moving!");
         
 
         Console.WriteLine($"\nTry to start {car.Make}-{car.Model} engine");
+        while (!car.SuccesStart())
+        {
+            Console.WriteLine("Failed");
+        }
         car.Start();
         Console.WriteLine($"{car.Make}-{car.Model} start moving!");
         
 
         Console.WriteLine($"\nTry to start {truck.Make}-{truck.Model} engine");
+        while (!truck.SuccesStart())
+        {
+            Console.WriteLine("Failed");
+        }
         truck.Start();
         Console.WriteLine($"{truck.Make}-{truck.Model} start moving!");
         
@@ -75,28 +87,19 @@ internal class Program
             case 1:
                 {
                     Console.WriteLine($"\n{vehicle.Make}-{vehicle.Model} are moving on dry asphalt");
-                    if (!vehicle.SetCoefficientOfFriction(0.8))
-                    {
-                        Console.WriteLine($"Encorrect coefficient of friction for {vehicle.Make}-{vehicle.Model}");
-                    }                    
+                    vehicle.CoefficientOfFriction = 0.8;                 
                 }                
                 break;
             case 2:
                 {
                     Console.WriteLine($"\n{vehicle.Make}-{vehicle.Model} are moving on wet asphalt");
-                    if (!vehicle.SetCoefficientOfFriction(0.4))
-                    {
-                        Console.WriteLine($"Encorrect coefficient of friction for {vehicle.Make}-{vehicle.Model}");
-                    }                   
+                    vehicle.CoefficientOfFriction = 0.4;
                 }
                 break;
             case 3:
                 {
                     Console.WriteLine($"\n{vehicle.Make}-{vehicle.Model} are moving on ice");
-                    if (!vehicle.SetCoefficientOfFriction(0.1))
-                    {
-                        Console.WriteLine($"Encorrect coefficient of friction for {vehicle.Make}-{vehicle.Model}");
-                    }                    
+                    vehicle.CoefficientOfFriction = 0.1;                    
                 }
                 break;
         }

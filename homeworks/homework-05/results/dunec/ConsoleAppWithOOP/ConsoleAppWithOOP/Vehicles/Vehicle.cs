@@ -9,8 +9,8 @@ namespace ConsoleAppWithOOP.Vehicles
     internal abstract class Vehicle : IMovable
     {
         protected double CurrentSpeed = 0;
-        protected double CoefficientOfFriction = 0.8;
-        //protected double _coefficientOfFriction;
+        //protected double CoefficientOfFriction = 0.8;
+        protected double _coefficientOfFriction;
 
         protected Vehicle(string make, string model, int year, double weigh)
         {
@@ -24,7 +24,7 @@ namespace ConsoleAppWithOOP.Vehicles
         public string Model { get; set; } // Модель
         public int Year { get; } // Год выпуска
         public double Weight { get; set; } // Вес
-        /*
+        
         public double CoefficientOfFriction
         { 
             get { return _coefficientOfFriction; } 
@@ -37,7 +37,7 @@ namespace ConsoleAppWithOOP.Vehicles
             } 
         }//*/
 
-        internal bool SetCoefficientOfFriction(double coefficient)
+        /*internal bool SetCoefficientOfFriction(double coefficient)
         {
             if (coefficient > 0)
             {
