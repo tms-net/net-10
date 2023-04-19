@@ -1,6 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
-
+﻿Car car = new Car(
+    year: "2023",
+    make: "BMW",
+    model: "666",
+    numberOfDoors: 2);
+car.OpenDoor(1);
+car.CloseDoor(1);
+car.Start();
 
 
 internal abstract class Vehicle : IMovable, IRefuel
@@ -10,16 +15,26 @@ internal abstract class Vehicle : IMovable, IRefuel
     protected int CurrentFuelLevel;
     private bool _isFuelCapOpen;
     private readonly int _year;
+    protected bool[] _isDoorOpen;
 
     public string Make { get; }
     public string Model { get; }
     public string Year { get; }
 
-    protected Vehicle (string year, string make, string model)
+    protected Vehicle (string year, string make, string model, int numberOfDoors = 0)
     {
         Year = year;
         Make = make;
         Model = model;
+
+        if(numberOfDoors > 0)
+        {
+            _isDoorOpen = new bool[numberOfDoors];
+        }
+        else
+        {
+            _isDoorOpen = new bool[0];
+        }
     }
 
     public abstract void Start();
@@ -60,7 +75,7 @@ interface IHaveDoors
 }
 
 interface IHaveHood
-{
+{    
     void OpenHood();
     void CloseHood();
 }
@@ -78,18 +93,17 @@ interface IRefuel
 
 internal class Car : Vehicle, IHaveDoors, IHaveHood, IHaveTrunk
 {
-    bool[] _isDoorOpen = new bool[4];
     bool _isHoodOpen;
     bool _isTrunkOpen;
 
-    public Car(string year, string make, string model) : base(year, make, model)
+    public Car(string year, string make, string model, int numberOfDoors) : base(year, make, model, numberOfDoors)
     {
 
     }
 
     public void OpenDoor(int doorId)
     {
-        if(doorId < _isDoorOpen.Length)
+        if(doorId < _isDoorOpen.Length && CurrentSpeed == 0)
         {
             _isDoorOpen[doorId] = true;
         }
@@ -97,7 +111,7 @@ internal class Car : Vehicle, IHaveDoors, IHaveHood, IHaveTrunk
 
     public void CloseDoor(int doorId)
     {
-        if(doorId < _isDoorOpen.Length)
+        if(doorId < _isDoorOpen.Length && CurrentSpeed == 0)
         {
             _isDoorOpen[doorId] = false;
         }
@@ -131,17 +145,16 @@ internal class Car : Vehicle, IHaveDoors, IHaveHood, IHaveTrunk
 
 internal class Truck : Vehicle, IHaveDoors, IHaveHood
 {
-    bool[] _isDoorOpen = new bool[2];
     bool _isHoodOpen;
 
-    public Truck(string year, string make, string model) : base(year, make, model)
+    public Truck(string year, string make, string model, int numberOfDoors) : base(year, make, model, numberOfDoors)
     {
 
     }
 
     public void OpenDoor(int doorId)
     {
-        if (doorId < _isDoorOpen.Length)
+        if (doorId < _isDoorOpen.Length && CurrentSpeed == 0)
         {
             _isDoorOpen[doorId] = true;
         }
@@ -149,7 +162,7 @@ internal class Truck : Vehicle, IHaveDoors, IHaveHood
 
     public void CloseDoor(int doorId)
     {
-        if (doorId < _isDoorOpen.Length)
+        if (doorId < _isDoorOpen.Length && CurrentSpeed == 0)
         {
             _isDoorOpen[doorId] = false;
         }
