@@ -43,15 +43,17 @@ namespace patapau
             physicalСlients.Transfer(legalСlients, 20);
             //Сделаем депозиты
             physicalСlients.Deposit(100);
-            physicalСlients.Deposit(100);
+            physicalСlients.Deposit(-100);
             //Загрузим весь журнал логов и просмотрим только на Пополнение
             var logs = physicalСlients.GetHistoryLog();
-            foreach (var log in logs.Where(x=>x._category == "Пополнение"))
-            {
-                Console.WriteLine($"{log.GetLog()}");
-            }
-            Console.WriteLine(physicalСlients.CheckBalance());
-            Console.WriteLine(physicalСlients.GetBankAccount());
+            //foreach (var log in logs.Where(x=>x._category == "Пополнение"))
+            //{
+            //    Console.WriteLine($"{log.GetLog()}");
+            //}
+            Log log = logs.Last();
+            Console.WriteLine($"{log.GetLog()}");
+            //Console.WriteLine(physicalСlients.CheckBalance());
+            //Console.WriteLine(physicalСlients.GetBankAccount());
         }
 
     }

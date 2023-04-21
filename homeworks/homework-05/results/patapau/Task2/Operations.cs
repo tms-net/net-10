@@ -30,8 +30,8 @@
         void Deposit(double sum);// Депозит на банковский счет
         void Withdrawal(double sum);// Вывод из банковского счета
         string CheckBalance();// Проверка баланса
-        void Transfer(IOperations toClient, double sum);//Перевод
-        string name { get; }//Имя клиента выполняющего операцию
+        void Transfer(ClientBank toClient, double sum);//Перевод
+        //string name { get; }//Имя клиента выполняющего операцию
     }
 
 
@@ -61,7 +61,7 @@
         public abstract void Withdrawal(double sum);
         public abstract string CheckBalance();
 
-        public virtual void Transfer(IOperations toClient, double sum)
+        public virtual void Transfer(ClientBank toClient, double sum)
         {
             if (balance < sum)
             {
