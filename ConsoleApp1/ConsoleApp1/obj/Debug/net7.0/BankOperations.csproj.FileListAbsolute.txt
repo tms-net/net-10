@@ -1,0 +1,15 @@
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\BankOperations.csproj.AssemblyReference.cache
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\BankOperations.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\BankOperations.AssemblyInfoInputs.cache
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\BankOperations.AssemblyInfo.cs
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\BankOperations.csproj.CoreCompileInputs.cache
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\bin\Debug\net7.0\BankOperations.exe
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\bin\Debug\net7.0\BankOperations.deps.json
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\bin\Debug\net7.0\BankOperations.runtimeconfig.json
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\bin\Debug\net7.0\BankOperations.dll
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\bin\Debug\net7.0\BankOperations.pdb
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\BankOperations.dll
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\refint\BankOperations.dll
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\BankOperations.pdb
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\BankOperations.genruntimeconfig.cache
+C:\Users\Ryu\Desktop\репозиторий\ConsoleApp1\ConsoleApp1\obj\Debug\net7.0\ref\BankOperations.dll
