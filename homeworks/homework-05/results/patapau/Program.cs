@@ -1,5 +1,6 @@
 ﻿using patapau.Task1;
 using patapau.Task2;
+using patapau.Insurance;
 
 namespace patapau
 {
