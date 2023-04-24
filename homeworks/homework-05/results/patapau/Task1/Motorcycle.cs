@@ -3,13 +3,28 @@
     internal class Motorcycle : Vehicle
     {
         private bool _tripodEjected;
-        public Motorcycle(string year, string model, string make, double tank) : base(year, model, make, tank)
+        public Motorcycle(string year, string model, string make, double tank, double currentfuellevel) : base(year, model, make, tank, currentfuellevel)
         {
 
         }
+
+        public override string GetLastRefuelInfo()
+        {
+            string _information;
+            if (_lastRefuelFuel == 0)
+            {
+                _information = "Мотоцикл не был заправлен";
+            }
+            else
+            {
+                _information = $"Мотоцикл был заправлен на {_lastRefuelFuel} литров. Текущий уровень топлива {_currentFuelLevel}";
+            }
+            return _information;
+        }
+
         public override void Start()
         {
-            CurrentSpeed = 80;
+            _currentSpeed = 80;
         }
 
         public override void Stop()
@@ -17,15 +32,6 @@
             base.Stop();
             _tripodEjected = true;
         }
-        public override void HalfTank()
-        {
-            base.HalfTank();
-            Console.WriteLine("Мотоцикл заправлен!");
-        }
-        public override void FullTank()
-        {
-            base.FullTank();
-            Console.WriteLine("Мотоцикл заправлен!");
-        }
+
     }
 }

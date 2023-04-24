@@ -1,4 +1,6 @@
-﻿namespace patapau.Task2
+﻿using System.Net.Sockets;
+
+namespace patapau.Task2
 {
     //Класс физических лиц
     public class PhysicalСlients : ClientBank
@@ -6,67 +8,48 @@
         public PhysicalСlients(string name) : base(name)
         {
             bankAccount = $"PHY-{new Random().Next(100000, 1000000)}";
-            logs.Add(new Log(DateTime.Now, $"Счет {bankAccount} успешно создан", "Создание счета", balance));
+            LogHistory.AddLog($"Счет {bankAccount} успешно создан", "Создание счета", balance);
         }
 
         public override void Deposit(double sum)
         {
             if (sum <= 0)
             {
-                logs.Add(new Log(DateTime.Now, $"Нельзя пополнить счет на {sum}", "Ошибка", balance));
+                LogHistory.AddLog($"Указано недопустимое значение для депозита: {sum}", "Ошибка", balance);
+                throw new ArgumentException("Указано недопустимое значение для депозита", nameof(sum));
             }
-            else
-            {
-                balance += sum;
-                logs.Add(new Log(DateTime.Now, $"Счет пополнен на {sum} ", "Пополнение", balance));
-            }
+            balance += sum;
+            LogHistory.AddLog($"Счет пополнен на {sum} ", "Пополнение", balance);
         }
 
         public override void Withdrawal(double sum)
         {
-            switch (sum)
+            if (sum <= 0 || sum > balance)
             {
-                case var _ when sum <= 0:
-                    logs.Add(new Log(DateTime.Now, $"Сумма вывода меньше или равна 0", "Ошибка", balance));
-                    break;
-                case var _ when sum  > balance:
-                    logs.Add(new Log(DateTime.Now, $"Недостаточно средств для вывода {sum}", "Ошибка", balance));
-                    break;
-                default:
-                    balance -= sum;
-                    logs.Add(new Log(DateTime.Now, $"Вывод средств {sum}", "Вывод", balance));
-                    break;
+                LogHistory.AddLog($"Указано недопустимое значение для вывода: {sum}", "Ошибка", balance);
+                throw new ArgumentException("Указано недопустимое значение для вывода.", nameof(sum));
             }
-        }
-        public override double CheckBalance()
-        {
-            return balance;
+            balance -= sum;
+            LogHistory.AddLog($"Вывод средств {sum}", "Вывод", balance);
         }
 
         public override void Transfer(ClientBank toClient, double sum)
         {
-            switch (sum)
+            if (sum <= 0 || sum > balance)
             {
-                case var _ when sum <= 0:
-                    logs.Add(new Log(DateTime.Now, $"Сумма вывода меньше или равна 0", "Ошибка", balance));
-                    break;
-                case var _ when sum > balance:
-                    logs.Add(new Log(DateTime.Now, $"Недостаточно средств для перевода {sum}", "Ошибка", balance));
-                    break;
-                case var _ when this == toClient:
-                    logs.Add(new Log(DateTime.Now, $"Нельзя переводить переводить деньги себе на счет", "Ошибка", balance));
-                    break;
-                case var _ when toClient == null:
-                    logs.Add(new Log(DateTime.Now, $"Не существует указанного счета", "Ошибка", balance));
-                    break;
-                default:
-                    balance -= sum;
-                    toClient.Deposit(sum);
-                    var toClientLogs = toClient.GetHistoryLog();
-                    toClientLogs[toClientLogs.Count - 1] = new Log(DateTime.Now, $"{toClientLogs[toClientLogs.Count - 1].Message} Перевод средств от {name} выполнен", "Перевод", toClientLogs[toClientLogs.Count - 1].Balance);
-                    logs.Add(new Log(DateTime.Now, $"Перевод средств на сумму {sum} от {name} к {toClient.name} выполнен", "Перевод", balance));
-                    break;
+                LogHistory.AddLog($"Указано недопустимое значение для перевода: {sum}", "Ошибка", balance);
+                throw new ArgumentException("Указано недопустимое значение для перевода.", nameof(sum));
             }
+
+            if (this == toClient || toClient == null)
+            {
+                LogHistory.AddLog($"Неверно указан адресат перевода", "Ошибка", balance);
+                throw new InvalidOperationException("Неверно указан адресат перевода.");
+            }
+
+            balance -= sum;
+            toClient.Deposit(sum);
+            LogHistory.AddLog($"Перевод средств на сумму {sum} от {name} к {toClient.name} выполнен", "Перевод", balance);
         }
     }
 }

@@ -2,23 +2,29 @@
 {
     internal class Truck : Vehicle
     {
-        public Truck(string year, string model, string make, double tank) : base(year, model, make, tank)
+        public Truck(string year, string model, string make, double tank, double currentfuellevel) : base(year, model, make, tank, currentfuellevel)
         {
 
         }
+
+        public override string GetLastRefuelInfo()
+        {
+            string _information;
+            if (_lastRefuelFuel == 0)
+            {
+                _information = "Грузовик не был заправлен";
+            }
+            else
+            {
+                _information = $"Грузовик был заправлен на {_lastRefuelFuel} литров. Текущий уровень топлива {_currentFuelLevel}";
+            }
+            return _information;
+        }
+
         public override void Start()
         {
-            CurrentSpeed = 50;
+            _currentSpeed = 50;
         }
-        public override void HalfTank()
-        {
-            base.HalfTank();
-            Console.WriteLine("Грузовик заправлен!");
-        }
-        public override void FullTank()
-        {
-            base.FullTank();
-            Console.WriteLine("Грузовик заправлен!");
-        }
+
     }
 }

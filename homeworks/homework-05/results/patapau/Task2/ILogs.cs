@@ -2,6 +2,7 @@
 {
     public interface ILogs
     {
-        List<Log> GetHistoryLog();// Загрузка полной истории логов
+        void AddLog(string messageLog, string categoryLog, double balance);// Добавить лог в историю
+        List<Log> GetFullHistoryLog();// Загрузка полной истории логов
     }
 }

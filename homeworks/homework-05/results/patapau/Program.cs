@@ -9,19 +9,21 @@ namespace patapau
         {
             Console.WriteLine("TASK1");
             //Task 1
-            Car car = new Car("1987", "323", "Mazda", 50);
-            Truck truck = new Truck("2020", "alpha", "Lancia", 250);
-            Motorcycle motorcycle = new Motorcycle("2018", "Street", "BMW", 20);
-            Vehicle[] vehicles = new Vehicle[] { car, truck, motorcycle };
-            foreach (var vehicle in vehicles)
+            var random = new Random();
+            Car car = new Car("1987", "323", "Mazda", 50, Math.Floor(random.NextDouble() * 50));
+            Truck truck = new Truck("2020", "alpha", "Lancia", 250, Math.Floor(random.NextDouble() * 250));
+            Motorcycle motorcycle = new Motorcycle("2018", "Street", "BMW", 20, Math.Floor(random.NextDouble() * 20));
+            Console.WriteLine($"Текущий уровень топлива равен {car.GetCurrentFuelLevel()}");
+            try
             {
-                //Проверим текущую скорость
-                vehicle.GetCurrentSpeed();
-                //Проверим количество топлива
-                vehicle.GetFuelLevel();
-                //Зальем пол бака
-                vehicle.HalfTank();
+                car.RefuelHalfTank();
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            Console.WriteLine(car.GetLastRefuelInfo());
+
 
 
 
@@ -44,21 +46,32 @@ namespace patapau
             }
 
             //Выполним перевод денег между клиентами
-            legalСlients.Transfer(physicalСlients, 50);
-            physicalСlients.Transfer(legalСlients, 20);
-            Console.WriteLine(physicalСlients.GetOperationStatus());
-            //Сделаем депозиты
-            physicalСlients.Deposit(100);
-            physicalСlients.Deposit(100);
-            //Загрузим весь журнал логов и просмотрим только на Пополнение
-            var logs = physicalСlients.GetHistoryLog();
+            try
+            {
+                legalСlients.Transfer(physicalСlients, 50);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+
+            ////Загрузим весь журнал логов и просмотрим только на Пополнение
+            var logs = legalСlients.GetHistoryLogs();
             foreach (var log in logs/*.Where(x=>x.Category == "Пополнение")*/)
             {
                 Console.WriteLine($"{log.GetLog()}");
             }
+
+
+
+
+
             Console.WriteLine(physicalСlients.CheckBalance());
             Console.WriteLine(physicalСlients.GetBankAccount());
         }
 
     }
+
+
 }

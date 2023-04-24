@@ -4,6 +4,6 @@
     {
         void Start();
         void Stop();
-        void GetCurrentSpeed();
+        double GetCurrentSpeed();//Получает текушую скорость транспорта
     }
 }
