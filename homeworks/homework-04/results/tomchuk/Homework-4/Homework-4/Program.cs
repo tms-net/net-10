@@ -22,5 +22,4 @@ public class Program
         Array.Reverse(nums);
         return nums;
     }
-
 }
