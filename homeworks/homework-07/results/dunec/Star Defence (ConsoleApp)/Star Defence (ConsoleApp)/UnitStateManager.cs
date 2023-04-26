@@ -24,6 +24,14 @@ namespace Star_Defence__ConsoleApp_
             _enumValues = Enum.GetValues<TState>();
             _states = new bool[_enumValues.Length, _enumValues.Length];
 
+            for (int i = 0; i < _enumValues.Length; i++)
+            { 
+                if (i < _enumValues.Length - 1)
+                    _states[i, i + 1] = true;
+                else
+                    _states[i, 0] = true;
+            }
+            
             Current = default;
         }
 
@@ -38,6 +46,9 @@ namespace Star_Defence__ConsoleApp_
             var fromIndex = Array.IndexOf(_enumValues, fromState);
             var toIndex = Array.IndexOf(_enumValues, toState);
 
+            if (fromIndex == -1 | toIndex == -1)
+                throw new IndexOutOfRangeException("Can't allow transition for unexist state.");
+
             // разрешаем переход
             _states[fromIndex, toIndex] = true;
         }
@@ -49,9 +60,14 @@ namespace Star_Defence__ConsoleApp_
         public void MoveTo(TState toState)
         {
             // TODO: Подумайте над крайними случаями значений (edge cases)
-
+            
             var fromIndex = Array.IndexOf(_enumValues, Current);
             var toIndex = Array.IndexOf(_enumValues, toState);
+            
+            if (toIndex == -1)
+            {
+                throw new IndexOutOfRangeException("Can't transite to unexist state.");
+            }
 
             if (!_states[fromIndex, toIndex])
             {

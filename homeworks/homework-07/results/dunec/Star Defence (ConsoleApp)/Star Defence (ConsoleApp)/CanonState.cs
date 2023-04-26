@@ -12,7 +12,7 @@ namespace Star_Defence__ConsoleApp_
     internal enum CanonState
     {
         Awaiting,   // ожидание цели
-        Aim,        // прицеливание
-        Atack       // атака
+        Aiming,        // прицеливание
+        Atacking       // атака
     }
 }
