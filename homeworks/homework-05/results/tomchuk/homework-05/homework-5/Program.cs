@@ -2,10 +2,15 @@
 {
     private static void Main(string[] args)
     {
-        Car c1 = new Car();
+        Car car1 = new Car(2005, "BMW", "X5");
  
-        Motorcycle m1 = new Motorcycle();
+        Motorcycle motorcycle1 = new Motorcycle(2010, "MAISTO ", "20-11108");
 
-        Truck t1 = new Truck();
+        Truck truck1 = new Truck(1981, "Sod Buster", "MPC Models");
+
+
+        Console.WriteLine(car1.Info());
+        Console.WriteLine(motorcycle1.Info());
+        Console.WriteLine(truck1.Info());
     }
 }

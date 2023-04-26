@@ -1,23 +1,25 @@
-﻿internal partial class Program
+﻿internal class Motorcycle : Vehicle
 {
-    internal class Motorcycle : Vehicle
+    private bool _tripodEjected;
+
+    public Motorcycle(int year, string make, string model) : base(year, make, model)
     {
-        public Motorcycle()
-        {
-            //
-            // TODO: Add constructor logic here
-            //
-        }
+        Make = make; 
+        Model = model; 
+    }
 
-        int _currentSpeed;
-        public override void Start()
-        {
-            _currentSpeed = 10; // устанавливаем скорость движения
-        }
+    public override void Start()
+    {
+        _currentSpeed = 50; // устанавливаем скорость движения
+    }
 
-        public override void Stop()
-        {
-            _currentSpeed = 0; // сбрасываем скорость движения
-        }
+    public override void Stop()
+    {
+        base.Stop(); // сбрасываем скорость движения
+        _tripodEjected = true;
+    }
+    public override string Info()
+    {
+        return $"Motorcycle model: {Model}, make {Make}, year: {Year}";
     }
 }
