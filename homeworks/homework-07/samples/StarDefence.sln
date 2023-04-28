@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarDefence", "StarDefence\StarDefence.csproj", "{C367417E-DE35-4403-A659-9AE8333D0792}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarDefence.Units", "StarDefenceUnits\StarDefence.Units.csproj", "{DA3F3562-72E3-42CF-A298-B69DFE444E34}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C367417E-DE35-4403-A659-9AE8333D0792}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C367417E-DE35-4403-A659-9AE8333D0792}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C367417E-DE35-4403-A659-9AE8333D0792}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C367417E-DE35-4403-A659-9AE8333D0792}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA3F3562-72E3-42CF-A298-B69DFE444E34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA3F3562-72E3-42CF-A298-B69DFE444E34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA3F3562-72E3-42CF-A298-B69DFE444E34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA3F3562-72E3-42CF-A298-B69DFE444E34}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26174D51-1234-4951-9874-FAB1A7869B42}
+	EndGlobalSection
+EndGlobal
