@@ -1,13 +1,12 @@
 ﻿namespace KlindyukHW5.Vehicle.Entities
 {
-    internal class Truck : Vehicle
+    internal class Truck : Car
     {
-        private int Capacity { get; }
-        private bool _handbrake;
+        public int Capacity { get; }
 
-        public Truck(int Year, string Make, string Model, int Capacity) : base(Year, Make, Model)
+        public Truck(int year, string make, string model, string type, int capacity) : base(year, make, model, type)
         {
-            this.Capacity = Capacity;
+            this.Capacity = capacity;
         }
 
         public override void Start()
@@ -18,7 +17,6 @@
         public override void Stop()
         {
             base.Stop();
-            _handbrake = true;
         }
 
         public override string ToString()

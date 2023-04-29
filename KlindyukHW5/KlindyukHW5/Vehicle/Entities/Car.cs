@@ -2,16 +2,17 @@
 {
     internal class Car : Vehicle
     {
-        private bool _handbrake;
-        private string Type { get; }
+        private bool _handbrake = true;
+        public string Type { get; }
 
-        public Car(int Year, string Make, string Model, string Type) : base(Year, Make, Model)
+        public Car(int year, string make, string model, string type) : base(year, make, model)
         {
-            this.Type = Type;
+            this.Type = type;
         }
 
         public override void Start()
         {
+            _handbrake = false;
             CurrentSpeed = 90;
         }
 

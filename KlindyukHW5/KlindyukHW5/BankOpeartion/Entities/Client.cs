@@ -8,13 +8,11 @@ namespace KlindyukHW5.BankOpeartion.Entities
 {
     internal class Client
     {
-        internal Client(int ClientId, int Sum)
+        internal Client(int ClientId)
         {
             this.ClientId = ClientId;
-            this.Sum = Sum;
         }
 
-        internal int ClientId { get; }
-        internal int Sum { get; set; }
+        public int ClientId { get; }
     }
 }

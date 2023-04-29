@@ -8,11 +8,11 @@ namespace KlindyukHW5.Vehicle.Entities
 {
     abstract class Vehicle : IMovable
     {
-        protected Vehicle(int Year, string Make, string Model)
+        protected Vehicle(int year, string make, string model)
         {
-            this.Year = Year;
-            this.Make = Make;
-            this.Model = Model;
+            this.Year = year;
+            this.Make = make;
+            this.Model = model;
         }
 
         protected int CurrentSpeed;

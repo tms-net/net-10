@@ -8,10 +8,9 @@ namespace KlindyukHW5.BankOpeartion.Entities
 {
     internal class PremiumClients : Client
     {
-        private int Deposit = 1000;
-        internal PremiumClients(int ClientId, int Sum) : base(ClientId, Sum)
+        internal int Deposit { get { return 1000; } }
+        internal PremiumClients(int ClientId) : base(ClientId)
         {
-            this.Sum += Deposit;
         }
     }
 }

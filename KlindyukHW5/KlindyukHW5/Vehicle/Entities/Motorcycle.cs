@@ -2,14 +2,15 @@
 {
     internal class Motorcycle : Vehicle
     {
-        private bool _tripodEjected;
+        private bool _tripodEjected = true;
 
-        public Motorcycle(int Year, string Make, string Model) : base(Year, Make, Model)
+        public Motorcycle(int year, string make, string model) : base(year, make, model)
         {
         }
 
         public override void Start()
         {
+            _tripodEjected = false;
             CurrentSpeed = 150;
         }
 

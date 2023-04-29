@@ -9,6 +9,6 @@ namespace KlindyukHW5.BankOpeartion
 {
     internal interface ITransfer
     {
-        void Transfer(Client sender, Client recipient, int transferSum);
+        string Transfer(int senderID, int recipientID, int transferSum);
     }
 }

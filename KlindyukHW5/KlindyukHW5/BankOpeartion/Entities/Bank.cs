@@ -1,56 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace KlindyukHW5.BankOpeartion.Entities
+
 {
     internal class Bank : ITransfer
     {
-        internal Client[] clients;
-        internal Client[] prClients;
+
+        internal List<Client> clients = new List<Client>() { new Client(400000) };
+        internal List<PremiumClients> prClients = new List<PremiumClients>() { new PremiumClients(700000) };
+        private Dictionary<int, int> bankAccounts = new()  //Client ID and SUM
+        {
+            [400000] = 300,
+            [700000] = 2400
+        };
 
         internal Bank(int amount)
         {
             Random rnd = new Random();
-            clients = new Client[amount];
-            prClients = new PremiumClients[amount];
-            for (int i = 0; i < clients.Length; i++)
+            for (int i = 0; i < amount; i++)
             {
-                int id = rnd.Next(100000, 999999 + 1);
-                int sum = rnd.Next(0, 500 + 1);
-                clients[i] = new Client(id, sum);
-                prClients[i] = new PremiumClients(id, sum);
+                int id = rnd.Next(400000, 999999);
+                int sum = rnd.Next(500, 700 + 1);
+                if (id >= 700000)
+                {
+                    var newPrClient = new PremiumClients(id); ;
+                    prClients.Add(newPrClient);
+                    bankAccounts.Add(newPrClient.ClientId, newPrClient.Deposit + sum);
+                }
+                else
+                {
+                    var newClient = new Client(id);
+                    clients.Add(newClient);
+                    bankAccounts.Add(newClient.ClientId, sum);
+                }
             }
-            ShowClients();
+            GetInformation();
         }
 
-        public void Transfer(Client sender, Client recipient, int transferSum)
+        public string Transfer(int senderID, int recipientID, int transferSum)
         {
-            if (sender.Sum >= transferSum)
+            if (bankAccounts[senderID] >= transferSum)
             {
-                sender.Sum -= transferSum;
-                recipient.Sum += transferSum;
-                Console.WriteLine($"Sender: {sender.ClientId}: WAS: {sender.Sum + transferSum} NOW: {sender.Sum}");
-                Console.WriteLine($"Recipient: {recipient.ClientId}: WAS: {recipient.Sum - transferSum} NOW: {recipient.Sum}");
+                bankAccounts[senderID] -= transferSum;
+                bankAccounts[recipientID] += transferSum;
+                return $"\nSender: {senderID}: WAS: {bankAccounts[senderID] + transferSum} NOW: {bankAccounts[senderID]}\n" +
+                $"Recipient: {recipientID}: WAS: {bankAccounts[recipientID] - transferSum} NOW: {bankAccounts[recipientID]}";
             }
-            else { Console.WriteLine("Error! Check your balance!"); }
+            else
+            {
+                return "Error! Check your balance!";
+            }
         }
 
-        public void ShowClients()
+        public string GetInformation()
         {
-            Console.WriteLine("Premium:");
-            foreach (Client prClient in prClients)
+            string result = "";
+            foreach (var account in bankAccounts)
             {
-                Console.WriteLine($"ID: {prClient.ClientId} | SUM: {prClient.Sum}");
+                if (account.Key >= 700000)
+                {
+                    result += $"Premium Client  ID: {account.Key}  SUM: {account.Value}\n";
+                }
+                else
+                {
+                    result += $"Standart Client ID: {account.Key}  SUM: {account.Value}\n";
+                }
             }
-            Console.WriteLine("\nStandart:");
-            foreach (Client client in clients)
+            result += "\nStandart Clients ID";
+            foreach (var client in clients)
             {
-                Console.WriteLine($"ID: {client.ClientId} | SUM: {client.Sum}");
+                result += $"\n{client.ClientId}";
             }
-            Console.WriteLine();
+            result += "\n\nPremium Clients ID";
+
+            foreach (var prClient in prClients)
+            {
+                result += $"\n{prClient.ClientId}";
+            }
+            return result;
         }
+
     }
 }
