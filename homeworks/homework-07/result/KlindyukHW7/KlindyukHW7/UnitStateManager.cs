@@ -17,51 +17,43 @@ namespace KlindyukHW7
         /// Текущее состояние
         /// </summary>
         public TState Current { get; private set; }
-
-        private readonly TState[] _enumValues;
-        private readonly bool[,] _states;
+        private Dictionary<TState, HashSet<TState>> _allowedStates = new Dictionary<TState, HashSet<TState>>();
 
 
-        public UnitStateManager()
+        public UnitStateManager(TState current)
         {
-            _enumValues = Enum.GetValues<TState>();
-            _states = new bool[_enumValues.Length, _enumValues.Length];
-            Current = default;
+            Current = current;
         }
 
         /// <summary>
         /// Настройка переходов между состояниями
         /// </summary>
-        /// <param name="fromState">Исходное состояние</param>
+        /// <param name="from">Исходное состояние</param>
         /// <param name="to">Последующее состояние</param>
-        /// <param name="fromState">Исходное состояние</param>
-        public void AllowTransition(TState from, TState to)
+        public void AllowTransition(params (TState from, TState to)[] states)
         {
-            //получаем индексы
-            var fromIndex = Array.IndexOf(_enumValues, from);
-            var toIndex = Array.IndexOf(_enumValues, to);
-
-            //разрешаем переход
-            _states[fromIndex, toIndex] = true;
+            for (int i = 0; i < states.Length; i++)
+            {
+                if (!_allowedStates.ContainsKey(states[i].from))
+                {
+                    _allowedStates.Add(states[i].from, new HashSet<TState>());
+                }
+                _allowedStates[states[i].from].Add(states[i].to);
+            }
         }
 
         /// <summary>
         /// Осуществлять переход в состояние
         /// </summary>
-        /// <param name="state">Конечное состояние</param>
-        public void MoveTo(TState toState)
+        /// <param name="toState">Конечное состояние</param>
+        public bool MoveTo(TState toState)
         {
-            var fromIndex = Array.IndexOf(_enumValues, Current);
-            var toIndex = Array.IndexOf(_enumValues, toState);
-
-            if (!_states[fromIndex, toIndex])
+            if (_allowedStates[Current].Contains(toState))
             {
-                // запрещаем переход
-                throw new InvalidOperationException($"Transition not allowed from {Current} to {toState} state.");
+                Current = toState;
+                return true;
             }
-
-            // осуществляем переход
-            Current = toState;
+            return false;
         }
     }
 }

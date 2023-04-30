@@ -1,69 +1,72 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using KlindyukHW7;
 
-var shootingStates = new UnitStateManager<ShootingState>();
+var shootingStates = new UnitStateManager<ShootingState>(ShootingState.Awaiting);
+shootingStates.AllowTransition
+    (
+    (ShootingState.Awaiting, ShootingState.Aim),
+    (ShootingState.Aim, ShootingState.Atack),
+    (ShootingState.Atack, ShootingState.Awaiting)
+    );
+Console.WriteLine($"{shootingStates.Current} to {ShootingState.Aim} ->" +
+    $" {shootingStates.MoveTo(ShootingState.Aim)}"); //true
 
-shootingStates.AllowTransition(ShootingState.Awaiting, ShootingState.Aim);
-Console.Write($"{shootingStates.Current} to {ShootingState.Aim} -> "); //Сurrent = Awaiting
-shootingStates.MoveTo(ShootingState.Aim);
-Console.WriteLine($"{shootingStates.Current}"); //Сurrent = Aim
+Console.WriteLine($"{shootingStates.Current} to {ShootingState.Atack} -> " +
+    $"{shootingStates.MoveTo(ShootingState.Atack)}"); //true
 
-shootingStates.AllowTransition(ShootingState.Aim, ShootingState.Atack);
-Console.Write($"{shootingStates.Current} to {ShootingState.Atack} -> "); //Сurrent = Aim
-shootingStates.MoveTo(ShootingState.Atack);
-Console.WriteLine($"{shootingStates.Current}"); //Сurrent = Atack
+Console.WriteLine($"{shootingStates.Current} to {ShootingState.Awaiting} -> " +
+    $"{shootingStates.MoveTo(ShootingState.Awaiting)}"); //true
 
-shootingStates.AllowTransition(ShootingState.Atack, ShootingState.Awaiting);
-Console.Write($"{shootingStates.Current} to {ShootingState.Awaiting} -> "); //Сurrent = Atack
-shootingStates.MoveTo(ShootingState.Awaiting);
-Console.WriteLine($"{shootingStates.Current}\n"); //Сurrent = Awaiting
+Console.WriteLine($"{shootingStates.Current} to {ShootingState.Atack} -> " +
+    $"{shootingStates.MoveTo(ShootingState.Atack)}\n"); //false
 
+//-------------------------------------------------------------------------------------
 
-var destroyerStates = new UnitStateManager<DestroyerState>();
+var destroyerStates = new UnitStateManager<DestroyerState>(DestroyerState.LiftOff);
+destroyerStates.AllowTransition
+    (
+    (DestroyerState.LiftOff, DestroyerState.Atack),
+    (DestroyerState.Atack, DestroyerState.Refilling),
+    (DestroyerState.Refilling, DestroyerState.LiftOff)
+    );
+Console.WriteLine($"{destroyerStates.Current} to {DestroyerState.Atack} ->" +
+    $" {destroyerStates.MoveTo(DestroyerState.Atack)}"); //true
 
-destroyerStates.AllowTransition(DestroyerState.LiftOff, DestroyerState.Atack);
-Console.Write($"{destroyerStates.Current} to {DestroyerState.Atack} -> "); //Сurrent = LiftOff
-destroyerStates.MoveTo(DestroyerState.Atack);
-Console.WriteLine($"{destroyerStates.Current}"); //Сurrent = Atack
+Console.WriteLine($"{destroyerStates.Current} to {DestroyerState.Refilling} -> " +
+    $"{destroyerStates.MoveTo(DestroyerState.Refilling)}"); //true
 
-destroyerStates.AllowTransition(DestroyerState.Atack, DestroyerState.Refilling);
-Console.Write($"{destroyerStates.Current} to {DestroyerState.Refilling} -> "); //Сurrent = Atack
-destroyerStates.MoveTo(DestroyerState.Refilling);
-Console.WriteLine($"{destroyerStates.Current}"); //Сurrent = Refilling
+Console.WriteLine($"{destroyerStates.Current} to {DestroyerState.LiftOff} -> " +
+    $"{destroyerStates.MoveTo(DestroyerState.LiftOff)}\n"); //true
 
-destroyerStates.AllowTransition(DestroyerState.Refilling, DestroyerState.LiftOff);
-Console.Write($"{destroyerStates.Current} to {DestroyerState.LiftOff} -> "); //Сurrent = Refilling
-destroyerStates.MoveTo(DestroyerState.LiftOff);
-Console.WriteLine($"{destroyerStates.Current}\n"); //Сurrent = LiftOff
+//-------------------------------------------------------------------------------------
 
+var troopersStates = new UnitStateManager<TroopersState>(TroopersState.Awaiting);
+troopersStates.AllowTransition
+    (
+    (TroopersState.Awaiting, TroopersState.Move),
+    (TroopersState.Move, TroopersState.Atack),
+    (TroopersState.Atack, TroopersState.Defense),
+    (TroopersState.Defense, TroopersState.Awaiting),
+    (TroopersState.Atack, TroopersState.Awaiting)
+    );
+Console.WriteLine($"{troopersStates.Current} to {TroopersState.Move} ->" +
+    $" {troopersStates.MoveTo(TroopersState.Move)}"); //true
 
-var troopersState = new UnitStateManager<TroopersState>();
+Console.WriteLine($"{troopersStates.Current} to {TroopersState.Atack} -> " +
+    $"{troopersStates.MoveTo(TroopersState.Atack)}"); //true
 
-troopersState.AllowTransition(TroopersState.Awaiting, TroopersState.Move);
-Console.Write($"{troopersState.Current} to {TroopersState.Move} -> "); //Сurrent = Awaiting
-troopersState.MoveTo(TroopersState.Move);
-Console.WriteLine($"{troopersState.Current}"); //Сurrent = Move
+Console.WriteLine($"{troopersStates.Current} to {TroopersState.Defense} -> " +
+    $"{troopersStates.MoveTo(TroopersState.Defense)}"); //true
 
-troopersState.AllowTransition(TroopersState.Move, TroopersState.Atack);
-Console.Write($"{troopersState.Current} to {TroopersState.Atack} -> "); //Сurrent = Move
-troopersState.MoveTo(TroopersState.Atack);
-Console.WriteLine($"{troopersState.Current}"); //Сurrent = Atack
+Console.WriteLine($"{troopersStates.Current} to {TroopersState.Awaiting} -> " +
+    $"{troopersStates.MoveTo(TroopersState.Awaiting)}"); //true
 
-troopersState.AllowTransition(TroopersState.Atack, TroopersState.Defense);
-Console.Write($"{troopersState.Current} to {TroopersState.Defense} -> "); //Сurrent = Atack
-troopersState.MoveTo(TroopersState.Defense);
-Console.WriteLine($"{troopersState.Current}"); //Сurrent = Defense
+Console.WriteLine($"{troopersStates.Current} to {TroopersState.Move} ->" +
+    $" {troopersStates.MoveTo(TroopersState.Move)}"); //true
 
-troopersState.AllowTransition(TroopersState.Defense, TroopersState.Awaiting);
-Console.Write($"{troopersState.Current} to {TroopersState.Awaiting} -> "); //Сurrent = Defense
-troopersState.MoveTo(TroopersState.Awaiting);
-Console.WriteLine($"{troopersState.Current}"); //Сurrent = Awaiting
+Console.WriteLine($"{troopersStates.Current} to {TroopersState.Atack} -> " +
+    $"{troopersStates.MoveTo(TroopersState.Atack)}"); //true
 
-troopersState.MoveTo(TroopersState.Move);
-troopersState.MoveTo(TroopersState.Atack);
-troopersState.AllowTransition(TroopersState.Atack, TroopersState.Awaiting);
-Console.Write($"{troopersState.Current} to {TroopersState.Awaiting} -> "); //Сurrent = Atack
-troopersState.MoveTo(TroopersState.Awaiting);
-Console.WriteLine($"{troopersState.Current}"); //Сurrent = Awaiting
-
+Console.WriteLine($"{troopersStates.Current} to {TroopersState.Awaiting} -> " +
+    $"{troopersStates.MoveTo(TroopersState.Awaiting)}"); //true
 
