@@ -13,7 +13,9 @@
             try
             {
                 unitStateManager.DeletePermissionTransition(CanonState.Aiming, CanonState.AwaitingTarget);
-                unitStateManager.MoveTo(CanonState.Attack);
+                Console.WriteLine(unitStateManager.Current);
+                unitStateManager.MoveTo(CanonState.Aiming);
+                Console.WriteLine(unitStateManager.Current);
             }
             catch (InvalidOperationException ex)
             {
