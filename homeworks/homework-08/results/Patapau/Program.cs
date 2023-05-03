@@ -9,8 +9,8 @@ namespace Patapau
         static void Main()
         {
             StudentManager studentManager = new StudentManager();
-            studentManager.AddStudent("Дима", 15, 'М', 9);
-            studentManager.AddStudent("Настя", 15, 'Ж', 10);
+            //studentManager.AddStudent("Дима", 15, 'М', 9);
+            //studentManager.AddStudent("Настя", 15, 'Ж', 10);
 
 
             bool isRunning = true;
@@ -36,39 +36,59 @@ namespace Patapau
                     case "1":
                         Console.Clear();
                         EnterDataStudent();
-                        studentManager.AddStudent(nameConsole, ageConsole, genderConsole, gradeConsole);
+                        Console.WriteLine(studentManager.AddStudent(nameConsole, ageConsole, genderConsole, gradeConsole));
                         break;
+
+
                     case "2":
                         Console.Clear();
+                        var students = studentManager.GetStudents();
+                        if (students.Count == 0)
+                        { 
+                            Console.WriteLine("Нет студентов в БД! Необходимо добавить студентов!\n");
+                            break;
+                        }
+
+                        foreach (var stud in students)
+                        {
+                            Console.WriteLine(stud);
+                        }
                         Console.WriteLine("Введите ID студента для редактирования");
                         EnterStudentID();
-                        if (studentManager.CheckIdStudentExistence(idConsole))
+                        student = studentManager.SearchByID(idConsole);
+                        if (student != null)
                         {
+                            Console.WriteLine($"Выбранный студент для редактирования\n {student}");
                             EnterDataStudent();
-                            studentManager.EditStudent(idConsole, nameConsole, ageConsole, genderConsole, gradeConsole);
+                            student.Name = nameConsole;
+                            student.Gender = genderConsole;
+                            student.Age = ageConsole;
+                            student.Grade = gradeConsole;
+                            Console.WriteLine(studentManager.EditStudent(student));
                         }
                         else
                         {
                             Console.WriteLine("Не найдено совпадений в БД!\n");
                         }
                         break;
-                   
-                    
-                    
-                    
-                    
-                    
+
+
                     case "3":
                         Console.Clear();
+                        students = studentManager.GetStudents();
+                        if (students.Count == 0)
+                        {
+                            Console.WriteLine("Нет студентов в БД! Необходимо добавить студентов!\n");
+                            break;
+                        }
+                        foreach (var stud in students)
+                        {
+                            Console.WriteLine(stud);
+                        }
                         Console.WriteLine("Введите ID студента для удаления");
                         EnterStudentID();
-                        studentManager.RemoveStudent(idConsole);
+                        Console.WriteLine(studentManager.RemoveStudent(idConsole));
                         break;
-                    
-                    
-                    
-                    
-                    
                     
                     
                     case "4":
@@ -80,6 +100,8 @@ namespace Patapau
                             Console.WriteLine("Не найдено совпадений в БД!\n");
                         Console.WriteLine(student);
                         break;
+                    
+                    
                     case "5":
                         Console.Clear();
                         Console.WriteLine("Введите имя студента для поиска");
@@ -88,9 +110,11 @@ namespace Patapau
                             Console.WriteLine("Не найдено совпадений в БД!\n");
                         Console.WriteLine(student);
                         break;
+                    
+                    
                     case "6":
                         Console.Clear();
-                        var students = studentManager.GetStudents();
+                        students = studentManager.GetStudents();
                         if (students.Count == 0)
                             Console.WriteLine("Нет студентов в БД! Необходимо добавить студентов!\n");
                         foreach (var stud in students)
@@ -98,10 +122,14 @@ namespace Patapau
                             Console.WriteLine(stud);
                         }
                         break;
+                    
+                    
                     case "7":
                         Console.Clear();
                         isRunning = false;
                         break;
+                    
+                    
                     default:
                         Console.Clear();
                         Console.WriteLine("Неизвестная команда! Повторите попытку!\n");

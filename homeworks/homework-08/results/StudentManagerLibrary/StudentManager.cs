@@ -11,33 +11,72 @@
             students = new List<Student>();
         }
 
-        public void AddStudent(string name, byte age, char gender, byte grade)
+        /// <summary>
+        /// Добавление в журнал нового студента
+        /// </summary>
+        /// <param name="name">имя студента</param>
+        /// <param name="age">возраст студента</param>
+        /// <param name="gender">пол студента</param>
+        /// <param name="grade">оценка студента</param>
+        /// <returns>Возвращает string с информацией о результате выполнения операции.</returns>
+        public string AddStudent(string name, byte age, char gender, byte grade)
         {
-            Student student = new Student(counterIdStudent, name, age, gender, grade);
-            students.Add(student);
-            counterIdStudent++;
+            try
+            {
+                Student student = new Student(counterIdStudent, name, age, gender, grade);
+                students.Add(student);
+                counterIdStudent++;
+                return $"Студент {name} успешно добавлен.\n";
+            }
+            catch (Exception e)
+            {
+                return $"Студент не был добавлен. {e.Message}\n";
+            }
         }
 
-        public void EditStudent(int id, string name, byte age, char gender, byte grade)
+        /// <summary>
+        /// Редактирование путем передачи в качестве параметра измененного объекта. Внутри метода поиск по ID и замена ссылки на переданный объект.
+        /// </summary>
+        /// <param name="EditedStudent">Передаем измененный объект</param>
+        /// <returns>Возвращает string с информацией о результате выполнения операции.</returns>
+        public string EditStudent(Student EditedStudent)
         {
-            var student = students.FirstOrDefault(s => s.Id == id);
-            student.Name = name;
-            student.Age = age;
-            student.Gender = gender;
-            student.Grade = grade;
+            try
+            {
+                int index = students.FindIndex(st => st.Id == EditedStudent.Id);
+                if (index != -1)
+                {
+                    students[index] = EditedStudent;
+                    return $"Студент c ID {EditedStudent.Id} успешно изменен.\n";
+                }
+                return $"Студент c ID {EditedStudent.Id} не найден!\n";
+            }
+            catch (Exception e)
+            {
+                return $"Ошибка: {e.Message}\n";
+            }
         }
 
         /// <summary>
         /// Удаление студента по ID
         /// </summary>
         /// <param name="studentID">ID студента</param>
-        /// <returns>При успешном удалении возвращается true, иначе false.</returns>
-        public void RemoveStudent(int studentID)
+        /// <returns>Возвращает string с информацией о результате выполнения операции.</returns>
+        public string RemoveStudent(int studentID)
         {
-            var student = students.FirstOrDefault(student => student.Id == studentID);
-            if (student != null)
+            try
             {
-                students.Remove(student);
+                var student = students.FirstOrDefault(student => student.Id == studentID);
+                if (student != null)
+                {
+                    students.Remove(student);
+                    return $"Студент c ID {studentID} удален!\n";
+                }
+                return $"Студент c ID {studentID} не найден!\n";
+            }
+            catch (Exception e)
+            {
+                return $"Ошибка: {e.Message}\n";
             }
         }
 
@@ -73,14 +112,9 @@
         public List<Student> GetStudents()
         {
             List<Student> CopyList = new List<Student>();
-            foreach( var student in students)
+            foreach (var student in students)
                 CopyList.Add(new Student(student.Id, student.Name, student.Age, student.Gender, student.Grade));
             return CopyList;
-        }
-        public bool CheckIdStudentExistence(int id)
-        {
-            var student = students.FirstOrDefault(s => s.Id == id);
-            return student != null;
         }
 
     }
