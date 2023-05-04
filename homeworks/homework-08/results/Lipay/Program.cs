@@ -7,8 +7,10 @@ internal partial class Program
     {
         Console.WriteLine("Программа: Менеджер студентов");
 
-        List<StudentManager> students = new List<StudentManager>();
-
+        List<Student> students = new List<Student>();
+        StudentManager studentManager= new StudentManager();
+        
+        
         while (true)
         {
 
@@ -38,12 +40,12 @@ internal partial class Program
             switch (options)
             {
                 case 1:
-                    students.Add(new StudentManager());
+                    students.Add(new Student());
 
                     Console.Write("Введите имя: ");
-                    string firstName = Console.ReadLine();
+                    string? firstName = Console.ReadLine();
                     Console.Write("Введите фамилию: ");
-                    string lastName = Console.ReadLine();
+                    string? lastName = Console.ReadLine();
                     Console.Write("Введите возраст: ");
                     int age;
                     while (true)
@@ -81,7 +83,9 @@ internal partial class Program
                     Console.Write("Введите рейтинг студента: ");
                     double rating = double.Parse(Console.ReadLine());
 
-                    students[students.Count - 1].AddInfo(firstName, lastName, age, rating, gender);
+     
+                    studentManager.AddInfo(students[students.Count - 1],firstName, lastName, age, rating, gender);
+
                     break;
                 case 2:
                     int resultSearch;
@@ -148,7 +152,7 @@ internal partial class Program
                             Console.Write("Введите рейтинг студента: ");
                             rating = double.Parse(Console.ReadLine());
 
-                            students[resultSearch].AddInfo(firstName, lastName, age, rating, gender);
+                            studentManager.AddInfo(students[resultSearch], firstName, lastName, age, rating, gender);
                         }
                         else
                             Console.WriteLine($"Такого ID: {SerchID} не найдено.");
@@ -157,7 +161,7 @@ internal partial class Program
                     {
                         Console.Write("Введите имя для поиска: ");
                         firstName = Console.ReadLine();
-                        Console.Write("Введите имя для поиска: ");
+                        Console.Write("Введите фамилию для поиска: ");
                         lastName = Console.ReadLine();
                         if (students.Exists(x => x.FirstName == firstName && x.LastName == lastName))
                         {
@@ -203,7 +207,7 @@ internal partial class Program
                             Console.Write("Введите рейтинг студента: ");
                             rating = double.Parse(Console.ReadLine());
 
-                            students[resultSearch].AddInfo(firstName, lastName, age, rating, gender);
+                            studentManager.AddInfo(students[resultSearch], firstName, lastName, age, rating, gender);
                         }
                         else
                             Console.WriteLine($"Студента {firstName} {lastName} не найдено.");
@@ -231,8 +235,7 @@ internal partial class Program
                         int SerchID = int.Parse(Console.ReadLine());
                         if (students.Exists(x => x.ID == SerchID))
                         {
-                            resultSearch = students.FindIndex(x => x.ID == SerchID);
-                            students.RemoveAt(resultSearch);
+                            studentManager.DeleteInfo(students, SerchID);
                         }
                         else
                             Console.WriteLine($"Такого ID: {SerchID} не найдено.");
@@ -245,8 +248,7 @@ internal partial class Program
                         lastName = Console.ReadLine();
                         if (students.Exists(x => x.FirstName == firstName && x.LastName == lastName))
                         {
-                            resultSearch = students.FindIndex(x => x.FirstName == firstName && x.LastName == lastName);
-                            students.RemoveAt(resultSearch);
+                            studentManager.DeleteInfo(students, firstName,lastName);
                         }
                         else
                             Console.WriteLine($"Студента {firstName} {lastName} не найдено.");
@@ -271,9 +273,9 @@ internal partial class Program
                     break;
                 case 5:
                     Console.Write("Введите имя для поиска: ");
-                    string SearchFirstName = Console.ReadLine();
-                    Console.Write("Введите имя для поиска: ");
-                    string SearchLastName = Console.ReadLine();
+                    string? SearchFirstName = Console.ReadLine();
+                    Console.Write("Введите фамилию для поиска: ");
+                    string? SearchLastName = Console.ReadLine();
                     if (students.Exists(x => x.FirstName == SearchFirstName && x.LastName == SearchLastName))
                     {
                         int resultName = students.FindIndex(x => x.FirstName == SearchFirstName && x.LastName == SearchLastName);
