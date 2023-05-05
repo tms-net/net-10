@@ -57,9 +57,10 @@
         public string RemoveStudent(int studentID)
         {
             var student = students.FirstOrDefault(student => student.Id == studentID);
-            if (students.Remove(student))
+            if (student != null)
             {
                 BackUp();
+                students.Remove(student);
                 return $"Студент c ID {studentID} удален!\n";
             }
             return $"Студент c ID {studentID} не найден!\n";

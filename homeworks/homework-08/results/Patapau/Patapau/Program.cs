@@ -9,6 +9,14 @@ namespace Patapau
         static void Main()
         {
             StudentManager studentManager = new StudentManager();
+            studentManager.AddStudent("1", 1, 'М', 1);
+            //studentManager.RemoveStudent(1);
+            //var st = studentManager.GetStudents();
+            //Console.WriteLine(st.Count);
+            //studentManager.RollBack();
+            //var st1 = studentManager.GetStudents();
+            //Console.WriteLine(st1.Count);
+
 
             bool isRunning = true;
 
