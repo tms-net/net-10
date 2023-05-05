@@ -1,14 +1,18 @@
 ﻿namespace StudentManagerLibrary
 {
-    public class StudentManager
+    public class StudentManager : IBackUp
     {
         private int counterIdStudent = 1;
 
-        private readonly List<Student> students;
+        private List<Student> students;
+
+        private readonly Stack<List<Student>> backUp;
 
         public StudentManager()
         {
             students = new List<Student>();
+
+            backUp = new Stack<List<Student>>();
         }
 
         /// <summary>
@@ -21,17 +25,11 @@
         /// <returns>Возвращает string с информацией о результате выполнения операции.</returns>
         public string AddStudent(string name, byte age, char gender, byte grade)
         {
-            try
-            {
-                Student student = new Student(counterIdStudent, name, age, gender, grade);
-                students.Add(student);
-                counterIdStudent++;
-                return $"Студент {name} успешно добавлен.\n";
-            }
-            catch (Exception e)
-            {
-                return $"Студент не был добавлен. {e.Message}\n";
-            }
+            BackUp();
+            Student student = new Student(counterIdStudent, name, age, gender, grade);
+            students.Add(student);
+            counterIdStudent++;
+            return $"Студент {name} успешно добавлен.\n";
         }
 
         /// <summary>
@@ -41,20 +39,14 @@
         /// <returns>Возвращает string с информацией о результате выполнения операции.</returns>
         public string EditStudent(Student EditedStudent)
         {
-            try
+            int index = students.FindIndex(st => st.Id == EditedStudent.Id);
+            if (index != -1)
             {
-                int index = students.FindIndex(st => st.Id == EditedStudent.Id);
-                if (index != -1)
-                {
-                    students[index] = EditedStudent;
-                    return $"Студент c ID {EditedStudent.Id} успешно изменен.\n";
-                }
-                return $"Студент c ID {EditedStudent.Id} не найден!\n";
+                BackUp();
+                students[index] = EditedStudent;
+                return $"Студент c ID {EditedStudent.Id} успешно изменен.\n";
             }
-            catch (Exception e)
-            {
-                return $"Ошибка: {e.Message}\n";
-            }
+            return $"Студент c ID {EditedStudent.Id} не найден!\n";
         }
 
         /// <summary>
@@ -64,20 +56,13 @@
         /// <returns>Возвращает string с информацией о результате выполнения операции.</returns>
         public string RemoveStudent(int studentID)
         {
-            try
+            var student = students.FirstOrDefault(student => student.Id == studentID);
+            if (students.Remove(student))
             {
-                var student = students.FirstOrDefault(student => student.Id == studentID);
-                if (student != null)
-                {
-                    students.Remove(student);
-                    return $"Студент c ID {studentID} удален!\n";
-                }
-                return $"Студент c ID {studentID} не найден!\n";
+                BackUp();
+                return $"Студент c ID {studentID} удален!\n";
             }
-            catch (Exception e)
-            {
-                return $"Ошибка: {e.Message}\n";
-            }
+            return $"Студент c ID {studentID} не найден!\n";
         }
 
         /// <summary>
@@ -111,11 +96,27 @@
         /// <returns>Возвращает копию списока студентов </returns>
         public List<Student> GetStudents()
         {
-            List<Student> CopyList = new List<Student>();
-            foreach (var student in students)
-                CopyList.Add(new Student(student.Id, student.Name, student.Age, student.Gender, student.Grade));
-            return CopyList;
+            return students.Select(s => new Student(s.Id, s.Name, s.Age, s.Gender, s.Grade)).ToList();
         }
-
+        /// <summary>
+        /// Записывает текущее состояние журнала студентов в стэк.  
+        /// </summary>
+        public void BackUp()
+        {
+            backUp.Push(GetStudents());
+        }
+        /// <summary>
+        /// Возвращает послед. записанное состояние журнала студентов из стэка.   
+        /// </summary>
+        /// <returns>Возвращает bool если попытка успешная, иначе false. </returns>
+        public bool RollBack()
+        {
+            if (backUp.Count > 0)
+            {
+                students = backUp.Pop();
+                return true;
+            }
+            return false;
+        }
     }
 }
