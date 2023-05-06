@@ -9,12 +9,6 @@ namespace ConsoleAppForBankoOperatons
 {
     internal abstract class BankAccount : Owner, IAccountOperations
     {
-        private readonly string _accountID;
-        private bool IsActive { get; set; }
-
-        private string blockReason = "";
-        private string BankId { get; }
-
         internal BankAccount(string backID, string bankName, string ownersName, string ownersAdress, double cash = 0, double overdrive = 0)
         {
             _accountID = Guid.NewGuid().ToString();
@@ -23,23 +17,17 @@ namespace ConsoleAppForBankoOperatons
             OwnersAdress = ownersAdress;
             OwnersName = ownersName;
             amountOfCash = cash;
-            Overdrive = overdrive;
         }
-                    
+
+        protected readonly string _accountID;
+        protected string blockReason = "";
+        protected string BankId { get; }
+
+        protected bool IsActive { get; set; }
         public string BankName { get; protected set; }
 
-        public double Overdrive { get; set; }
-
         public double amountOfCash;
-
-        public bool IsCreditAccount()
-        { 
-            if (Overdrive > 0) 
-                return true;
-            else
-                return false;
-        }
-
+       
         public void ActivateAccount()
         {
             IsActive = true;
@@ -64,26 +52,23 @@ namespace ConsoleAppForBankoOperatons
             blockReason = reason;
         }
 
-        public bool DeductFundFromAccount(double expenditure)
+        public virtual bool DeductFundFromAccount(double expenditure)
         {
-            double fullAmount = amountOfCash;
-            if (IsActive)
+            if (amountOfCash > expenditure)
             {
-                if (IsCreditAccount())
-                {
-                    fullAmount += Overdrive;
-                }
-
-                if (fullAmount > expenditure)
-                { 
-                    amountOfCash -= expenditure;
-                    return true;
-                }
-                else
-                    return false;
+                amountOfCash -= expenditure;
+                return true;
             }
+            return false;           
+        }
+
+        public override string ToString()
+        {
+            string result = $"Status: {IsActive}\nAccount ID: {_accountID}\nBank Id: {BankId}\nBank's Name: {BankName}\nOwner's name: {OwnersName}\nOwner's address: {OwnersAdress}\nAmount of cash: {amountOfCash}";
+            if (IsActive)
+                return result;
             else
-                return false; 
-        }        
+                return result.Insert(result.IndexOf("Account ID"), $"Block reason: {blockReason}\n");
+        }
     }
 }
