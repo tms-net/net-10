@@ -1,0 +1,15 @@
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\obj\Debug\net7.0\Zanka_dz_5.csproj.AssemblyReference.cache
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\obj\Debug\net7.0\Zanka_dz_5.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\obj\Debug\net7.0\Zanka_dz_5.AssemblyInfoInputs.cache
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\obj\Debug\net7.0\Zanka_dz_5.AssemblyInfo.cs
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\obj\Debug\net7.0\Zanka_dz_5.csproj.CoreCompileInputs.cache
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\bin\Debug\net7.0\Zanka_dz_5.exe
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\bin\Debug\net7.0\Zanka_dz_5.deps.json
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\bin\Debug\net7.0\Zanka_dz_5.runtimeconfig.json
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\bin\Debug\net7.0\Zanka_dz_5.dll
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\bin\Debug\net7.0\Zanka_dz_5.pdb
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\obj\Debug\net7.0\Zanka_dz_5.dll
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\obj\Debug\net7.0\refint\Zanka_dz_5.dll
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\obj\Debug\net7.0\Zanka_dz_5.pdb
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\obj\Debug\net7.0\Zanka_dz_5.genruntimeconfig.cache
+C:\Users\hp\source\repos\Zanka_dz_5\Zanka_dz_5\obj\Debug\net7.0\ref\Zanka_dz_5.dll
