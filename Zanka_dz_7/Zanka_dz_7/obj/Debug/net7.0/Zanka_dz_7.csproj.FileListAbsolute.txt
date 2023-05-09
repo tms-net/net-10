@@ -1,0 +1,15 @@
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\bin\Debug\net7.0\Zanka_dz_7.exe
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\bin\Debug\net7.0\Zanka_dz_7.deps.json
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\bin\Debug\net7.0\Zanka_dz_7.runtimeconfig.json
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\bin\Debug\net7.0\Zanka_dz_7.dll
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\bin\Debug\net7.0\Zanka_dz_7.pdb
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\obj\Debug\net7.0\Zanka_dz_7.csproj.AssemblyReference.cache
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\obj\Debug\net7.0\Zanka_dz_7.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\obj\Debug\net7.0\Zanka_dz_7.AssemblyInfoInputs.cache
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\obj\Debug\net7.0\Zanka_dz_7.AssemblyInfo.cs
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\obj\Debug\net7.0\Zanka_dz_7.csproj.CoreCompileInputs.cache
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\obj\Debug\net7.0\Zanka_dz_7.dll
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\obj\Debug\net7.0\refint\Zanka_dz_7.dll
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\obj\Debug\net7.0\Zanka_dz_7.pdb
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\obj\Debug\net7.0\Zanka_dz_7.genruntimeconfig.cache
+C:\Users\hp\source\repos\Zanka_dz_7\Zanka_dz_7\obj\Debug\net7.0\ref\Zanka_dz_7.dll
