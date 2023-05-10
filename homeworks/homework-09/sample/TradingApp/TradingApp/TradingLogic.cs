@@ -1,5 +1,72 @@
 ﻿namespace TradingApp
 {
+    public class TradingLogic : ITradingLogic
+    {
+        private Dictionary<string, int> _wallet;
+        private decimal _balance;
+        private ITradingDataRetreiver _tradingDataRetreiver;
+        public event EventHandler<OrderInfo> OrderCompleted;
+
+        public TradingLogic(decimal balance, ITradingDataRetreiver tradingDataRetreiver)
+        {
+            _balance = balance;
+            _tradingDataRetreiver = tradingDataRetreiver;
+            _wallet = new Dictionary<string, int>();
+        }
+
+        public OrderInfo PlaceOrder(string symbol, int quantity, decimal price, OrderPriceType orderPriceType, OrderType orderType)
+        {
+            var orderCompleted = new OrderInfo();
+            IOrder order;
+
+            //SymbolInfo symbolInfo = _tradingDataRetreiver.RetreiveInfo(symbol, TimeSpan.MinValue, TimeSpan.MinValue);
+
+            if (orderType == OrderType.Buy)
+            {
+                order = new BuyOrder(this);
+
+                if (orderPriceType == OrderPriceType.Market)
+                {
+                    
+                }
+                else
+                {
+
+                }                
+                    
+            }
+            else
+            {
+                order = new SellOrder(this);
+
+                if (orderPriceType == OrderPriceType.Market)
+                {
+
+                }
+                else
+                {
+                    //по сути нужно запрашивать разрешение на одобрение сделки. предлагаю сделать через генерацию рандом
+                }
+            }
+
+           
+        }
+
+        private void AddSymbol(string symbol, int quantity)
+        {
+            _wallet.Add(symbol, quantity);
+        }
+
+        //fill up wallet in the start
+        public void FillWallet(Dictionary<string, int> newWallet)
+        {
+            if (newWallet != null)
+            {
+                _wallet = newWallet;
+            }
+        }
+    }
+
     // Торговая логика - Никита Кочура
     // Купить/Продать
     // По рыночной цене - 100
@@ -61,9 +128,5 @@
     {
         Buy,
         Sell
-    }
-
-    internal class TradingLogic
-    {
     }
 }
