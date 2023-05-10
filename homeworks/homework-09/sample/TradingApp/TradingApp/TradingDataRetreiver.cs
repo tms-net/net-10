@@ -28,7 +28,38 @@
         public event Action<SymbolInfo> SymbolUpdated;
     }
 
-    internal class TradingDataRetreiver
+    internal class TradingDataRetreiver : ITradingDataRetreiver
     {
+        public TradingDataRetreiver()
+        {
+            
+
+            var Companis = new Dictionary<string, string>()
+            {
+                { "MSFT", "1"},
+                { "AAPL", "1"},
+                { "AMZN", "1"},
+                { "SMSN", "1"},
+                {"SIE", "1" }
+            };
+            var timer = new Timer(ApdeitData);
+            timer.Change(100, 500);
+            
+            timer.AutoReset = true;
+            timer.Elapsed += (_, _) => Console.WriteLine($"Current time: {DateTime.Now}");
+
+        }
+
+        private void ApdeitData(object? state)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SymbolInfo RetreiveInfo(string symbolName, TimeSpan period, TimeSpan granularity)
+        {
+            
+        }
     }
+                      
+
 }

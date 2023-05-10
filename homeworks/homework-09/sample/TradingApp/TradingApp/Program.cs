@@ -1,18 +1,23 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿internal class Program
+{
+    private static void Main(string[] args)
+    {
+        Console.WriteLine("Hello, World!");
+    }
+}
 
 // delegate bool InfoUpdated(SymbolInfo symbolInfo);
 
 // UI - Павел Дунец
-    // Основной символ (тикер) -> ввод пользователя
-        // Текущее значение цены
-        // Информация по символу
+// Основной символ (тикер) -> ввод пользователя
+// Текущее значение цены
+// Информация по символу
 
-    // Сопутствующие символы
-        // Значение
-        // Изменение (↑ | ↓)
+// Сопутствующие символы
+// Значение
+// Изменение (↑ | ↓)
 
-    // Возможность изменения частоты InfoUpdated += (Handler)
-    // Функции
+// Возможность изменения частоты InfoUpdated += (Handler)
+// Функции
 
 
