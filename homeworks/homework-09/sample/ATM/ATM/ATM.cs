@@ -1,14 +1,41 @@
 ﻿namespace Banking
 {
-    internal class ATM
+    public interface ITransaction
+    {
+        event EventHandler<TransactionEventArgs> TransactionCompleted;
+    }
+
+    public delegate bool MyDelegate(long id);
+
+    internal class ATM : ITransaction
     {
         private long _cacheAmount;
 
-        public event EventHandler<TransactionEventArgs> TransactionCompleted;
+        public MyDelegate Started;
+
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set =>_name = value;
+        }
+
+        private EventHandler<TransactionEventArgs> _transactionCompleted;
+
+        event EventHandler<TransactionEventArgs> ITransaction.TransactionCompleted
+        {
+            add => _transactionCompleted += value;
+            remove => _transactionCompleted -= value;
+        }
 
         public ATM(long cashAmount)
         {
             _cacheAmount = cashAmount;
+        }
+
+        public static void MyDelegateImpl(long amount)
+        {
+
         }
 
         public void WithdrawMoney(long amount)
@@ -30,9 +57,10 @@
                 args.TransactionError = "Not enough money";
             }
 
-            if (TransactionCompleted != null)
+            if (_transactionCompleted != null)
             {
-                TransactionCompleted(this, args);
+                //_transactionCompleted?.Invoke(this, args);
+                _transactionCompleted(this, args);
             }
         }
 
