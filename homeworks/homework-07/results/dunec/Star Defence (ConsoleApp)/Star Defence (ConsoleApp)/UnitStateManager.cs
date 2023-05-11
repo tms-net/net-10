@@ -24,15 +24,7 @@ namespace Star_Defence__ConsoleApp_
 
             _enumValues = Enum.GetValues<TState>();
 
-            _states = new Dictionary<TState, List<TState>>();
-            /*
-            for (int i = 0; i < _enumValues.Length; i++)
-            { 
-                if (i < _enumValues.Length - 1)
-                    _states[i, i + 1] = true;
-                else
-                    _states[i, 0] = true;
-            }//*/
+            _states = new Dictionary<TState, List<TState>>();            
             
             Current = default;
         }
