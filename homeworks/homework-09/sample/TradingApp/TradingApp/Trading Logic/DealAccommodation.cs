@@ -30,7 +30,6 @@ namespace TradingApp
             if (_isCancelOrder)
             {
                 _isCancelOrder = false; //reset value for future orders
-
                 return false;
             }
 

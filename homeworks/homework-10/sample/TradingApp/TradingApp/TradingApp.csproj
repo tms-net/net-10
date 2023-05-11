@@ -10,4 +10,10 @@
   <ItemGroup>
     <None Remove="Trading Logic\" />
   </ItemGroup>
+<<<<<<< HEAD
+=======
+  <ItemGroup>
+    <Folder Include="Trading Logic\" />
+  </ItemGroup>
+>>>>>>> 723dc3c (Created separate class files)
 </Project>
