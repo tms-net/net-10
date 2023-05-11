@@ -20,7 +20,7 @@
         {
             var orderCompleted = new OrderInfo();
 
-            //SymbolInfo symbolInfo = _tradingDataRetreiver.RetreiveInfo(symbol, TimeSpan.MinValue, TimeSpan.MinValue);
+            SymbolInfo symbolInfo = _tradingDataRetreiver.RetreiveInfo(symbol, TimeSpan.MinValue, TimeSpan.MinValue);
 
             if (orderType == OrderType.Buy)
             {
