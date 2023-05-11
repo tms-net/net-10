@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,22 +16,23 @@ namespace Star_Defence__ConsoleApp_
         // TODO: Оптимизируйте алгоритм и структуры данных
 
         private readonly TState[] _enumValues;
-        private readonly bool[,] _states;
+        private readonly Dictionary<TState, List<TState>> _states;
 
         public UnitStateManager()
         {
             // TODO: Используйте конструктор для определения переходов между состояниями
 
             _enumValues = Enum.GetValues<TState>();
-            _states = new bool[_enumValues.Length, _enumValues.Length];
 
+            _states = new Dictionary<TState, List<TState>>();
+            /*
             for (int i = 0; i < _enumValues.Length; i++)
             { 
                 if (i < _enumValues.Length - 1)
                     _states[i, i + 1] = true;
                 else
                     _states[i, 0] = true;
-            }
+            }//*/
             
             Current = default;
         }
@@ -42,15 +44,26 @@ namespace Star_Defence__ConsoleApp_
         /// <param name="toState">Последующее состояние</param>
         public void AllowTransition(TState fromState, TState toState)
         {
+            if (Array.IndexOf(_enumValues, fromState) == -1)
+            {
+                throw new ArgumentException("Try to add unavailable State");
+            }
             // получаем индексы
-            var fromIndex = Array.IndexOf(_enumValues, fromState);
-            var toIndex = Array.IndexOf(_enumValues, toState);
-
-            if (fromIndex == -1 | toIndex == -1)
-                throw new IndexOutOfRangeException("Can't allow transition for unexist state.");
-
+            bool finded = false;
             // разрешаем переход
-            _states[fromIndex, toIndex] = true;
+            foreach (TState state in _states.Keys)
+            {
+                if (state.Equals(fromState))
+                {
+                    finded = true;
+                    break;
+                }                
+            }
+            if (!finded)
+            {
+                _states.Add(fromState, new List<TState>());
+            }
+            _states[fromState].Add(toState);
         }
 
         /// <summary>
@@ -60,23 +73,25 @@ namespace Star_Defence__ConsoleApp_
         public void MoveTo(TState toState)
         {
             // TODO: Подумайте над крайними случаями значений (edge cases)
-            
-            var fromIndex = Array.IndexOf(_enumValues, Current);
-            var toIndex = Array.IndexOf(_enumValues, toState);
-            
-            if (toIndex == -1)
+            bool finded = false;
+            //var fromIndex = Array.IndexOf(_enumValues, Current);
+            //var toIndex = Array.IndexOf(_enumValues, toState);
+            foreach (TState state in _states.Keys)
             {
-                throw new IndexOutOfRangeException("Can't transite to unexist state.");
+                if (_states[Current].IndexOf(toState) == -1)
+                {
+                    // запрещаем переход
+                    throw new InvalidOperationException($"Transition not allowed from {Current} to {toState} state.");
+                }
+                else
+                {
+                    // осуществляем переход
+                    Current = toState;
+                    finded = true;
+                    break;
+                }                
             }
-
-            if (!_states[fromIndex, toIndex])
-            {
-                // запрещаем переход
-                throw new InvalidOperationException($"Transition not allowed from {Current} to {toState} state.");
-            }
-
-            // осуществляем переход
-            Current = toState;
+            if(!finded) throw new IndexOutOfRangeException("Can't transite to unexist state.");                      
         }
 
         /// <summary>
