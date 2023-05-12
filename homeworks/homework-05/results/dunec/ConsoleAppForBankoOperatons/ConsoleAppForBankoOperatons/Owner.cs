@@ -8,7 +8,7 @@ namespace ConsoleAppForBankoOperatons
 {
     internal abstract class Owner
     {
-        protected string OwnersAdress { get; set; } = string.Empty;
-        protected string OwnersName { get; set; } = string.Empty;
+        protected string? OwnersAdress { get; set; }
+        protected string? OwnersName { get; set; }
     }
 }

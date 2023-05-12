@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleAppForBankoOperatons
+namespace ConsoleAppForBankoOperatons.Accounts
 {
     internal class PersonalBankAccount : BankAccount, IOverdrive
     {
@@ -29,20 +29,15 @@ namespace ConsoleAppForBankoOperatons
         public override bool DeductFundFromAccount(double expenditure)
         {
             double fullAmount = amountOfCash;
-            if (IsActive)
+            if (IsCreditAccount())
             {
-                if (IsCreditAccount())
-                {
-                    fullAmount += Overdrive;
-                }
+                fullAmount += Overdrive;
+            }
 
-                if (fullAmount > expenditure)
-                {
-                    amountOfCash -= expenditure;
-                    return true;
-                }
-                else
-                    return false;
+            if (fullAmount > expenditure)
+            {
+                amountOfCash -= expenditure;
+                return true;
             }
             else
                 return false;
@@ -62,9 +57,9 @@ namespace ConsoleAppForBankoOperatons
         public void TakeOffOverdrive()
         {
             if (IsCreditAccount())
-            { 
+            {
                 Overdrive = 0;
-                if (amountOfCash < 0 )
+                if (amountOfCash < 0)
                 {
                     DeactivateAccount("Negative balance");
                 }
@@ -75,7 +70,7 @@ namespace ConsoleAppForBankoOperatons
         {
             string result = "";
 
-            if (IsCreditAccount()) 
+            if (IsCreditAccount())
                 result = base.ToString() + $"\nOverdrive: true\nAmount of overdrive: {Overdrive}";
             else
                 result = base.ToString() + $"\nOverdrive: false";

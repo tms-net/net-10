@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleAppForBankoOperatons
+namespace ConsoleAppForBankoOperatons.Accounts
 {
     internal interface IAccountOperations
     {
         void ActivateAccount();
         void DeactivateAccount(string blockReason);
-        bool AddFundToAccount(double incomeCash);
+        void AddFundToAccount(double incomeCash);
         bool DeductFundFromAccount(double expenditure);
 
     }
