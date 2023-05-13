@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata.Ecma335;
 
 namespace TradingApp
 {
@@ -6,56 +7,55 @@ namespace TradingApp
         //      - InfoUpdated()
         //      - Использовать делегат для уведомления компонент пользовательского интерфейса о наличии новых цен на акции.
         //      - Класс должен получать новые данные каждые X секунд и уведомлять компонент пользовательского интерфейса.
-        //  - Получение данных для похожих символов
+        //   - Получение данных для похожих символов
 
     public interface ITradingDataRetreiver
     {
-
-        // От 01.01.2023 до now
-        // TimeSpan (from -> to) - год, день, неделя
-        // Enum -> год, день, неделя (Period)
-
-        // гранулярность
-        // Enum
-        // Timespan
         SymbolInfo RetreiveInfo(string symbolName, TimeSpan period, TimeSpan granularity);
     }
-
-    public class SymbolInfo
+    
+    public class SymbolInfo : ITradingDataRetreiver
     {
-        public string SymbolName { get; }
-        public string MarketCap { get; }
-        public IDictionary<DateTime, decimal> Data { get; }
+       
+        public delegate void MethodContainer(); //Определяем делегат
 
-        public event Action<SymbolInfo> SymbolUpdated;
-    }
+        public event MethodContainer CurrentInfo; // Определяем событие на возвращение данных каждые 2 секунды после вызова метода RetreiveInfo
+        public string SymbolName { get; } //Символ компании на бирже
+        public Dictionary<DateTime, decimal> Data { get; }
 
-    internal class TradingDataRetreiver
-    {
-        TradingDataRetreiver() 
+        public Dictionary<string, Dictionary<DateTime, decimal>> MarketCap { get; } //Словарь с датой и значением
+       
+
+        Random random = new Random();
+        
+
+        SymbolInfo()
         {
-            var company = new Dictionary<string, string>()
+            MarketCap = new Dictionary<string, decimal>()
             {
-                { "MSFT", ""},
-                { "AAPL", ""},
-                { "AMZN", ""},
-                { "GOOG", ""},
-                { "META", ""}
+                { "MSFT", Data}, //Может сюда вставить словарь с ключом датой и ценой, нагенерить значений и выдовать по запросу?
+                { "AAPL", },
+                { "AMZN", 300},
+                { "GOOG", 346},
+                { "META", 689}
             };
             int num = 0;
 
             TimerCallback tm = new TimerCallback(Count);
 
             Timer timer = new Timer(tm, num, 0, 2000);
+            
         }
-        public static void Count(object obj)
+        public void Count(object obj)
         {
-            int x = (int)obj;
-            for (int i = 1; i < 9; i++, x++)
-            {
-                Console.WriteLine($"{x * i}");
-            }
+            CurrentInfo(); //Возвращение новых данных каждые 2 сек, нужно подписаться на метод RetreiveInfo
         }
+        public SymbolInfo RetreiveInfo(string symbolName, TimeSpan period, TimeSpan granularity)
+        {
+            var price = MarketCap[symbolName];
+            return ;
+        }
+        
+        
     }
-
 }
