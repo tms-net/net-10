@@ -39,7 +39,7 @@
 
         public override string ToString()
         {
-            return $"{Name}, {Id}, {Age}, {Grade}, {Gender}";
+            return $"Name: {Name},Age: {Age},Grade: {Grade},Gender: {Gender}";
         }
     }
 }
