@@ -6,6 +6,7 @@
     <RootNamespace>hw_7</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <StartupObject>hw_7.Program</StartupObject>
   </PropertyGroup>
 
 </Project>
