@@ -36,55 +36,15 @@ namespace Patapau
 
 
         /// <summary>
-        /// Настройка переходов между состояниями (добавление разрешений)
-        /// </summary>
-        /// <param name="fromState">Исходное состояние</param>
-        /// <param name="toState">Последующее состояние</param>
-        public void AllowTransition(TState fromState, TState toState)
-        {
-            if (!dictionary.ContainsKey(fromState))
-            {
-                dictionary.Add(fromState, new HashSet<TState>() { toState });
-            }
-            else
-            {
-                dictionary[fromState].Add(toState);
-            }
-        }
-
-
-        /// <summary>
-        /// Настройка переходов между состояниями (удаление разрешений)
-        /// </summary>
-        /// <param name="fromState">Исходное состояние</param>
-        /// <param name="toState">Последующее состояние</param>
-        public void DeletePermissionTransition(TState fromState, TState toState)
-        {
-            if (dictionary.ContainsKey(fromState) && dictionary[fromState].Contains(toState))
-            {
-                if (dictionary[fromState].Count<2)
-                {
-                    dictionary.Remove(fromState);
-                }
-                else
-                {
-                    dictionary[fromState].Remove(toState);
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException($"Transition from state {Current} to state {toState} was not detected.");
-            }
-        }
-
-
-        /// <summary>
         /// Осуществить переход в состояние
         /// </summary>
         /// <param name="toState">Конечное состояние</param>
         public void MoveTo(TState toState)
         {
-
+            if (toState.Equals(Current))
+            {
+                throw new InvalidOperationException($"The object is already in this state");
+            }
             if (dictionary.ContainsKey(Current) && dictionary[Current].Contains(toState))
             {
                 Current = toState;
