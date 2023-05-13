@@ -11,10 +11,10 @@ namespace hw_7
         private readonly Dictionary<T,T> bitDict = new Dictionary<T, T>();
         private readonly T[] _enumValues;
         public T _current { get; private set; }
-        public UniteStateManager(Tuple<T, T>[] tuples)
+        public UniteStateManager(Tuple<T, T>[] tuples, T current)
         {
             _enumValues = Enum.GetValues<T>();
-            _current = default;
+            _current = current;
             foreach (var tuple in tuples)
             {
                 if (!bitDict.ContainsKey(tuple.Item1))
