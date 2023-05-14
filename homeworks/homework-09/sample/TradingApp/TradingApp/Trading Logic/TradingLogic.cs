@@ -60,9 +60,9 @@
         /// <summary>
         /// contains actions when status of order is known
         /// </summary>
-        private void OnOrderApproved(bool isOrderApproved, BuyOrder order)
+        private void OnOrderApproved(bool isOrderApproved)
         {
-            
+          
         }
         private void AddSymbol(string symbol, int quantity)
         {
