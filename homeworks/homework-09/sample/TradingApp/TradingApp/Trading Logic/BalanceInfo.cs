@@ -9,6 +9,11 @@ namespace TradingApp
         // Cash (1000)
         // Shares в валюте (изменяемое)
         public decimal Difference { get; set; }
+
+        public  BalanceInfo(decimal initialValue)
+        {
+            TotalBalance = initialValue;
+        }
     }
 }
 

@@ -3,20 +3,24 @@
     public class TradingLogic : ITradingLogic
     {
         private Dictionary<string, int> _wallet;
-        private decimal _balance;
+        private BalanceInfo _balance;
         private ITradingDataRetreiver _tradingDataRetreiver;
-        public event EventHandler<OrderInfo> OrderCompleted;
+        public event Action<OrderInfo> OrderCompleted;
 
         public event Action<BalanceInfo> BalanceChanged;
 
         public TradingLogic(decimal balance, ITradingDataRetreiver tradingDataRetreiver)
         {
-            _balance = balance;
+            _balance = new BalanceInfo(balance);
             _tradingDataRetreiver = tradingDataRetreiver;
             _wallet = new Dictionary<string, int>();
+
+            //test data start
+            AddSymbol("w", 10);
+            //test data end
         }
 
-        public OrderInfo PlaceOrder(string symbol, int quantity, decimal price, OrderPriceType orderPriceType, OrderType orderType)
+        public void PlaceOrder(string symbol, int quantity, decimal price, OrderPriceType orderPriceType, OrderType orderType)
         {
             var orderCompleted = new OrderInfo();
 
@@ -24,43 +28,47 @@
 
             if (orderType == OrderType.Buy)
             {
-                BuyOrder order = new BuyOrder(this, symbol, quantity, price, orderPriceType);
-
-                if (orderPriceType == OrderPriceType.Market)
+                if(symbolInfo != null) //validation that the symbol is presented on the market
                 {
-                    order.MakeOrderMarket();
-                }
-                else
-                {
-                    order.MakeOrderPrice();
-                }
+                    BuyOrder order = new BuyOrder(this, symbol, quantity, price, orderPriceType);
 
-                order.OrderApproved += OnOrderApproved;
+                    if (orderPriceType == OrderPriceType.Market)
+                    {
+                        order.MakeOrderMarket();
+                    }
+                    else
+                    {
+                        order.MakeOrderPrice();
+                    }
+
+                    order.OrderApproved += OnOrderApproved;
+                }
             }
             else
             {
-                SellOrder order = new SellOrder(this, symbol, quantity, price, orderPriceType);
-
-                if (orderPriceType == OrderPriceType.Market)
+                if (_wallet.ContainsKey(symbol) && _wallet[symbol] >= quantity)
                 {
-                    order.MakeOrderMarket();
-                }
-                else
-                {
-                    order.MakeOrderPrice();
-                }
+                    SellOrder order = new SellOrder(this, symbol, quantity, price, orderPriceType);
 
-                order.OrderApproved += OnOrderApproved;
+                    if (orderPriceType == OrderPriceType.Market)
+                    {
+                        order.MakeOrderMarket();
+                    }
+                    else
+                    {
+                        order.MakeOrderPrice();
+                    }
+
+                    order.OrderApproved += OnOrderApproved;
+                }
             }
-
-            return null;
         }
 
 
         /// <summary>
         /// contains actions when status of order is known
         /// </summary>
-        private void OnOrderApproved(bool isOrderApproved)
+        private void OnOrderApproved(bool isOrderApproved, OrderInfo orderInfo)
         {
           
         }
