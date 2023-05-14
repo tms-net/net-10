@@ -8,7 +8,7 @@ namespace TradingApp
 
         public string Symbol { get; init; }
         public int Quantity { get; init; }
-        public decimal Price { get; init; }
+        public decimal Price { get; init; } 
         public OrderPriceType PriceType { get; init; }
 
         public event Action<bool> OrderApproved;
@@ -33,16 +33,8 @@ namespace TradingApp
         ///make buy order with market price
         /// fires event OrderApproved based on response from DealAccommodation
         /// </summary>   
-        public bool MakeOrderPrice()
-        {
-            Random random = new Random();
-            if (random.Next(0, 100) > 50)
-            {
-                OrderApproved?.Invoke(_da.ApproveBuyOrder(this));
-                return true;
-            }
-            return false;
-        }
+        public void MakeOrderPrice()=>OrderApproved?.Invoke(_da.ApproveBuyOrder(this));
+        
         public bool CancelOrder() => _da.CancelCurrentOrder();            
     }   
 }

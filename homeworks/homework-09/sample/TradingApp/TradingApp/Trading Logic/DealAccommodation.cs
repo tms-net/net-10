@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection.Metadata.Ecma335;
+
 namespace TradingApp
 {
     // the class is responsible for approving/declying buy/sell offers
@@ -7,7 +9,6 @@ namespace TradingApp
     public class DealAccommodation
     {
         private bool _isCancelOrder;
-
         public bool ApproveBuyOrder(IOrder order)
         {
             Respond();
@@ -16,7 +17,11 @@ namespace TradingApp
                 _isCancelOrder = false; //reset value for future orders
                 return false;
             }
-
+            if (order.PriceType == OrderPriceType.Price)
+            {
+                if (!ClientDecision())
+                    return false;
+            }
             return true;
         }
 
@@ -47,6 +52,15 @@ namespace TradingApp
             Random random = new Random();
             TimeSpan respondTime = new TimeSpan(0, 0, random.Next(0, 5));
             Thread.Sleep(respondTime);
+        }
+
+        //whether client accepts deal terms 
+        private bool ClientDecision()
+        {
+            Random random= new Random();
+            if (random.Next(0,100)>50)
+                return true;
+            return false;
         }
     }
 }
