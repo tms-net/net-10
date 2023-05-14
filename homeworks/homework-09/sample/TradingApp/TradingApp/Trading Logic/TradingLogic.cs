@@ -11,7 +11,7 @@ namespace TradingApp
 
         public event Action<BalanceInfo> BalanceChanged;
 
-        public TradingLogic(BalanceInfo balance, ITradingDataRetreiver tradingDataRetreiver)
+        public TradingLogic(decimal balance, ITradingDataRetreiver tradingDataRetreiver)
         {
             _balance = new BalanceInfo(balance);
             _tradingDataRetreiver = tradingDataRetreiver;
@@ -70,9 +70,12 @@ namespace TradingApp
         /// <summary>
         /// contains actions when status of order is known
         /// </summary>
-        private void OnOrderApproved(bool isOrderApproved)
+
+        private void OnOrderApproved(OrderInfo orderInfo)
         {
-          
+            _balance.UpdateBalance(orderInfo.DealPrice, orderInfo.OrderType);
+
+            OrderCompleted?.Invoke(orderInfo);
         }
         
         private void AddSymbol(string symbol, int quantity)
@@ -87,18 +90,6 @@ namespace TradingApp
             {
                 _wallet = newWallet;
             }
-        }
-
-        public void Deposit(decimal amount)
-        {
-            _balance += amount;
-
-            var balanceInfo = new BalanceInfo
-            {
-                TotalBalance = _balance,
-                Difference = amount
-            };
-            // BalanceChanged?.Invoke(balanceInfo); // уведомление о пополнении баланса
         }
     }
 

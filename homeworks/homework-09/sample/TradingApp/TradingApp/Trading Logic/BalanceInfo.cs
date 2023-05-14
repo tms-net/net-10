@@ -10,9 +10,9 @@ namespace TradingApp
         // Shares в валюте (изменяемое)
         public decimal Difference { get; set; } // изменение, которое внес последний ордер 
 
-        public BalanceInfo(decimal balanceValue)
+        public BalanceInfo(decimal initialValue)
         {
-            _balance = balanceValue;
+            _balance = initialValue;
         }
 
         public void UpdateBalance(decimal amount, OrderType orderType)

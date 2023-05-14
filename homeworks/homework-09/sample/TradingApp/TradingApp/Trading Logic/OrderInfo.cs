@@ -10,7 +10,6 @@ namespace TradingApp
         public OrderType OrderType { get; set; }
         public DealStatus Status { get; set; }
 
-        public OrderType OrderType { get; set; }
     }
 }
 
