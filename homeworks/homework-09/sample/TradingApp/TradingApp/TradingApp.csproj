@@ -10,7 +10,4 @@
   <ItemGroup>
     <None Remove="Trading Logic\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Trading Logic\" />
-  </ItemGroup>
 </Project>
