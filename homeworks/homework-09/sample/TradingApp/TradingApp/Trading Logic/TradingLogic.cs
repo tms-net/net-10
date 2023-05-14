@@ -62,9 +62,8 @@
         /// </summary>
         private void OnOrderApproved(bool isOrderApproved)
         {
-
+          
         }
-
         private void AddSymbol(string symbol, int quantity)
         {
             _wallet.Add(symbol, quantity);
@@ -77,6 +76,18 @@
             {
                 _wallet = newWallet;
             }
+        }
+
+        public void Deposit(decimal amount)
+        {
+            _balance += amount;
+
+            var balanceInfo = new BalanceInfo
+            {
+                TotalBalance = _balance,
+                Difference = amount
+            };
+            // BalanceChanged?.Invoke(balanceInfo); // уведомление о пополнении баланса
         }
     }
 
