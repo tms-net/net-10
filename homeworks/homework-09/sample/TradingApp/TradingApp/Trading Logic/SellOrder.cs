@@ -12,6 +12,7 @@ namespace TradingApp
         public SellOrder(TradingLogic tradingLogic, string symbol, int quantity, decimal price, OrderPriceType orderPriceType)
         {
             _tl = tradingLogic;
+            _da = new DealAccommodation();
         }
 
         public void MakeOrderMarket()=>OrderApproved?.Invoke(_da.ApproveSellOrder(this));
@@ -28,7 +29,7 @@ namespace TradingApp
         }
 
         
-        public bool CancelOrder()=> return _da.CancelCurrentOrder(this);
+        public bool CancelOrder()=>_da.CancelCurrentOrder();
         
     }
 }

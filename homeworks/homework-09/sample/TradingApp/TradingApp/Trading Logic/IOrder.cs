@@ -7,9 +7,10 @@ namespace TradingApp
 
         public void MakeOrderMarket();
 
-        public void MakeOrderPrice();
+        public bool MakeOrderPrice();
 
 		public bool CancelOrder();
+
     }
 }
 

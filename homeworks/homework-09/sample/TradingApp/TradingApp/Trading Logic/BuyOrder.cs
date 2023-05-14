@@ -33,7 +33,7 @@ namespace TradingApp
         ///make buy order with market price
         /// fires event OrderApproved based on response from DealAccommodation
         /// </summary>   
-        public void MakeOrderPrice()
+        public bool MakeOrderPrice()
         {
             Random random = new Random();
             if (random.Next(0, 100) > 50)
