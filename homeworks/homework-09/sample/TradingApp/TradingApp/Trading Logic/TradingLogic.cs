@@ -6,6 +6,7 @@ namespace TradingApp
     {
         private Dictionary<string, int> _wallet;
         private BalanceInfo _balance;
+        private BalanceInfo _balance;
         private ITradingDataRetreiver _tradingDataRetreiver;
         public event Action<OrderInfo> OrderCompleted;
 
@@ -14,11 +15,16 @@ namespace TradingApp
         public TradingLogic(decimal balance, ITradingDataRetreiver tradingDataRetreiver)
         {
             _balance = new BalanceInfo(balance);
+            _balance = new BalanceInfo(balance);
             _tradingDataRetreiver = tradingDataRetreiver;
             _wallet = new Dictionary<string, int>();
 
             //test data start
+<<<<<<< HEAD
             //AddSymbol("w", 10);
+=======
+            AddSymbol("w", 10);
+>>>>>>> 619e580 (Added  check logic)
             //test data end
         }
 
@@ -33,7 +39,10 @@ namespace TradingApp
                 if(symbolInfo != null) //validation that the symbol is presented on the market
                 {
                     BuyOrder order = new BuyOrder(this, symbol, quantity, price, orderPriceType);
+<<<<<<< HEAD
                     order.OrderApproved += OnOrderApproved;
+=======
+>>>>>>> 619e580 (Added  check logic)
 
                     if (orderPriceType == OrderPriceType.Market)
                     {
@@ -43,6 +52,7 @@ namespace TradingApp
                     {
                         order.MakeOrderPrice();
                     }
+<<<<<<< HEAD
                 }
             }
             else if (_wallet.ContainsKey(symbol) && _wallet[symbol] >= quantity)
@@ -64,12 +74,36 @@ namespace TradingApp
                 throw new ArgumentException();
             }
             
+=======
+
+                    order.OrderApproved += OnOrderApproved;
+                }
+            }
+            else
+            {
+                if (_wallet.ContainsKey(symbol) && _wallet[symbol] >= quantity)
+                {
+                    SellOrder order = new SellOrder(this, symbol, quantity, price, orderPriceType);
+
+                    if (orderPriceType == OrderPriceType.Market)
+                    {
+                        order.MakeOrderMarket();
+                    }
+                    else
+                    {
+                        order.MakeOrderPrice();
+                    }
+
+                    order.OrderApproved += OnOrderApproved;
+                }
+            }
+>>>>>>> 619e580 (Added  check logic)
         }
 
         /// <summary>
         /// contains actions when status of order is known
         /// </summary>
-        private void OnOrderApproved(OrderInfo orderInfo)
+        private void OnOrderApproved(bool isOrderApproved, OrderInfo orderInfo)
         {
             _balance.UpdateBalance(orderInfo.DealPrice, orderInfo.OrderType);
 
