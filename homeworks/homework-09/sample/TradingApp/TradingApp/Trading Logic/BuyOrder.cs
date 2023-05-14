@@ -27,10 +27,7 @@ namespace TradingApp
         /// make buy order with market price
         /// fires event OrderApproved based on response from DealAccommodation
         /// </summary>
-        public void MakeOrderMarket()
-        {
-            OrderApproved?.Invoke(_da.ApproveBuyOrder(this)); //call event
-        }
+        public void MakeOrderMarket()=>OrderApproved?.Invoke(_da.ApproveBuyOrder(this)); //call event
 
         /// <summary>
         ///make buy order with market price
@@ -38,13 +35,15 @@ namespace TradingApp
         /// </summary>   
         public void MakeOrderPrice()
         {
-            OrderApproved?.Invoke(_da.ApproveBuyOrder(this)); //call event
+            Random random = new Random();
+            if (random.Next(0, 100) > 50)
+            {
+                OrderApproved?.Invoke(_da.ApproveBuyOrder(this));
+                return true;
+            }
+            return false;
         }
-
-        public bool CancelOrder()
-        {
-            return _da.CancelCurrentOrder();            
-        }
+        public bool CancelOrder() => _da.CancelCurrentOrder();            
     }   
 }
 
