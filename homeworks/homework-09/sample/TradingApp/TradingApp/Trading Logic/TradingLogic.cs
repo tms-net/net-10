@@ -12,7 +12,7 @@ namespace TradingApp
 
         public event Action<BalanceInfo> BalanceChanged;
 
-        public TradingLogic(decimal balance, ITradingDataRetreiver tradingDataRetreiver)
+        public TradingLogic(BalanceInfo balance, ITradingDataRetreiver tradingDataRetreiver)
         {
             _balance = new BalanceInfo(balance);
             _balance = new BalanceInfo(balance);
@@ -105,7 +105,10 @@ namespace TradingApp
         /// </summary>
         private void OnOrderApproved(bool isOrderApproved, OrderInfo orderInfo)
         {
-            _balance.UpdateBalance(orderInfo.DealPrice, orderInfo.OrderType);
+            if(orderInfo.Status == DealStatus.Completed)
+            {
+                //order is approved
+            }
 
             OrderCompleted?.Invoke(orderInfo);
         }
@@ -127,6 +130,18 @@ namespace TradingApp
             {
                 _wallet = newWallet;
             }
+        }
+
+        public void Deposit(decimal amount)
+        {
+            _balance += amount;
+
+            var balanceInfo = new BalanceInfo
+            {
+                TotalBalance = _balance,
+                Difference = amount
+            };
+            // BalanceChanged?.Invoke(balanceInfo); // уведомление о пополнении баланса
         }
     }
 }
