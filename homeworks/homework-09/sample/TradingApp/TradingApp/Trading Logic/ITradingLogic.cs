@@ -11,7 +11,7 @@ namespace TradingApp
 
         // Продать когда цена Y (есть на балансе)
 
-        OrderInfo PlaceOrder(
+        void PlaceOrder(
             string symbol,
             int quantity,
             decimal price,

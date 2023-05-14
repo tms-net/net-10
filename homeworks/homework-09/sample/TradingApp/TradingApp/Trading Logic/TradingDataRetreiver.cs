@@ -21,14 +21,24 @@
 
     public class SymbolInfo
     {
-        public string SymbolName { get; }
+        public string SymbolName { get; set; }
         public string MarketCap { get; }
         public IDictionary<DateTime, decimal> Data { get; }
 
         public event Action<SymbolInfo> SymbolUpdated;
     }
 
-    internal class TradingDataRetreiver
+    internal class TradingDataRetreiver : ITradingDataRetreiver
     {
+        public SymbolInfo RetreiveInfo(string symbolName, TimeSpan period, TimeSpan granularity)
+        {
+            SymbolInfo symbolInfo = new SymbolInfo();
+
+            //test data start
+            symbolInfo.SymbolName = "www";
+            //test data end
+
+            return symbolInfo;
+        }
     }
 }
