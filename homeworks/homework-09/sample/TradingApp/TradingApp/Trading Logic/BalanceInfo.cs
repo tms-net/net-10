@@ -8,21 +8,29 @@ namespace TradingApp
         // Balance
         // Cash (1000)
         // Shares в валюте (изменяемое)
-        public decimal Difference { get; set; }
+        public decimal Difference { get; set; } // изменение, которое внес последний ордер 
 
-
-        public void ApdateBalance(decimal amount)
+        public BalanceInfo(decimal balanceValue)
         {
-            //депозит и снатяие
-            _balance += amount;
-
-            var balanceInfo = new BalanceInfo
-            {
-                TotalBalance = _balance,
-                Difference = amount
-            };
-            // BalanceChanged?.Invoke(balanceInfo); // уведомление о пополнении баланса
+            _balance = balanceValue;
         }
+
+        public void UpdateBalance(decimal amount, OrderType orderType)
+        {
+            if (orderType == OrderType.Buy)
+            {
+                _balance += amount;
+                Difference = +amount;
+            }
+            else if (orderType == OrderType.Sell)
+            {
+                _balance -= amount;
+                Difference = amount;
+            }
+
+            TotalBalance = _balance;
+        }
+
     }
 }
 

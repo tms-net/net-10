@@ -13,7 +13,7 @@ namespace TradingApp
 
         public TradingLogic(decimal balance, ITradingDataRetreiver tradingDataRetreiver)
         {
-           // _balance = BalanceInfo;
+            _balance = new BalanceInfo(balance);
             _tradingDataRetreiver = tradingDataRetreiver;
             _wallet = new Dictionary<string, int>();
         }
@@ -62,30 +62,14 @@ namespace TradingApp
         /// <summary>
         /// contains actions when status of order is known
         /// </summary>
-        private void OnOrderApproved(bool isOrderApproved)
+        private void OnOrderApproved(OrderInfo orderInfo)
         {
-            if (isOrderApproved)
-            {
-                Console.WriteLine("Заказ подтвержден");
-                decimal totalPrice = quantity * price;
-                decimal updatedBalance = _balance - totalPrice;
-                _balance = updatedBalance;
+            _balance.UpdateBalance(orderInfo.DealPrice, orderInfo.OrderType);
 
-                // Генерация события BalanceChanged
-                var balanceInfo = new BalanceInfo
-                {
-                    TotalBalance = _balance,
-                    Difference = -totalPrice
-                };
-                BalanceChanged?.Invoke(balanceInfo);
-            }
-            else
-            {
-                // Логика при отказе в заказе
-                Console.WriteLine("Заказ отклонен");
-            }
-            
+
+            OrderCompleted?.Invoke(orderInfo);
         }
+        
         private void AddSymbol(string symbol, int quantity)
         {
             _wallet.Add(symbol, quantity);
@@ -99,7 +83,7 @@ namespace TradingApp
                 _wallet = newWallet;
             }
         }
-
+       
     }
 
     // Торговая логика - Никита Кочура
