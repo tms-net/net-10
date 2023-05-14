@@ -9,7 +9,7 @@
 
         public event Action<BalanceInfo> BalanceChanged;
 
-        public TradingLogic(decimal balance, ITradingDataRetreiver tradingDataRetreiver)
+        public TradingLogic(BalanceInfo balance, ITradingDataRetreiver tradingDataRetreiver)
         {
             _balance = new BalanceInfo(balance);
             _tradingDataRetreiver = tradingDataRetreiver;
@@ -70,7 +70,12 @@
         /// </summary>
         private void OnOrderApproved(bool isOrderApproved, OrderInfo orderInfo)
         {
-          
+            if(orderInfo.Status == DealStatus.Completed)
+            {
+                //order is approved
+            }
+
+            OrderCompleted?.Invoke(orderInfo);
         }
         private void AddSymbol(string symbol, int quantity)
         {
@@ -95,7 +100,8 @@
                 TotalBalance = _balance,
                 Difference = amount
             };
-            // BalanceChanged?.Invoke(balanceInfo); // уведомление о пополнении баланса
+
+            BalanceChanged?.Invoke(balanceInfo); // уведомление о пополнении баланса
         }
     }
 
