@@ -1,9 +1,11 @@
-﻿namespace TradingApp
+﻿using System.Diagnostics;
+
+namespace TradingApp
 {
     public class TradingLogic : ITradingLogic
     {
         private Dictionary<string, int> _wallet;
-        private decimal _balance;
+        private BalanceInfo _balance;
         private ITradingDataRetreiver _tradingDataRetreiver;
         public event EventHandler<OrderInfo> OrderCompleted;
 
@@ -11,7 +13,7 @@
 
         public TradingLogic(decimal balance, ITradingDataRetreiver tradingDataRetreiver)
         {
-            _balance = balance;
+           // _balance = BalanceInfo;
             _tradingDataRetreiver = tradingDataRetreiver;
             _wallet = new Dictionary<string, int>();
         }
@@ -62,7 +64,27 @@
         /// </summary>
         private void OnOrderApproved(bool isOrderApproved)
         {
-          
+            if (isOrderApproved)
+            {
+                Console.WriteLine("Заказ подтвержден");
+                decimal totalPrice = quantity * price;
+                decimal updatedBalance = _balance - totalPrice;
+                _balance = updatedBalance;
+
+                // Генерация события BalanceChanged
+                var balanceInfo = new BalanceInfo
+                {
+                    TotalBalance = _balance,
+                    Difference = -totalPrice
+                };
+                BalanceChanged?.Invoke(balanceInfo);
+            }
+            else
+            {
+                // Логика при отказе в заказе
+                Console.WriteLine("Заказ отклонен");
+            }
+            
         }
         private void AddSymbol(string symbol, int quantity)
         {
@@ -78,17 +100,6 @@
             }
         }
 
-        public void Deposit(decimal amount)
-        {
-            _balance += amount;
-
-            var balanceInfo = new BalanceInfo
-            {
-                TotalBalance = _balance,
-                Difference = amount
-            };
-            // BalanceChanged?.Invoke(balanceInfo); // уведомление о пополнении баланса
-        }
     }
 
     // Торговая логика - Никита Кочура
