@@ -1,9 +1,14 @@
-﻿namespace ShopSimulator
+﻿using System;
+
+namespace ShopSimulator
 {
     public class Shop
     {
         private Thread[] _cahierThreads;
         private Queue<Person> _peopleQueue; // Эмуляция очереди клиентов
+        private bool _isShopOpen;
+        private object locker = new();
+        private readonly int WAITINGTIME = 100;
 
         public Shop(int cahierCount)
         {
@@ -18,6 +23,7 @@
 
         public void Open()
         {
+            _isShopOpen = true;
             Array.ForEach(_cahierThreads, thread => thread.Start());
 
             Console.WriteLine($"Добро пожаловать, вас обслуживает {_cahierThreads.Length} касс(ы)");
@@ -25,20 +31,42 @@
 
         public void Enter(Person person)
         {
-            // TODO: Реализовать логику постановки клиента в очередь
-
             Console.WriteLine($"{person.Name} вошел в магазин");
+            _peopleQueue.Enqueue(person);
+
         }
 
         public void Close()
         {
-            // TODO: Реализовать гарантированное обслуживание всех клиентов после закрытия
+            _isShopOpen = false;
         }
 
         private void ServeCustomer()
         {
-            // TODO: Реализовать логику обслуживания клиента из очереди
-            // Использовать свойство клиента для эмуляции времени обслуживания с помощью Thread.Sleep()
+            while(_isShopOpen || _peopleQueue.Count() > 0)
+            {
+                Person curPerson = null;
+
+                lock (locker)
+                {
+                    if (_peopleQueue.Count() > 0)
+                    {
+                        curPerson = _peopleQueue.Dequeue();
+                    }
+                }
+
+                if(curPerson != null)
+                {
+                    Console.WriteLine($"{curPerson.Name} обслуживается сейчас");
+                    Thread.Sleep(curPerson.ProcessingTime);
+                    Console.WriteLine($"{curPerson.Name} обслужен");
+                }
+                else
+                {
+                    Console.WriteLine("Queue is empty. Waiting..."); //
+                    Thread.Sleep(WAITINGTIME);
+                }                
+            }
         }
     }
 }
