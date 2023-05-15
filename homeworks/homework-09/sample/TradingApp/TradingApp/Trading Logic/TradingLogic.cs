@@ -28,7 +28,7 @@ namespace TradingApp
 
             SymbolInfo symbolInfo = _tradingDataRetreiver.RetreiveInfo(symbol, TimeSpan.MinValue, TimeSpan.MinValue);
 
-            if (orderType == OrderType.Buy)
+            if (orderType == OrderType.Buy && (_balance.TotalBalance >= price * quantity))
             {
                 if(symbolInfo != null) //validation that the symbol is presented on the market
                 {
