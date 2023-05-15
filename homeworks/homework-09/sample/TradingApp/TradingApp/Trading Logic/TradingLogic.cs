@@ -18,7 +18,7 @@ namespace TradingApp
             _wallet = new Dictionary<string, int>();
 
             //test data start
-            AddSymbol("w", 10);
+            //AddSymbol("w", 10);
             //test data end
         }
 
@@ -75,13 +75,18 @@ namespace TradingApp
 
             OrderCompleted?.Invoke(orderInfo);
         }
-        
+
+        /// <summary>
+        /// add one symbol with a specified quantity to the wallet
+        /// </summary>
         private void AddSymbol(string symbol, int quantity)
         {
             _wallet.Add(symbol, quantity);
         }
 
-        //fill up wallet at the start
+        /// <summary>
+        /// fill up wallet at the start
+        /// </summary>
         public void FillWallet(Dictionary<string, int> newWallet)
         {
             if (newWallet != null)

@@ -12,7 +12,6 @@ namespace TradingApp
         public void MakeOrderPrice();
 
 		public bool CancelOrder();
-
     }
 }
 
