@@ -3,12 +3,31 @@ namespace TradingApp
 {
     public class BalanceInfo
     {
-        public decimal TotalBalance { get; set; }
+        public decimal TotalBalance { get; private set; }
+        private decimal _balance;
+        public decimal Difference { get; private set;} // изменение, которое внес последний ордер 
 
-        // Balance
-        // Cash (1000)
-        // Shares в валюте (изменяемое)
-        public decimal Difference { get; set; }
+        public BalanceInfo(decimal initialValue)
+        {
+            _balance = initialValue;
+        }
+
+        public void UpdateBalance(decimal amount, OrderType orderType)
+        {
+            if (orderType == OrderType.Buy)
+            {
+                _balance += amount;
+                Difference = amount;
+            }
+            else if (orderType == OrderType.Sell)
+            {
+                _balance -= amount;
+                Difference = amount;
+            }
+
+            TotalBalance = _balance;
+        }
+
     }
 }
 
