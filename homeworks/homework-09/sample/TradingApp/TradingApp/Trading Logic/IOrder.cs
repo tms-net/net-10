@@ -5,7 +5,7 @@ namespace TradingApp
 	{
         public OrderPriceType PriceType { get; init; }
 
-        public event Action<bool> OrderApproved;
+        public event Action<OrderInfo> OrderApproved;
 
         public void MakeOrderMarket();
 

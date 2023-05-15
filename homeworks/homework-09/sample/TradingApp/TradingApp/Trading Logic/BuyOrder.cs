@@ -1,17 +1,19 @@
 ﻿using System;
 namespace TradingApp
 {
-	public class BuyOrder : IOrder
-	{
+    public class BuyOrder : IOrder
+    {
         private TradingLogic _tl;
         private DealAccommodation _da;
 
         public string Symbol { get; init; }
         public int Quantity { get; init; }
-        public decimal Price { get; init; } 
+        public decimal Price { get; init; }
+
+        private OrderInfo _orderInfo;
         public OrderPriceType PriceType { get; init; }
 
-        public event Action<bool> OrderApproved;
+        public event Action<OrderInfo> OrderApproved;
 
         public BuyOrder(TradingLogic tradingLogic, string symbol, int quantity, decimal price, OrderPriceType orderPriceType)
         {
@@ -27,15 +29,30 @@ namespace TradingApp
         /// make buy order with market price
         /// fires event OrderApproved based on response from DealAccommodation
         /// </summary>
-        public void MakeOrderMarket()=>OrderApproved?.Invoke(_da.ApproveBuyOrder(this)); //call event
+        public void MakeOrderMarket()
+        {
+            _da.ApproveBuyOrder(this);
+            _orderInfo.Status = DealStatus.Completed;
+            OrderApproved?.Invoke(_orderInfo);
+        }//call event
 
         /// <summary>
         ///make buy order with market price
         /// fires event OrderApproved based on response from DealAccommodation
         /// </summary>   
-        public void MakeOrderPrice()=>OrderApproved?.Invoke(_da.ApproveBuyOrder(this));
-        
-        public bool CancelOrder() => _da.CancelCurrentOrder();            
-    }   
-}
+        public void MakeOrderPrice()
+        {
+            _da.ApproveBuyOrder(this);
+            _orderInfo.Status = DealStatus.Completed;
+            OrderApproved?.Invoke(_orderInfo);
+        }
+
+        public bool CancelOrder()
+        {
+            _orderInfo.Status = DealStatus.Cancelled;
+            return _da.CancelCurrentOrder();
+        }
+    }
+}/* на входе - параметры с конутруктры
+  * на выход е- event orderinfo*/
 
