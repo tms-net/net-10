@@ -17,6 +17,7 @@ namespace TradingApp
 
         public SellOrder(TradingLogic tradingLogic, string symbol, int quantity, decimal price, OrderPriceType orderPriceType)
         {
+            _orderInfo = new OrderInfo();
             _orderInfo.Symbol = symbol;
             _orderInfo.DealPrice = quantity * price;
             Symbol = symbol;

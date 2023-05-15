@@ -17,7 +17,10 @@ namespace TradingApp
 
         public BuyOrder(TradingLogic tradingLogic, string symbol, int quantity, decimal price, OrderPriceType orderPriceType)
         {
+            _orderInfo = new OrderInfo();
             _tl = tradingLogic;
+            _orderInfo.Symbol = symbol;
+            _orderInfo.DealPrice = quantity * price;
             _da = new DealAccommodation();
             Symbol = symbol;
             Quantity = quantity;

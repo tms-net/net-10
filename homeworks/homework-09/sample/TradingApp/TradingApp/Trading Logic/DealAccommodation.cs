@@ -9,9 +9,9 @@ namespace TradingApp
     public class DealAccommodation
     {
         private bool _isCancelOrder;
+
         public bool ApproveBuyOrder(IOrder order)
         {
-            Respond();
             if (_isCancelOrder)
             {
                 _isCancelOrder = false; //reset value for future orders
@@ -27,7 +27,6 @@ namespace TradingApp
 
         public bool ApproveSellOrder(IOrder order)
         {
-            Respond();
             if (_isCancelOrder)
             {
                 _isCancelOrder = false; //reset value for future orders
@@ -45,15 +44,7 @@ namespace TradingApp
 
             return true;
         }
-
-        //imitation of serever/client respond
-        private void Respond()
-        {
-            Random random = new Random();
-            TimeSpan respondTime = new TimeSpan(0, 0, random.Next(0, 5));
-            Thread.Sleep(respondTime);
-        }
-
+       
         //whether client accepts deal terms 
         private bool ClientDecision()
         {

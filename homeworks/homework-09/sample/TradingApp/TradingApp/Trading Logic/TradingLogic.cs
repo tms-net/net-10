@@ -33,6 +33,7 @@ namespace TradingApp
                 if(symbolInfo != null) //validation that the symbol is presented on the market
                 {
                     BuyOrder order = new BuyOrder(this, symbol, quantity, price, orderPriceType);
+                    order.OrderApproved += OnOrderApproved;
 
                     if (orderPriceType == OrderPriceType.Market)
                     {
@@ -42,17 +43,14 @@ namespace TradingApp
                     {
                         order.MakeOrderPrice();
                     }
-
-                    order.OrderApproved += OnOrderApproved;
                 }
             }
-            else
-            {
-                if (_wallet.ContainsKey(symbol) && _wallet[symbol] >= quantity)
+            else if (_wallet.ContainsKey(symbol) && _wallet[symbol] >= quantity)
                 {
                     SellOrder order = new SellOrder(this, symbol, quantity, price, orderPriceType);
+                    order.OrderApproved += OnOrderApproved;
 
-                    if (orderPriceType == OrderPriceType.Market)
+                if (orderPriceType == OrderPriceType.Market)
                     {
                         order.MakeOrderMarket();
                     }
@@ -60,17 +58,17 @@ namespace TradingApp
                     {
                         order.MakeOrderPrice();
                     }
-
-                    order.OrderApproved += OnOrderApproved;
                 }
+            else
+            {
+                throw new ArgumentException();
             }
+            
         }
-
 
         /// <summary>
         /// contains actions when status of order is known
         /// </summary>
-
         private void OnOrderApproved(OrderInfo orderInfo)
         {
             _balance.UpdateBalance(orderInfo.DealPrice, orderInfo.OrderType);
@@ -92,12 +90,4 @@ namespace TradingApp
             }
         }
     }
-
-    // Торговая логика - Никита Кочура
-    // Купить/Продать
-    // По рыночной цене - 100
-    // Ордер
-    // Цена достигла значения X 90
-    // Отмена ордера при значении Y 80
-    // Баланс    
 }

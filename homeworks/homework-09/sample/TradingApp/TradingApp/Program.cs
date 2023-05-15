@@ -19,7 +19,7 @@ using TradingApp;
     // Функции
 
 
-    TradingLogic tradingLogic = new TradingLogic(100, new TradingDataRetreiver());
+    TradingLogic tradingLogic = new TradingLogic(100000, new TradingDataRetreiver());
     tradingLogic.OrderCompleted += OnOrderCompleted;
     tradingLogic.PlaceOrder("www", 1, 10, OrderPriceType.Market, OrderType.Buy);
 

@@ -3,7 +3,7 @@ namespace TradingApp
 {
     public class BalanceInfo
     {
-        public decimal TotalBalance { get; private set; }
+        public decimal TotalBalance { get => _balance; private set { _balance = value; } }
         private decimal _balance;
         public decimal Difference { get; private set;} // изменение, которое внес последний ордер 
 
