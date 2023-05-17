@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-
-namespace TradingApp.Trading_Logic
+﻿namespace TradingApp.Trading_Logic
 {
     internal class ThreadOrder
     {
@@ -27,13 +20,13 @@ namespace TradingApp.Trading_Logic
         static void Threadbody(ThreadOrder threadOrder)
         {
 
-            Thread threadBody = new Thread(Threadcheck);
+            Thread threadBody = new Thread(() => Threadcheck(threadOrder));
             threadBody.Start();
             Thread.Sleep(1000);
             placeOrder();
             Thread.Sleep(1000);
             ////currentPrice = 800/*ссылаемся на цену с биржи */;
-            threadOrder.currentPrice;
+            //threadOrder.currentPrice;
             Thread.Sleep(1000);
             orderStatus = false;
             threadBody.Join();
@@ -42,9 +35,9 @@ namespace TradingApp.Trading_Logic
         /// <summary>
         /// сравниваем текущую цену с ценой биржи
         /// </summary>
-        static void Threadcheck(ThreadOrder threadOrder, OrderType orderType)
+        static void Threadcheck(ThreadOrder threadOrder/*, OrderType orderType*/)
         {
-            //OrderType MyOrder1 = OrderType.Buy;
+            OrderType orderType = OrderType.Buy;
             //OrderType MyOrder2 = OrderType.Sell;
             while (orderStatus)
             {
@@ -67,17 +60,13 @@ namespace TradingApp.Trading_Logic
             }
 
         }
-        static void Main(string[] args)
+
+        static void CheckOrderPrice(double currentPrice, double dinamicPrice)
         {
-            static int CheckOrderPrice(double currentPrice, double dinamicPrice)
-            {
-                ThreadOrder threadOrder = new ThreadOrder();
-                threadOrder.requestedPrice = dinamicPrice;
-                threadOrder.currentPrice = currentPrice;
-                Threadbody(threadOrder);
-
-            }
-
+            ThreadOrder threadOrder = new ThreadOrder();
+            threadOrder.requestedPrice = dinamicPrice;
+            threadOrder.currentPrice = currentPrice;
+            Threadbody(threadOrder);
         }
     }
 }

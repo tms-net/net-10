@@ -1,8 +1,9 @@
-﻿using TradingApp;
+﻿using System;
+using TradingApp;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    static void Main(string[] args)
     {
         // Отображение
         //  - Экраны (Screen) ; Страница (Page) ; View
@@ -18,9 +19,10 @@ internal class Program
         //  - ITradingLogic
 
         var random = new Random();
-        var tradingDataRetreiver = new TradingDataRetreiver();
-        var tradingLogic = new TradingLogic();
         var currentBalance = random.Next(1000, 100000);
+
+        var tradingDataRetreiver = new TradingDataRetreiver();
+        var tradingLogic = new TradingLogic(currentBalance, tradingDataRetreiver);        
 
         // Получить информацию для отображения данных
         var symbolName = TradingDataFromConsole.GetSymbolFromConsole();
@@ -30,10 +32,10 @@ internal class Program
         // Отобразить данные
         var symbolData = tradingDataRetreiver.RetreiveInfo(symbolName, period, granularity);
 
-        var console = new TradingDataFromConsole(symbolData, currentBalance);
+        var console = new TradingDataFromConsole(symbolData, (decimal)currentBalance, tradingLogic);
 
         // Опции для изменения отображения данных
-        console.ShowMainInfo();        
+        console.ShowMainInfo();
 
         // Опции для создания ордера
         Console.WriteLine("Опции:");
@@ -54,12 +56,20 @@ internal class Program
     internal class TradingDataFromConsole
     {
         private SymbolInfo _symbolData;
-        private int _currentBalance;
+        private decimal _currentBalance;
 
-        public TradingDataFromConsole(SymbolInfo symbolData, int currentBalance)
+        public TradingDataFromConsole(SymbolInfo symbolData, decimal currentBalance, ITradingLogic tradingLogic)
         {
             _symbolData = symbolData;
             _currentBalance = currentBalance;
+
+            tradingLogic.BalanceChanged += TradingLogic_BalanceChanged;
+        }
+
+        private void TradingLogic_BalanceChanged(BalanceInfo balanceInfo)
+        {
+            _currentBalance = balanceInfo.TotalBalance;
+            ShowMainInfo();
         }
 
         internal static string GetOptionFromConsole()

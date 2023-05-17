@@ -15,16 +15,16 @@ namespace TradingApp
 
         public event Action<OrderInfo> OrderApproved;
 
-        public BuyOrder(TradingLogic tradingLogic, string symbol, int quantity, decimal price, OrderPriceType orderPriceType)
+        public BuyOrder(TradingLogic tradingLogic, string symbol, int quantity, decimal? price, OrderPriceType orderPriceType)
         {
             _orderInfo = new OrderInfo();
             _tl = tradingLogic;
             _orderInfo.Symbol = symbol;
-            _orderInfo.DealPrice = quantity * price;
+            _orderInfo.DealPrice = (quantity * price) ?? default;
             _da = new DealAccommodation();
             Symbol = symbol;
             Quantity = quantity;
-            Price = price;
+            Price = price ?? default;
             PriceType = orderPriceType;
         }
 
