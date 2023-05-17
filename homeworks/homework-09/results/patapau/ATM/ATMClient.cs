@@ -6,11 +6,14 @@
 
         private decimal? _accountBalance; // Nullable Value Type
 
-        public event EventHandler<ClientBalanceEventArgs> _clientBalance;
+        private TransactionStatus _transactionStatus;
+
+        public event EventHandler<ClientEventArgs> _clientEvent;
 
         public ATMClient(ATM atm)
         {
             _atm = atm;
+            _atm._transactionCompleted += CheckTransaction;
         }
 
         /// <summary>
@@ -28,24 +31,37 @@
         /// <param name="amount">сумма для снятия</param>
         public void Withdraw(long amount)
         {
-            if (amount <= _accountBalance)
+
+            if (amount <= 0 || amount > _accountBalance)
+            {
+                ClientEventArgs args = new ClientEventArgs();
+                args.TransactionStatus = TransactionStatus.Failed;
+                args.TransactionError = "Incorrect withdrawal amount";
+                if (_clientEvent != null)
+                {
+                    _clientEvent(this, args);
+                }
+            }
+            else
             {
                 _atm.WithdrawMoney(amount);
-                _accountBalance -= amount;
+                if (_transactionStatus == TransactionStatus.Succeeded)
+                {
+                    _accountBalance -= amount;
+                }
             }
         }
-
         /// <summary>
         /// .Пополнить банкомат средствами
         /// </summary>
         /// <param name="amount">сумма пополнения</param>
         public void TopUp(long amount)
         {
-            if (amount > 0)
+            _atm.TopUpMoney(amount);
+            if (_transactionStatus == TransactionStatus.Succeeded)
             {
-                _atm.TopUpMoney(amount);
                 _accountBalance += amount;
-            }
+            } 
         }
 
         /// <summary>
@@ -54,20 +70,32 @@
         /// <exception cref="NotImplementedException"></exception>
         public void ViewBalance()
         {
-            ClientBalanceEventArgs args = new ClientBalanceEventArgs(_accountBalance);
-            if (_clientBalance != null)
+            ClientEventArgs args = new ClientEventArgs(_accountBalance);
+            if (_clientEvent != null)
             {
-                _clientBalance(this, args);
+                _clientEvent(this, args);
             }
         }
+
+        void CheckTransaction(object sender, TransactionEventArgs args)
+        {
+            _transactionStatus = args.TransactionStatus;
+        }
+
+
     }
 
 
-    public class ClientBalanceEventArgs
+    public class ClientEventArgs
     {
         public decimal? Balance { get; set; }
+        public TransactionStatus TransactionStatus { get; set; }
+        public string TransactionError { get; set; }
+        public ClientEventArgs()
+        {
 
-        public ClientBalanceEventArgs(decimal? balance)
+        }
+        public ClientEventArgs(decimal? balance)
         {
             Balance = balance;
         }

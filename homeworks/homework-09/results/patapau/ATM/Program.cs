@@ -7,20 +7,34 @@ var atm = new ATM(10000);
 
 atm._transactionCompleted += (sender, args) =>
 {
-    Console.WriteLine($"Transaction completed: {args.BalanceAfter}");
+    if (args.TransactionStatus == TransactionStatus.Succeeded)
+    {
+        Console.WriteLine($"Transaction completed: {args.BalanceAfter}");
+    }
+    else
+    {
+        Console.WriteLine($"Transaction error: {args.TransactionError}");
+    }
 };
 
 for (int i = 0; i < 10; i++)
 {
     var client = new ATMClient(atm);
-    client._clientBalance += GetClientBalance;
-    Console.Write($"Client {i + 1} ");
+    client._clientEvent += GetClientEvent;
+    Console.WriteLine($"Client {i + 1} ");
     DoRandomActions(client);
 }
 
-void GetClientBalance(object sender, ClientBalanceEventArgs args)
+void GetClientEvent(object sender, ClientEventArgs args)
 {
-    Console.WriteLine($"Client balance {args.Balance}");
+    if (args.TransactionStatus == TransactionStatus.Failed)
+    {
+        Console.WriteLine($"Incorrect withdrawal amount");
+    }
+    else
+    {
+        Console.WriteLine($"Client balance {args.Balance}");
+    }
 }
 
 void DoRandomActions(ATMClient client)
@@ -32,7 +46,7 @@ void DoRandomActions(ATMClient client)
     var numberOfActions = random.Next(10);
     for (int i = 0; i < numberOfActions; i++)
     {
-        actions[random.Next(0,2)](random.Next(10, 1000));
+        actions[random.Next(0, 2)](random.Next(10, 1000));
         client.ViewBalance();
     }
 }

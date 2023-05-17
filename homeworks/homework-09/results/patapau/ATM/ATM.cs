@@ -49,7 +49,7 @@
             else
             {
                 args.TransactionStatus = TransactionStatus.Failed;
-                args.TransactionError = "Top-up amount is less than 1";
+                args.TransactionError = "Top-up amount is less than or equal to 0";
             }
 
             if (_transactionCompleted != null)
