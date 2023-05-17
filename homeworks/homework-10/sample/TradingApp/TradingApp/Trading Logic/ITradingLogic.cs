@@ -6,9 +6,9 @@ namespace TradingApp
         void PlaceOrder(
             string symbol,
             int quantity,
-            decimal price,
             OrderPriceType orderPriceType,
-            OrderType orderType);
+            OrderType orderType,
+            decimal? price = null);
 
         event Action<BalanceInfo> BalanceChanged;
     }

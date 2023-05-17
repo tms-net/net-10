@@ -3,6 +3,7 @@ namespace TradingApp
 {
     public enum DealStatus
     {
+        Pending,
         Completed,
         Cancelled
     }

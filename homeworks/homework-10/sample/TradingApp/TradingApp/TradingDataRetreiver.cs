@@ -20,7 +20,13 @@ namespace TradingApp
         public string SymbolName { get; } //Символ компании на бирже
         public decimal MarketCap { get; } //Словарь с датой и значением
         public IDictionary<DateTime, decimal> Data { get; }
+
         public event Action<SymbolInfo> SymbolUpdated;
+
+        public decimal? MarketPrice()
+        {
+            return Data?.LastOrDefault().Value; // Enumerable.LastOrDefault
+        }
 
         public SymbolInfo()
         {

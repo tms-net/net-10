@@ -4,66 +4,110 @@ namespace TradingApp
 {
     public class TradingLogic : ITradingLogic
     {
-        private Dictionary<string, int> _wallet;
+        private Dictionary<string, int> _stocks;
         private BalanceInfo _balance;
         private ITradingDataRetreiver _tradingDataRetreiver;
         public event Action<OrderInfo> OrderCompleted;
 
         public event Action<BalanceInfo> BalanceChanged;
 
-        public TradingLogic(decimal balance, ITradingDataRetreiver tradingDataRetreiver)
+        public TradingLogic(
+            decimal balance,
+            ITradingDataRetreiver tradingDataRetreiver)
         {
+            // Currency Balance
             _balance = new BalanceInfo(balance);
+
             _tradingDataRetreiver = tradingDataRetreiver;
-            _wallet = new Dictionary<string, int>();
+
+            // Stocks
+            _stocks = new Dictionary<string, int>();
+
+            // Full Balance
+            //  - _blance + _stocks omn current price
 
             //test data start
             //AddSymbol("w", 10);
             //test data end
         }
 
-        public void PlaceOrder(string symbol, int quantity, decimal price, OrderPriceType orderPriceType, OrderType orderType)
+        public void PlaceOrder(
+            string symbol,
+            int quantity,
+            OrderPriceType orderPriceType,
+            OrderType orderType,
+            Nullable<decimal> price = default
+            //decimal? price = null // только для Price OrderType
+            )
         {
             var orderCompleted = new OrderInfo();
 
-            SymbolInfo symbolInfo = _tradingDataRetreiver.RetreiveInfo(symbol, TimeSpan.MinValue, TimeSpan.MinValue);
+            ValidateOrder(symbol, quantity, orderPriceType, orderType, price);
 
-            if (orderType == OrderType.Buy && (_balance.TotalBalance >= price * quantity))
+            IOrder order = orderType switch
             {
-                if(symbolInfo != null) //validation that the symbol is presented on the market
-                {
-                    BuyOrder order = new BuyOrder(this, symbol, quantity, price, orderPriceType);
-                    order.OrderApproved += OnOrderApproved;
+                OrderType.Buy => new BuyOrder(this, symbol, quantity, price, orderPriceType),
+                OrderType.Sell => new SellOrder(this, symbol, quantity, price, orderPriceType),
+                _ => throw new ArgumentException()
+            };
 
-                    if (orderPriceType == OrderPriceType.Market)
-                    {
-                        order.MakeOrderMarket();
-                    }
-                    else
-                    {
-                        order.MakeOrderPrice();
-                    }
-                }
+            order.OrderApproved += OnOrderApproved;
+
+            if (orderPriceType == OrderPriceType.Market)
+            {
+                order.MakeOrderMarket();
             }
-            else if (_wallet.ContainsKey(symbol) && _wallet[symbol] >= quantity)
-                {
-                    SellOrder order = new SellOrder(this, symbol, quantity, price, orderPriceType);
-                    order.OrderApproved += OnOrderApproved;
-
-                if (orderPriceType == OrderPriceType.Market)
-                    {
-                        order.MakeOrderMarket();
-                    }
-                    else
-                    {
-                        order.MakeOrderPrice();
-                    }
-                }
             else
             {
-                throw new ArgumentException();
+                order.MakeOrderPrice();
             }
-            
+        }
+
+        private /* ValidationResult */ /*bool*/ void ValidateOrder(string symbol, int quantity, OrderPriceType orderPriceType, OrderType orderType, decimal? price)
+        {
+
+            // Validate order
+            //  - Есть баланс для покупки
+            //  - Валидный символ (?)
+            //  - Соответствие значений параметров
+            //      - Цена указана для Price Order Type
+
+            SymbolInfo symbolInfo = _tradingDataRetreiver.RetreiveInfo(symbol, TimeSpan.MinValue, TimeSpan.MinValue);
+
+            if (symbolInfo == null)
+            {
+                //return false;
+                throw new InvalidOperationException("Invalid symbol");
+            }
+
+            if (quantity <= 0)
+            {
+                // throw new ArgumentException();
+
+                throw new InvalidOperationException("Invalid quantity");
+            }
+
+            if (orderPriceType == OrderPriceType.Price && !price.HasValue)
+            {
+                throw new InvalidOperationException("Invalid price");
+            }
+
+            if (orderPriceType == OrderPriceType.Price && _balance.TotalBalance < price * quantity)
+            {
+                throw new InvalidOperationException("Invalid balance");
+            }
+
+            if (orderPriceType == OrderPriceType.Market &&
+                _balance.TotalBalance < symbolInfo.MarketPrice() * quantity)
+            {
+                throw new InvalidOperationException("Invalid balance");
+            }
+
+            if (orderType == OrderType.Sell && 
+               (!_stocks.TryGetValue(symbol, out var currentQuantity) || currentQuantity < quantity))
+            {
+                throw new InvalidOperationException("Invalid quantity");
+            }
         }
 
         /// <summary>
@@ -81,7 +125,7 @@ namespace TradingApp
         /// </summary>
         private void AddSymbol(string symbol, int quantity)
         {
-            _wallet.Add(symbol, quantity);
+            _stocks.Add(symbol, quantity);
         }
 
         /// <summary>
@@ -91,7 +135,7 @@ namespace TradingApp
         {
             if (newWallet != null)
             {
-                _wallet = newWallet;
+                _stocks = newWallet;
             }
         }
     }
