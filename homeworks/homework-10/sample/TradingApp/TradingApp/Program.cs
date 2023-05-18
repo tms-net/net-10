@@ -5,6 +5,9 @@ internal class Program
 {
     static void Main(string[] args)
     {
+        Console.InputEncoding = System.Text.Encoding.UTF8;
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
         // Отображение
         //  - Экраны (Screen) ; Страница (Page) ; View
         //      - Home (Главный)
@@ -25,14 +28,14 @@ internal class Program
         var tradingLogic = new TradingLogic(currentBalance, tradingDataRetreiver);        
 
         // Получить информацию для отображения данных
-        var symbolName = TradingDataFromConsole.GetSymbolFromConsole();
-        var period = TradingDataFromConsole.GetPeriodFromConsole();
-        var granularity = TradingDataFromConsole.GetGranularityFromConsole();
+        var symbolName = TradingDataInConsole.GetSymbolFromConsole();
+        var period = TradingDataInConsole.GetPeriodFromConsole();
+        var granularity = TradingDataInConsole.GetGranularityFromConsole();
 
         // Отобразить данные
         var symbolData = tradingDataRetreiver.RetreiveInfo(symbolName, period, granularity);
 
-        var console = new TradingDataFromConsole(symbolData, (decimal)currentBalance, tradingLogic);
+        var console = new TradingDataInConsole(symbolData, (decimal)currentBalance, tradingLogic);
 
         // Опции для изменения отображения данных
         console.ShowMainInfo();
@@ -43,22 +46,48 @@ internal class Program
         Console.WriteLine(" 2. Изменить период");
         Console.WriteLine(" 3. Создать ордер");
 
+        //while (true)
+        //{
+        //    var option = TradingDataInConsole.GetOptionFromConsole();
+
+        //    // Обработка опции
+
+        //    console.ShowMainInfo();
+        //}
+
         while (true)
         {
-            var option = TradingDataFromConsole.GetOptionFromConsole();
+            bool exit = false;
+            switch (TradingDataInConsole.ShowMenuOfOptions())
+            {
+                case 1:
+                    { }
+                    break;
+                case 2:
+                    { }
+                    break;
+                case 3:
+                    {
 
-            // Обработка опции
-
-            console.ShowMainInfo();
+                    }
+                    break;
+                case 0:
+                    { exit = true; }
+                    break;
+            }
+            if (exit || TradingDataInConsole.AskAnotherAction())
+            {
+                break;
+            }
         }
     }
 
-    internal class TradingDataFromConsole
+    internal class TradingDataInConsole
     {
         private SymbolInfo _symbolData;
         private decimal _currentBalance;
 
-        public TradingDataFromConsole(SymbolInfo symbolData, decimal currentBalance, ITradingLogic tradingLogic)
+        public TradingDataInConsole(SymbolInfo symbolData, decimal currentBalance, ITradingLogic tradingLogic)
         {
             _symbolData = symbolData;
             _currentBalance = currentBalance;
@@ -70,6 +99,40 @@ internal class Program
         {
             _currentBalance = balanceInfo.TotalBalance;
             ShowMainInfo();
+        }
+
+        public static int ShowMenuOfOptions()
+        {
+            while (true)
+            {
+                Console.WriteLine("Options:");
+                Console.WriteLine(" 1. Change granularity");
+                Console.WriteLine(" 2. Change period");
+                Console.WriteLine(" 3. Create order");
+                Console.WriteLine(" 0. Exit");
+                switch (Console.ReadLine())
+                {
+                    case "1": return 1;
+                    case "2": return 2;
+                    case "3": return 3;
+                    case "0": return 0;
+                    default: Console.WriteLine("Unavailable option code"); break;
+                }
+            }
+        }
+
+        public static bool AskAnotherAction()
+        {
+            while (true)
+            {
+                Console.WriteLine("Do you want to make anotehr action?(y/n)");
+                switch (Console.ReadLine())
+                {
+                    case "y": case "Y": return true;
+                    case "n": case "N": return false;
+                    default: Console.WriteLine("Uncorrect input"); break;
+                }
+            }
         }
 
         internal static string GetOptionFromConsole()
@@ -99,7 +162,7 @@ internal class Program
             {
                 Console.WriteLine("Input Symbol name:");
                 result = Console.ReadLine();
-                if (result == null || result.Length != 0)
+                if (result == null || result.Length == 0)
                 {
                     Console.WriteLine($"Incorrect Symbol name {result}");
                 }
@@ -109,31 +172,31 @@ internal class Program
                 }
             }
         }
+
         internal static TimeSpan GetPeriodFromConsole()
         {
-            DateTime dateTimeFrom = DateTime.Now;
-            DateTime dateTimeTo = DateTime.Now;
             Console.WriteLine("For retrieving info need period");
             while (true)
             {
                 Console.WriteLine("Input date FROM: ");
-                if (!DateTime.TryParse(Console.ReadLine(), out dateTimeFrom))
+                if (!DateTime.TryParse(Console.ReadLine(), out var dateTimeFrom))
                 {
                     Console.WriteLine($"Uncorrect date {dateTimeFrom}");
                 }
-                else { break; }
-            }
-
-            while (true)
-            {
-                Console.WriteLine("Input date TO: ");
-                if (!DateTime.TryParse(Console.ReadLine(), out dateTimeTo) || dateTimeTo < dateTimeFrom)
-                {
-                    Console.WriteLine($"Uncorrect date {dateTimeTo}");
-                }
                 else
+                { 
+                    continue;
+                }
+
+                //Console.WriteLine("Input date TO: ");
+                //if (!DateTime.TryParse(Console.ReadLine(), out var dateTimeTo) || dateTimeTo < dateTimeFrom)
+                //{
+                //    Console.WriteLine($"Uncorrect date {dateTimeTo}");
+                //}
+                //else
                 {
-                    return dateTimeTo - dateTimeFrom;
+                    //return dateTimeTo - dateTimeFrom;
+                    return DateTime.UtcNow - dateTimeFrom;
                 }
             }
         }
@@ -141,13 +204,13 @@ internal class Program
         {
             while (true)
             {
-                Console.WriteLine("For retrieving info choose granularity (1 - Day, 2 - Week, 3 - Month, 4 - Year)");
+                Console.WriteLine("For retrieving info choose granularity (1 - 5min, 2 - 30min, 3 - 1hiur, 4 - Day)");
                 switch (Console.ReadLine())
                 {
-                    case "1": return DateTime.Now.AddDays(1) - DateTime.Now;
-                    case "2": return DateTime.Now.AddDays(7) - DateTime.Now;
-                    case "3": return DateTime.Now.AddMonths(1) - DateTime.Now;
-                    case "4": return DateTime.Now.AddYears(1) - DateTime.Now;
+                    case "1": return TimeSpan.FromMinutes(5);
+                    case "2": return TimeSpan.FromMinutes(30);
+                    case "3": return TimeSpan.FromHours(1);
+                    case "4": return TimeSpan.FromDays(1);
                     default: Console.WriteLine("Unavailable granularity code"); break;
                 }
             }

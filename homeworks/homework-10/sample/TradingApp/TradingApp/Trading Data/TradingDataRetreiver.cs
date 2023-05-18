@@ -1,6 +1,6 @@
-﻿using System;
-using System.Data;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Linq;
+using System.Text.Json;
+using TradingApp.Data;
 
 namespace TradingApp
 {
@@ -19,7 +19,7 @@ namespace TradingApp
     {
         public string SymbolName { get; } //Символ компании на бирже
         public decimal MarketCap { get; } //Словарь с датой и значением
-        public IDictionary<DateTime, decimal> Data { get; }
+        public IDictionary<DateTime, decimal> Data { get; set; }
 
         public event Action<SymbolInfo> SymbolUpdated;
 
@@ -28,7 +28,7 @@ namespace TradingApp
             return Data?.LastOrDefault().Value; // Enumerable.LastOrDefault
         }
 
-        public SymbolInfo()
+        public SymbolInfo(string symbolName)
         {
             // Сгененрировать объем акций
         }
@@ -46,19 +46,103 @@ namespace TradingApp
         {
             GenerateData();
 
+            // Получить из файла
+
+            // addr1:(object1)              addr2:(object2)         (object3) -> (object)(object2)(object3)
+
+            // path: (23rekjfnberbokerbmeprelkge09ruger98guer0ue8rgye9rgy98eyg89eygekrjgbeg9e8rug23rkjb)
+            //        ^      ^     
+
+            // 1: полностью преобразовать
+            //    обычное содержимое файла -> Substring(3,6) -> "файла"
+
+            // 2: потоковое чтение/запись файла
+            //    (от байта 3 прочитай 5 байт) -> "файла"
+
+            // Файл vs Память
+            // 1. Доступ к памяти быстрее
+            // 2. Файл доступен всем приложениям -> persistent, память - temporary
+
+            // потоковое
+            FileStream fileStream = File.OpenRead("");
+            //  опредленная блокировка операций с файлом
+
+            // полностью преобразовать
+            var content = File.ReadAllText("");
+            File.WriteAllText("path", content);
+
+            var msftData = JsonSerializer.Deserialize<TradingData>(content);
+
+            // данные (бинарные, текстовые) -> объект
+            // Сериализация
+
             // Дополнение текущими данными
             //  - Каждые 5 мин
-            
+
             Timer timer = new Timer(UpdateData, null, MinimalGranularityMs, MinimalGranularityMs);
         }
 
         public SymbolInfo RetreiveInfo(string symbolName, TimeSpan period, TimeSpan granularity)
         {
+            var now = DateTime.UtcNow;
+            var start = now - period;
+
+            // start -------------------------------------  now
+            //       {            period                  }
+
+            // 0    5m  10m   15m   20m     25m   30m   35m  - 5 min granularity
+
+            // 0    5m  10m   15m    20m     25m   30m   35m  - 15 min granularity
+            // {                  }{                   }{   } 
+            
+            // 15:00 <-       15:15 <-            15:30 <- - now 15:35 -> 15:45
+            // [start ->       end]                        - average
+
+            
+
             // Получение данных
+            var symbolData = symbolName switch
+            {
+                "MSFT" => _dataMSFT,
+                "AAPL" => _dataAAPL,
+                _ => throw new NotSupportedException()
+            };
 
             // Аггрегация данных
 
-            throw new NotImplementedException();
+            // minGranularity = 5min
+            // granularity = 15min
+            // 0,1,2,3,4,5,6,7
+            // 0,0,0,1,1,1,2,2,2
+
+            // 15/5 = 3
+
+            // index * minGranularity % granularity
+
+            var groupping = ((long) granularity.TotalMilliseconds) / MinimalGranularityMs;
+
+            // LINQ to Objects
+            // LINQ = Language Intergated Query
+
+            // from symbolData
+            // where dataPoint.Key > start
+            // select new { index, dataPoint }
+            // group by dataIndex.index / groupping
+
+            IDictionary<DateTime, decimal> data = symbolData
+                .Where(dataPoint => dataPoint.Key > start) // filter
+                // анонимный класс
+                .Select((dataPoint, index) => new { index, dataPoint }) // map / проекция
+                .ToLookup(dataIndex => dataIndex.index / groupping) // group
+                .ToDictionary( // reduce материализация
+                    group => group.Min(dataIndex => dataIndex.dataPoint.Key), // аггрегация для ключа
+                    group => group.Average(dataIndex => dataIndex.dataPoint.Value) // аггрегация для значения
+                ); 
+
+            return new SymbolInfo(symbolName)
+            {
+                Data = data
+            };
         }
 
         private void UpdateData(object? state)
@@ -79,6 +163,17 @@ namespace TradingApp
                 _dataMSFT.Add(dateNow, msftStartPrice + msftStartPrice * (decimal)_random.NextDouble());
                 _dataAAPL.Add(dateNow, aaplStartPrice + aaplStartPrice * (decimal)_random.NextDouble());
             }
+
+            // сохранить в файл
+
+            // объект -> данные (бинарные, текстовые) -> текстовые -> формат данных
+            
+            // бинарные -> в виде как объекты
+
+            // .txt -> текст
+            // .csv - comma separated values
+            // .xml - extended markup language
+            // .json - javascript object notation
         }
 
         private void GenerateData()
