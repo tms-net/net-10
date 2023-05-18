@@ -140,23 +140,3 @@ namespace TradingApp
         }
     }
 }
-
-
-
-
-/*example of making trade order from Program class
- * 
- * 
- * 
-TradingLogic tradingLogic = new TradingLogic(100000, new TradingDataRetreiver());
-tradingLogic.OrderCompleted += OnOrderCompleted;
-tradingLogic.PlaceOrder("www", 1, 10, OrderPriceType.Market, OrderType.Buy);
-
-static void OnOrderCompleted(OrderInfo orderInfo)
-{
-if(orderInfo.Status == DealStatus.Completed)
-{
-    Console.WriteLine("Test has been passed!");
-}
-}
-*/
