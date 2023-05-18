@@ -1,6 +1,5 @@
 ﻿using Homework_8;
 
-CommandManager cm = new CommandManager();
 StudentManager sm = new StudentManager();
 Student student0 = new Student()
     {
@@ -46,48 +45,48 @@ Student student4 = new Student()
     };
 
 AddStudentCommand addStudent = new AddStudentCommand(sm, student0);
-cm.CallCommand(addStudent);
+sm.CallCommand(addStudent);
 addStudent = new AddStudentCommand(sm, student1);
-cm.CallCommand(addStudent);
+sm.CallCommand(addStudent);
 addStudent = new AddStudentCommand(sm, student2);
-cm.CallCommand(addStudent);
+sm.CallCommand(addStudent);
 addStudent = new AddStudentCommand(sm, student3);
-cm.CallCommand(addStudent);
+sm.CallCommand(addStudent);
 addStudent = new AddStudentCommand(sm, student4);
-cm.CallCommand(addStudent);
+sm.CallCommand(addStudent);
 Console.Write("\n\n5 students have been added:");
 sm.ConsoleOutCurrentListOfUsers();
 
 var removeStudent = new RemoveStudentCommand(sm, student2);
-cm.CallCommand(removeStudent);
+sm.CallCommand(removeStudent);
 Console.Write("\n\n2nd student has been removed:");
 sm.ConsoleOutCurrentListOfUsers();
 
-cm.UndoCommand();
+sm.UndoCommand();
 Console.Write("\n\nUndo removing 2 student:");
 sm.ConsoleOutCurrentListOfUsers();
 
 var addMark = new AddMarkCommand(sm, student4, 7);
-cm.CallCommand(addMark);
+sm.CallCommand(addMark);
 Console.Write("\n\nA new mark added for the last student:");
 sm.ConsoleOutCurrentListOfUsers();
 
 var editFirstNameCommand = new EditFirstNameCommand(sm, student4, "EditedFirstName");
-cm.CallCommand(editFirstNameCommand);
+sm.CallCommand(editFirstNameCommand);
 Console.Write("\n\nChanged first name for the last student:");
 sm.ConsoleOutCurrentListOfUsers();
 
 var editLastNameCommand = new EditLastNameCommand(sm, student4, "EditedLastName");
-cm.CallCommand(editLastNameCommand);
+sm.CallCommand(editLastNameCommand);
 Console.Write("\n\nChanged last name for the last student:");
 sm.ConsoleOutCurrentListOfUsers();
 
 var editAgeCommand = new EditAgeCommand(sm, student4, 19);
-cm.CallCommand(editAgeCommand);
+sm.CallCommand(editAgeCommand);
 Console.Write("\n\nChanged Age for the last student:");
 sm.ConsoleOutCurrentListOfUsers();
 
-cm.UndoCommand();
+sm.UndoCommand();
 Console.Write("\n\nUndo changes of age 4 student:");
 sm.ConsoleOutCurrentListOfUsers();
 

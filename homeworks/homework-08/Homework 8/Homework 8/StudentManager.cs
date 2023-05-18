@@ -5,16 +5,34 @@ namespace Homework_8
 	{
 		private Dictionary<Guid, Student> _students; //contains unique Id and a reference to student
 		private Dictionary<Guid, string> _studentsId; //contans <"first_name+last_name" , unique_id> for searching by firstname/lastname
+        private Stack<ICommand> _commandHistory;
 
-		public Dictionary<Guid, Student> Students => _students;
+        public Dictionary<Guid, Student> Students => _students;
 
 		public StudentManager()
 		{
 			_students = new Dictionary<Guid, Student>();
 			_studentsId = new Dictionary<Guid, string>();
-		}
 
-		public void AddStudent(Student newStudent)
+            _commandHistory = new Stack<ICommand>();
+        }
+
+        public void CallCommand(ICommand newCommand)
+        {
+            newCommand.Do();
+            _commandHistory.Push(newCommand);
+        }
+
+        public void UndoCommand()
+        {
+            if (_commandHistory.Count > 0)
+            {
+                var deniedCommand = _commandHistory.Pop();
+                deniedCommand.Undo();
+            }
+        }
+
+        public void AddStudent(Student newStudent)
 		{
 			_students.Add(newStudent.ID, newStudent);
 			_studentsId.Add(newStudent.ID, $"{newStudent.FirstName.ToLower()}{newStudent.LastName.ToLower()}");
