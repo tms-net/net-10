@@ -143,39 +143,13 @@ internal class Car : Vehicle, IHaveDoors, IHaveHood, IHaveTrunk
     }
 }
 
-internal class Truck : Vehicle, IHaveDoors, IHaveHood
+internal class Truck : Car
 {
     bool _isHoodOpen;
 
     public Truck(string year, string make, string model, int numberOfDoors) : base(year, make, model, numberOfDoors)
     {
 
-    }
-
-    public void OpenDoor(int doorId)
-    {
-        if (doorId < _isDoorOpen.Length && CurrentSpeed == 0)
-        {
-            _isDoorOpen[doorId] = true;
-        }
-    }
-
-    public void CloseDoor(int doorId)
-    {
-        if (doorId < _isDoorOpen.Length && CurrentSpeed == 0)
-        {
-            _isDoorOpen[doorId] = false;
-        }
-    }
-
-    public void OpenHood()
-    {
-        _isHoodOpen = true;
-    }
-
-    public void CloseHood()
-    {
-        _isHoodOpen = false;
     }
 
     public override void Start()
