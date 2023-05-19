@@ -217,7 +217,7 @@ internal class Program
         }
 
 
-        internal static decimal SetDealPriceFromConsole()
+        internal static decimal GetDealPriceFromConsole()
         {
             decimal result;
 
@@ -236,7 +236,7 @@ internal class Program
             }
         }
 
-        internal static DealStatus SetStatusFromConsole()
+        internal static DealStatus GetStatusFromConsole()
         {
             while (true)
             {
@@ -251,7 +251,7 @@ internal class Program
             }
         }
 
-        internal static int SetQuantityFromConsole()
+        internal static int GetQuantityFromConsole()
         {
             int result = 0;
             while (true)
@@ -268,7 +268,7 @@ internal class Program
             }
         }
 
-        internal static OrderPriceType SetOrderPriceTypeFromConsole()
+        internal static OrderPriceType GetOrderPriceTypeFromConsole()
         {
             while (true)
             {
@@ -282,7 +282,7 @@ internal class Program
             }
         }
 
-        internal static OrderType SetOrderTypeTypeFromConsole()
+        internal static OrderType GetOrderTypeTypeFromConsole()
         {
             while (true)
             {
