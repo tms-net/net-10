@@ -54,6 +54,8 @@ internal class Program
 
         //    console.ShowMainInfo();
         //}
+        BuyOrder? buyOrder = null;
+        SellOrder? sellOrder = null;
 
         while (true)
         {
@@ -68,17 +70,33 @@ internal class Program
                     break;
                 case 3:
                     {
-
+                        switch (TradingDataInConsole.ShowCreatNewOrderMenu())
+                        {
+                            case 1:
+                                {  
+                                    if (TradingDataInConsole.IsOrderExist(buyOrder)) 
+                                    {
+                                        buyOrder = new BuyOrder(tradingLogic, TradingDataInConsole.GetSymbolFromConsole(), TradingDataInConsole.GetQuantityFromConsole(),
+                                            TradingDataInConsole.GetDealPriceFromConsole(), TradingDataInConsole.GetOrderPriceTypeFromConsole());
+                                    }                                    
+                                } 
+                                break;
+                            case 2: 
+                                {
+                                    if (TradingDataInConsole.IsOrderExist(sellOrder))
+                                    {
+                                        sellOrder = new SellOrder(tradingLogic, TradingDataInConsole.GetSymbolFromConsole(), TradingDataInConsole.GetQuantityFromConsole(),
+                                        TradingDataInConsole.GetDealPriceFromConsole(), TradingDataInConsole.GetOrderPriceTypeFromConsole());
+                                    }
+                                }
+                                break;
+                        }
                     }
                     break;
                 case 0:
-                    { exit = true; }
-                    break;
+                    { exit = true; } break;
             }
-            if (exit || TradingDataInConsole.AskAnotherAction())
-            {
-                break;
-            }
+            if (exit || TradingDataInConsole.AskAnotherAction()) { break; }
         }
     }
 
@@ -121,11 +139,36 @@ internal class Program
             }
         }
 
+        internal static int ShowCreatNewOrderMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine("Do you want to creat Buy order or Sell order?(b/s)");
+                switch (Console.ReadLine())
+                {
+                    case "b": case "B": return 1;
+                    case "s": case "S": return 2;
+                    default: Console.WriteLine("Uncorrect input"); break;
+                }
+            }
+        }
+
+        internal static bool IsOrderExist(IOrder order)
+        {
+            if (order != null)
+            {
+                Console.WriteLine("Order already exist");
+                return  true;
+            }
+            else
+                return false;
+        }
+
         public static bool AskAnotherAction()
         {
             while (true)
             {
-                Console.WriteLine("Do you want to make anotehr action?(y/n)");
+                Console.WriteLine("Do you want to make another action?(y/n)");
                 switch (Console.ReadLine())
                 {
                     case "y": case "Y": return true;
@@ -204,7 +247,7 @@ internal class Program
         {
             while (true)
             {
-                Console.WriteLine("For retrieving info choose granularity (1 - 5min, 2 - 30min, 3 - 1hiur, 4 - Day)");
+                Console.WriteLine("For retrieving info choose granularity (1 - 5min, 2 - 30min, 3 - 1hour, 4 - Day)");
                 switch (Console.ReadLine())
                 {
                     case "1": return TimeSpan.FromMinutes(5);
@@ -282,7 +325,7 @@ internal class Program
             }
         }
 
-        internal static OrderType GetOrderTypeTypeFromConsole()
+        internal static OrderType GetOrderTypeFromConsole()
         {
             while (true)
             {
