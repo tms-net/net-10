@@ -13,11 +13,20 @@ atm.TransactionCompleted += (sender, args) =>
 
 for (int i = 0; i < 10; i++)
 {
+    
     var client = new ATMClient(atm);
-
+    var S = client.cardStatus;
     DoRandomActions(client);
+    if (S != client.cardStatus)
+    {
+        Console.WriteLine($"Current balance:{client.ViewBalance()}");
+    }
+    else
+    {
+        Console.WriteLine(client._cardStatus);
+    }
 
-    Console.WriteLine($"Current balance:{client.ViewBalance()}"); 
+  
 }
 
 

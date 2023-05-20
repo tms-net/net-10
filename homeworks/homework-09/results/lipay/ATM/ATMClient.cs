@@ -4,6 +4,9 @@
     {
         private ATM _atm;
         private decimal? _accountBalance; // Nullable Value Type
+        public string _cardStatus;
+        public CardStatus cardStatus = CardStatus.Failed;
+        
 
         public ATMClient(ATM atm)
         {
@@ -30,10 +33,12 @@
             {
                 _atm.WithdrawMoney(amount);
                 _accountBalance -= amount;
+                cardStatus = CardStatus.Succeeded;
             }
             else
             {
-                Console.WriteLine("Not enough money on card");
+                cardStatus = CardStatus.Failed;
+                _cardStatus = "Not enough money on card";
             }
          
         }
@@ -53,10 +58,22 @@
         /// Просмотр баланса пользователем
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        public decimal ViewBalance()
+        public decimal? ViewBalance()
         {
             // TODO: Реализовать Просмотр баланса
-            return _accountBalance.Value;
+            if (_accountBalance != null)
+            {
+                return _accountBalance.Value;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public enum CardStatus
+        {
+            Succeeded,
+            Failed
         }
     }
 }
