@@ -32,6 +32,13 @@ namespace Homework8Lutynski
             string toString = $"ID: {Id}, Name: {Name}, {Grade}-th Grade, Age: {Age}, Gender: {Gender}.";
             return toString;
         }
+<<<<<<< HEAD
         
+=======
+        internal void EditInfo()
+        {
+
+        }
+>>>>>>> aafdfb890feb6bf790d5af75ff0e39e77ebdc86b
     }
 }
