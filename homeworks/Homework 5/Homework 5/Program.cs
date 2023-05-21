@@ -103,7 +103,12 @@ internal class Car : Vehicle, IHaveDoors, IHaveHood, IHaveTrunk
 
     public void OpenDoor(int doorId)
     {
-        if(doorId < _isDoorOpen.Length && CurrentSpeed == 0)
+        if(doorId < _isDoorOpen.Length)
+        {
+            return;
+        }
+
+         if(CurrentSpeed == 0)
         {
             _isDoorOpen[doorId] = true;
         }
@@ -111,7 +116,12 @@ internal class Car : Vehicle, IHaveDoors, IHaveHood, IHaveTrunk
 
     public void CloseDoor(int doorId)
     {
-        if(doorId < _isDoorOpen.Length && CurrentSpeed == 0)
+        if(doorId < _isDoorOpen.Length)
+        {
+            return;
+        }
+        
+         if (CurrentSpeed == 0)
         {
             _isDoorOpen[doorId] = false;
         }
