@@ -1,0 +1,13 @@
+{
+	"version": "1.0"
+	"metadata": {
+		"updateDate": "05/17/2023",
+		"currency": "EUR",
+		"rate": 0.9,
+		"processed": true
+	},
+	"data": {
+		"MSFT": [300, 310, 350],		
+		"AAPL": [200, 210, 250]
+	}
+}

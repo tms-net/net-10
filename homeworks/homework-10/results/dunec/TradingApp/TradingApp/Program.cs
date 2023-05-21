@@ -5,9 +5,6 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        Console.InputEncoding = System.Text.Encoding.UTF8;
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
-
         // Отображение
         //  - Экраны (Screen) ; Страница (Page) ; View
         //      - Home (Главный)
@@ -17,6 +14,7 @@ internal class Program
 
         Console.WriteLine("Hello, Trading Platform!");
 
+        
         // Получить зависимости
         //  - ITradingDataRetreiver
         //  - ITradingLogic
@@ -47,57 +45,35 @@ internal class Program
         Console.WriteLine(" 3. Создать ордер");
 
         //while (true)
-        //{
-        //    var option = TradingDataInConsole.GetOptionFromConsole();
+        {
+            var option = TradingDataInConsole.GetOptionFromConsole();
 
-        //    // Обработка опции
+            // Обработка опции
 
-        //    console.ShowMainInfo();
-        //}
-        BuyOrder? buyOrder = null;
-        SellOrder? sellOrder = null;
-
+            console.ShowMainInfo();
+        }
+        
         while (true)
         {
             bool exit = false;
             switch (TradingDataInConsole.ShowMenuOfOptions())
             {
-                case 1:
-                    { }
-                    break;
-                case 2:
-                    { }
-                    break;
-                case 3:
+                case 1: 
+                    { } break;
+                case 2: 
+                    { } break;
+                case 3: 
                     {
-                        switch (TradingDataInConsole.ShowCreatNewOrderMenu())
-                        {
-                            case 1:
-                                {  
-                                    if (TradingDataInConsole.IsOrderExist(buyOrder)) 
-                                    {
-                                        buyOrder = new BuyOrder(tradingLogic, TradingDataInConsole.GetSymbolFromConsole(), TradingDataInConsole.GetQuantityFromConsole(),
-                                            TradingDataInConsole.GetDealPriceFromConsole(), TradingDataInConsole.GetOrderPriceTypeFromConsole());
-                                    }                                    
-                                } 
-                                break;
-                            case 2: 
-                                {
-                                    if (TradingDataInConsole.IsOrderExist(sellOrder))
-                                    {
-                                        sellOrder = new SellOrder(tradingLogic, TradingDataInConsole.GetSymbolFromConsole(), TradingDataInConsole.GetQuantityFromConsole(),
-                                        TradingDataInConsole.GetDealPriceFromConsole(), TradingDataInConsole.GetOrderPriceTypeFromConsole());
-                                    }
-                                }
-                                break;
-                        }
-                    }
-                    break;
-                case 0:
+                        
+                    } break;
+                case 0: 
                     { exit = true; } break;
             }
-            if (exit || TradingDataInConsole.AskAnotherAction()) { break; }
-        }
+            if (exit || TradingDataInConsole.AskAnotherAction())
+            {
+                break;
+            }
+        }  //*/
     }
 
     internal class TradingDataInConsole
@@ -120,7 +96,7 @@ internal class Program
         }
 
         public static int ShowMenuOfOptions()
-        {
+        {       
             while (true)
             {
                 Console.WriteLine("Options:");
@@ -139,43 +115,23 @@ internal class Program
             }
         }
 
-        internal static int ShowCreatNewOrderMenu()
-        {
-            while (true)
-            {
-                Console.WriteLine("Do you want to creat Buy order or Sell order?(b/s)");
-                switch (Console.ReadLine())
-                {
-                    case "b": case "B": return 1;
-                    case "s": case "S": return 2;
-                    default: Console.WriteLine("Uncorrect input"); break;
-                }
-            }
-        }
-
-        internal static bool IsOrderExist(IOrder order)
-        {
-            if (order != null)
-            {
-                Console.WriteLine("Order already exist");
-                return  true;
-            }
-            else
-                return false;
-        }
-
         public static bool AskAnotherAction()
         {
             while (true)
             {
-                Console.WriteLine("Do you want to make another action?(y/n)");
+                Console.WriteLine("Do you want to make anotehr action?(y/n)");
                 switch (Console.ReadLine())
                 {
                     case "y": case "Y": return true;
                     case "n": case "N": return false;
                     default: Console.WriteLine("Uncorrect input"); break;
                 }
-            }
+            }            
+        }
+
+        public static void CreateOrderMenu()
+        {
+            
         }
 
         internal static string GetOptionFromConsole()
@@ -205,7 +161,7 @@ internal class Program
             {
                 Console.WriteLine("Input Symbol name:");
                 result = Console.ReadLine();
-                if (result == null || result.Length == 0)
+                if (result == null || result.Length != 0)
                 {
                     Console.WriteLine($"Incorrect Symbol name {result}");
                 }
@@ -215,31 +171,31 @@ internal class Program
                 }
             }
         }
-
         internal static TimeSpan GetPeriodFromConsole()
         {
+            DateTime dateTimeFrom = DateTime.Now;
+            DateTime dateTimeTo = DateTime.Now;
             Console.WriteLine("For retrieving info need period");
             while (true)
             {
                 Console.WriteLine("Input date FROM: ");
-                if (!DateTime.TryParse(Console.ReadLine(), out var dateTimeFrom))
+                if (!DateTime.TryParse(Console.ReadLine(), out dateTimeFrom))
                 {
                     Console.WriteLine($"Uncorrect date {dateTimeFrom}");
                 }
-                else
-                { 
-                    continue;
-                }
+                else { break; }
+            }
 
-                //Console.WriteLine("Input date TO: ");
-                //if (!DateTime.TryParse(Console.ReadLine(), out var dateTimeTo) || dateTimeTo < dateTimeFrom)
-                //{
-                //    Console.WriteLine($"Uncorrect date {dateTimeTo}");
-                //}
-                //else
+            while (true)
+            {
+                Console.WriteLine("Input date TO: ");
+                if (!DateTime.TryParse(Console.ReadLine(), out dateTimeTo) || dateTimeTo < dateTimeFrom)
                 {
-                    //return dateTimeTo - dateTimeFrom;
-                    return DateTime.UtcNow - dateTimeFrom;
+                    Console.WriteLine($"Uncorrect date {dateTimeTo}");
+                }
+                else
+                {
+                    return dateTimeTo - dateTimeFrom;
                 }
             }
         }
@@ -247,20 +203,19 @@ internal class Program
         {
             while (true)
             {
-                Console.WriteLine("For retrieving info choose granularity (1 - 5min, 2 - 30min, 3 - 1hour, 4 - Day)");
+                Console.WriteLine("For retrieving info choose granularity (1 - 5 min, 2 - 30 min, 3 - 1 hour)");
                 switch (Console.ReadLine())
                 {
-                    case "1": return TimeSpan.FromMinutes(5);
-                    case "2": return TimeSpan.FromMinutes(30);
-                    case "3": return TimeSpan.FromHours(1);
-                    case "4": return TimeSpan.FromDays(1);
+                    case "1": return DateTime.Now.AddMinutes(5) - DateTime.Now;
+                    case "2": return DateTime.Now.AddMinutes(30) - DateTime.Now;
+                    case "3": return DateTime.Now.AddHours(1) - DateTime.Now;
                     default: Console.WriteLine("Unavailable granularity code"); break;
                 }
             }
         }
 
 
-        internal static decimal GetDealPriceFromConsole()
+        internal static decimal SetDealPriceFromConsole()
         {
             decimal result;
 
@@ -279,7 +234,7 @@ internal class Program
             }
         }
 
-        internal static DealStatus GetStatusFromConsole()
+        internal static DealStatus SetStatusFromConsole()
         {
             while (true)
             {
@@ -294,7 +249,7 @@ internal class Program
             }
         }
 
-        internal static int GetQuantityFromConsole()
+        internal static int SetQuantityFromConsole()
         {
             int result = 0;
             while (true)
@@ -311,7 +266,7 @@ internal class Program
             }
         }
 
-        internal static OrderPriceType GetOrderPriceTypeFromConsole()
+        internal static OrderPriceType SetOrderPriceTypeFromConsole()
         {
             while (true)
             {
@@ -325,7 +280,7 @@ internal class Program
             }
         }
 
-        internal static OrderType GetOrderTypeFromConsole()
+        internal static OrderType SetOrderTypeTypeFromConsole()
         {
             while (true)
             {

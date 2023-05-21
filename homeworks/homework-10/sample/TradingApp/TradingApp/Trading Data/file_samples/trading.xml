@@ -1,0 +1,12 @@
+<root>
+	<tradingmetadata updateDate="05/17/05">
+	</tradingmetadata>
+	<tradingdata granularity="5min">
+		<symbol name="MSFT">
+			<datapoint date="" price="" />
+		</symbol>
+		<symbol name="AAPL">
+			<datapoint date="" price="" />
+		</symbol>
+	</tradingdata>
+</root>
