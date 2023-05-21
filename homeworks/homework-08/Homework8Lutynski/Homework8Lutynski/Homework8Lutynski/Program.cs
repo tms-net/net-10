@@ -14,7 +14,7 @@ class StudentManager
     Stack<string> History = new Stack<string>();
     public StudentManager()
     {
-        Console.WriteLine("Добро пожаловать в информационную базу студентов! \nВыберите действие:");
+        Console.WriteLine("Добро пожаловать в информационную базу студентов! ");
     }
     public void FirstSave()
     {
@@ -28,7 +28,7 @@ class StudentManager
         {
         
         
-        Console.WriteLine("1 - Просмотр списка студентов \n2 - Добавить студента \n3 - Удалить студента \n4 - найти студента \n5 - отменить последнее действие");
+        Console.WriteLine("Выберите действие:\n1 - Просмотр списка студентов \n2 - Добавить студента \n3 - Удалить студента \n4 - найти студента \n5 - отменить последнее действие");
 
 
         string? userInput = Console.ReadLine();
