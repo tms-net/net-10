@@ -1,22 +1,27 @@
 ﻿using lib;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using static lib.Structs;
+using System.Xml.Linq;
 
 namespace hw_8
 {
     internal class StudentManager
     {
-        public Dictionary<decimal, Student> _students;
+        public Student? _prevStudent = default;
+
+        public Dictionary<int, Student> _students;
 
         public StudentManager()
         {
-           _students = new Dictionary<decimal, Student>();
+           _students = new Dictionary<int, Student>();
         }
 
         public void AddStudent(Student student) { _students.TryAdd(student.Id, student); }
 
         public void DeleteStudent(Student student)=>_students.Remove(student.Id);
 
-        public bool FindStudent(decimal id, out Student? student) 
+        public bool FindStudent(int id, out Student? student) 
         {
             if (_students.ContainsKey(id))
             {
@@ -39,7 +44,14 @@ namespace hw_8
             return false;
         }
 
-
+        public void BackUp(Student student)
+        {
+            student.Name = _prevStudent.Name;
+            student.Id = _prevStudent.Id;
+            student.Age = _prevStudent.Age;
+            student.Grade = _prevStudent.Grade;
+            student.Gender = _prevStudent.Gender;
+        }
 
     }
 }

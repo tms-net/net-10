@@ -34,7 +34,7 @@ namespace hw_8
                         Console.WriteLine(Find().ToString());
                         break;
                     case "5":
-                        Find().BackUp();
+                        studentManager.BackUp(Find());
                         break;
                     case "6":
                         foreach(var student in studentManager._students)
