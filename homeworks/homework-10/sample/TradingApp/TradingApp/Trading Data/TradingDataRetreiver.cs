@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Text.Json;
 using TradingApp.Data;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace TradingApp
 {
@@ -17,9 +19,13 @@ namespace TradingApp
 
     public class SymbolInfo
     {
+        
         public string SymbolName { get; } //Символ компании на бирже
         public decimal MarketCap { get; } //Словарь с датой и значением
         public IDictionary<DateTime, decimal> Data { get; set; }
+
+        public decimal Stock { get; } //Количество акций 
+        private decimal StockSum; // кол-во акций * на цену
 
         public event Action<SymbolInfo> SymbolUpdated;
 
@@ -28,9 +34,18 @@ namespace TradingApp
             return Data?.LastOrDefault().Value; // Enumerable.LastOrDefault
         }
 
+        public decimal? GetStockSum()
+        {
+            var Price = Data?.LastOrDefault().Value;
+            StockSum = (decimal)(Stock * Price);
+            return StockSum;
+        }
+        
         public SymbolInfo(string symbolName)
         {
             // Сгененрировать объем акций
+            Random _random = new Random();
+            Stock = (decimal)_random.Next(1000);
         }
     }
 
@@ -64,14 +79,14 @@ namespace TradingApp
             // 2. Файл доступен всем приложениям -> persistent, память - temporary
 
             // потоковое
-            FileStream fileStream = File.OpenRead("");
-            //  опредленная блокировка операций с файлом
+            //FileStream fileStream = File.OpenRead("");
+            ////  опредленная блокировка операций с файлом
 
-            // полностью преобразовать
-            var content = File.ReadAllText("");
-            File.WriteAllText("path", content);
+            //// полностью преобразовать
+            //var content = File.ReadAllText("");
+            //File.WriteAllText("path", content);
 
-            var msftData = JsonSerializer.Deserialize<TradingData>(content);
+            //var msftData = JsonSerializer.Deserialize<TradingData>(content);
 
             // данные (бинарные, текстовые) -> объект
             // Сериализация
@@ -166,8 +181,20 @@ namespace TradingApp
 
             // сохранить в файл
 
+            //  Сериализация JSON 
+            string fileNameMSFT = @"C:\Visual Studio\DataMSFT.json";
+            string fileNameAAPL = @"C:\Visual Studio\DataAAPL.json";
+            string jsonStringMSFT = JsonSerializer.Serialize(_dataMSFT);
+            string jsonStringAAPL = JsonSerializer.Serialize(_dataAAPL);
+
+            File.WriteAllText(fileNameMSFT, jsonStringMSFT);
+            File.WriteAllText(fileNameAAPL, jsonStringAAPL);
+
+
+
+
             // объект -> данные (бинарные, текстовые) -> текстовые -> формат данных
-            
+
             // бинарные -> в виде как объекты
 
             // .txt -> текст
@@ -204,6 +231,13 @@ namespace TradingApp
                     _dataAAPL.Add(date, aaplStartPrice + aaplStartPrice * (decimal)_random.NextDouble());
                 }
             }
+            //  Сериализация JSON
+            string fileNameMSFT = @"C:\Visual Studio\DataMSFT.json";
+            string fileNameAAPL = @"C:\Visual Studio\DataAAPL.json";
+            string jsonStringMSFT = JsonSerializer.Serialize(_dataMSFT);
+            string jsonStringAAPL = JsonSerializer.Serialize(_dataAAPL);
+            File.WriteAllText(fileNameMSFT, jsonStringMSFT);
+            File.WriteAllText(fileNameAAPL, jsonStringAAPL);
         }
     }
 }
