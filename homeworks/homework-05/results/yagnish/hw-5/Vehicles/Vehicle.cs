@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace hw_5.Vehicles
 {
-    internal class Base : IMovable, IHaveEngine
+    internal class Vehicle: IMovable, IHaveEngine
     {
         protected int _currentSpeed;
 
@@ -17,7 +17,7 @@ namespace hw_5.Vehicles
         public string? Mark { get; }
         public string? MaxSpeed { get; }
 
-        protected Base( string year, string model, string mark, string maxSpeed)
+        protected Vehicle( string year, string model, string mark, string maxSpeed)
         {
             _currentSpeed =0;
             Year = year;
