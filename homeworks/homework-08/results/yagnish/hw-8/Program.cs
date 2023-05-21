@@ -3,9 +3,10 @@ namespace hw_8
 {
     internal class Program
     {
+        static StudentManager studentManager = new StudentManager();
         static void Main(string[] args)
         {
-            StudentManager studentManager = new StudentManager();
+
             bool fl = true;
             while (fl)
             {
@@ -21,19 +22,19 @@ namespace hw_8
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        studentManager.AddStudent(MakeNewStudent(studentManager));
+                        studentManager.AddStudent(MakeNewStudent());
                         break;
                     case "2":
-                        studentManager.DeleteStudent(Find(studentManager));
+                        studentManager.DeleteStudent(Find());
                         break;
                     case "3":
-                        studentManager._students[Find(studentManager).Id].ChangeInfo(MakeNewStudent(studentManager));
+                        studentManager._students[Find().Id].ChangeInfo(MakeNewStudent());
                         break;
                     case "4":
-                        Console.WriteLine(Find(studentManager).ToString());
+                        Console.WriteLine(Find().ToString());
                         break;
                     case "5":
-                        Find(studentManager).BackUp();
+                        Find().BackUp();
                         break;
                     case "6":
                         foreach(var student in studentManager._students)
@@ -49,7 +50,7 @@ namespace hw_8
             }
         }
 
-        private static Student Find(StudentManager studentManager)
+        private static Student Find()
         {
             int id_input;
             string? _input = "";
@@ -66,7 +67,7 @@ namespace hw_8
             return student;
 
         }
-        private static Student MakeNewStudent(StudentManager studentManager)
+        private static Student MakeNewStudent()
         {
             Console.WriteLine("Name: ");
             var name = Console.ReadLine();
