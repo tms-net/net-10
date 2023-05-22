@@ -6,17 +6,13 @@ namespace hw_7
     {
         static void Main(string[] args)
         {
-            var CannonStateTransisions = new Tuple<CanonState, CanonState>[] {Tuple.Create(CanonState.AwaitingTarget,CanonState.Aiming),
-                                                                              Tuple.Create(CanonState.Aiming, CanonState.Atack),
-                                                                              Tuple.Create(CanonState.Atack, CanonState.AwaitingTarget) };
-            var DestroyerStateTransisions = new Tuple<DestroyerState, DestroyerState>[] {Tuple.Create(DestroyerState.LiftOff,DestroyerState.Atack),
-                                                                              Tuple.Create(DestroyerState.Atack,DestroyerState.Landing),
-                                                                              Tuple.Create(DestroyerState.Landing,DestroyerState.LiftOff)};
-            var TankStateTransisions = new Tuple<TankState, TankState>[] {Tuple.Create(TankState.Awaiting,TankState.Moving),
-                                                                          Tuple.Create(TankState.Moving,TankState.Atack),
-                                                                          Tuple.Create(TankState.Atack,TankState.Defence),
-                                                                          Tuple.Create(TankState.Defence,TankState.Awaiting),
-                                                                          Tuple.Create(TankState.Atack,TankState.Awaiting)};
+            var CannonStateTransisions = new (CanonState, CanonState)[] {(CanonState.AwaitingTarget,CanonState.Aiming),
+                                                                              (CanonState.Aiming, CanonState.Atack),
+                                                                              (CanonState.Atack, CanonState.AwaitingTarget) };
+            var DestroyerStateTransisions = new (DestroyerState, DestroyerState)[] {(DestroyerState.LiftOff,DestroyerState.Atack),
+                                                                              (DestroyerState.Atack, DestroyerState.Landing),
+                                                                              (DestroyerState.Landing, DestroyerState.LiftOff)};
+            var TankStateTransisions = new (TankState, TankState)[] { (TankState.Awaiting, TankState.Moving), (TankState.Moving, TankState.Atack), (TankState.Atack, TankState.Defence), (TankState.Defence, TankState.Awaiting), (TankState.Atack, TankState.Awaiting)  };
             var TankStateManager = new UniteStateManager<TankState>(TankStateTransisions,TankState.Awaiting);
             var DestroyerStateManager = new UniteStateManager<DestroyerState>(DestroyerStateTransisions,DestroyerState.LiftOff);
             var CanonStateManager = new UniteStateManager<CanonState>(CannonStateTransisions,CanonState.AwaitingTarget);
