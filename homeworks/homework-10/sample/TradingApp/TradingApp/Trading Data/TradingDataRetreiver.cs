@@ -62,7 +62,7 @@ namespace TradingApp
             // Файл vs Память
             // 1. Доступ к памяти быстрее
             // 2. Файл доступен всем приложениям -> persistent, память - temporary
-
+            /*
             // потоковое
             FileStream fileStream = File.OpenRead("");
             //  опредленная блокировка операций с файлом
@@ -71,7 +71,7 @@ namespace TradingApp
             var content = File.ReadAllText("");
             File.WriteAllText("path", content);
 
-            var msftData = JsonSerializer.Deserialize<TradingData>(content);
+            var msftData = JsonSerializer.Deserialize<TradingData>(content);//*/
 
             // данные (бинарные, текстовые) -> объект
             // Сериализация

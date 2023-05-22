@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Globalization;
+using System.Reflection.Metadata.Ecma335;
+using System.Threading.Channels;
 using TradingApp;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 internal class Program
 {
@@ -32,14 +36,18 @@ internal class Program
         var period = TradingDataInConsole.GetPeriodFromConsole();
         var granularity = TradingDataInConsole.GetGranularityFromConsole();
 
+        TradingDataInConsole? console = null;
         // Отобразить данные
+
         var symbolData = tradingDataRetreiver.RetreiveInfo(symbolName, period, granularity);
-
-        var console = new TradingDataInConsole(symbolData, (decimal)currentBalance, tradingLogic);
-
-        // Опции для изменения отображения данных
+        console = new TradingDataInConsole(symbolData, (decimal)currentBalance, tradingLogic);
         console.ShowMainInfo();
 
+
+        // Опции для изменения отображения данных
+        
+        TradingDataInConsole.PauseInConsole();
+        /*
         // Опции для создания ордера
         Console.WriteLine("Опции:");
         Console.WriteLine(" 1. Изменить гранулярность");
@@ -53,9 +61,7 @@ internal class Program
         //    // Обработка опции
 
         //    console.ShowMainInfo();
-        //}
-        BuyOrder? buyOrder = null;
-        SellOrder? sellOrder = null;
+        //}//*/
 
         while (true)
         {
@@ -63,40 +69,74 @@ internal class Program
             switch (TradingDataInConsole.ShowMenuOfOptions())
             {
                 case 1:
-                    { }
+                    {
+                        console.UpdateSymbolInfo(tradingDataRetreiver.RetreiveInfo(symbolName, period, TradingDataInConsole.GetGranularityFromConsole()));
+                    }
                     break;
                 case 2:
-                    { }
+                    {
+                        console.UpdateSymbolInfo(tradingDataRetreiver.RetreiveInfo(symbolName, TradingDataInConsole.GetPeriodFromConsole(), granularity));
+                    }
                     break;
                 case 3:
                     {
+                        symbolName = TradingDataInConsole.GetSymbolFromConsole();
+                        var quantity = TradingDataInConsole.GetQuantityFromConsole();
+                        var orderPriceType = TradingDataInConsole.GetOrderPriceTypeFromConsole();
+                        var orderType = TradingDataInConsole.GetOrderTypeFromConsole();
+                        try
+                        {
+                            if (orderPriceType == OrderPriceType.Price)
+                            {
+                                tradingLogic.PlaceOrder(symbolName, quantity, orderPriceType, orderType, TradingDataInConsole.GetPriceFromConsole());
+                            }
+                            else
+                            {
+                                tradingLogic.PlaceOrder(symbolName, quantity, orderPriceType, orderType);
+                            }
+                        }
+                        catch (InvalidOperationException invalidOperationException)
+                        {
+                            TradingDataInConsole.ShowExceptionMessage(invalidOperationException);
+                        }
+                        catch (Exception exception)
+                        {
+                            TradingDataInConsole.ShowExceptionMessage(exception);
+                        }
+
+                        /*
                         switch (TradingDataInConsole.ShowCreatNewOrderMenu())
                         {
                             case 1:
-                                {  
-                                    if (TradingDataInConsole.IsOrderExist(buyOrder)) 
+                                {
+                                    
+                                    /*
+                                    if (!TradingDataInConsole.IsOrderExist(console.buyOrder)) 
                                     {
-                                        buyOrder = new BuyOrder(tradingLogic, TradingDataInConsole.GetSymbolFromConsole(), TradingDataInConsole.GetQuantityFromConsole(),
+                                        console.buyOrder = new BuyOrder(tradingLogic, TradingDataInConsole.GetSymbolFromConsole(), TradingDataInConsole.GetQuantityFromConsole(),
                                             TradingDataInConsole.GetDealPriceFromConsole(), TradingDataInConsole.GetOrderPriceTypeFromConsole());
-                                    }                                    
+                                    }    //
                                 } 
                                 break;
                             case 2: 
                                 {
-                                    if (TradingDataInConsole.IsOrderExist(sellOrder))
+                                    /*
+                                    if (!TradingDataInConsole.IsOrderExist(console.sellOrder))
                                     {
-                                        sellOrder = new SellOrder(tradingLogic, TradingDataInConsole.GetSymbolFromConsole(), TradingDataInConsole.GetQuantityFromConsole(),
+                                        console.sellOrder = new SellOrder(tradingLogic, TradingDataInConsole.GetSymbolFromConsole(), TradingDataInConsole.GetQuantityFromConsole(),
                                         TradingDataInConsole.GetDealPriceFromConsole(), TradingDataInConsole.GetOrderPriceTypeFromConsole());
-                                    }
+                                    }//
                                 }
                                 break;
-                        }
+                        }//*/
                     }
                     break;
                 case 0:
                     { exit = true; } break;
             }
-            if (exit || TradingDataInConsole.AskAnotherAction()) { break; }
+            console.ShowMainInfo();
+            TradingDataInConsole.PauseInConsole();
+            if (exit || !TradingDataInConsole.AskAnotherAction()) { break; }
         }
     }
 
@@ -104,6 +144,8 @@ internal class Program
     {
         private SymbolInfo _symbolData;
         private decimal _currentBalance;
+        //internal BuyOrder? buyOrder;
+        //internal SellOrder? sellOrder;
 
         public TradingDataInConsole(SymbolInfo symbolData, decimal currentBalance, ITradingLogic tradingLogic)
         {
@@ -112,17 +154,27 @@ internal class Program
 
             tradingLogic.BalanceChanged += TradingLogic_BalanceChanged;
         }
-
         private void TradingLogic_BalanceChanged(BalanceInfo balanceInfo)
         {
             _currentBalance = balanceInfo.TotalBalance;
             ShowMainInfo();
         }
 
+        public void UpdateSymbolInfo(SymbolInfo symbolData)
+        {
+            _symbolData = symbolData;
+        }
+
+        public static void PauseInConsole()
+        {
+            Console.WriteLine("Press any key to continue");
+            Console.ReadLine();
+        }
         public static int ShowMenuOfOptions()
         {
             while (true)
-            {
+            {                
+                Console.Clear();
                 Console.WriteLine("Options:");
                 Console.WriteLine(" 1. Change granularity");
                 Console.WriteLine(" 2. Change period");
@@ -138,7 +190,6 @@ internal class Program
                 }
             }
         }
-
         internal static int ShowCreatNewOrderMenu()
         {
             while (true)
@@ -152,7 +203,6 @@ internal class Program
                 }
             }
         }
-
         internal static bool IsOrderExist(IOrder order)
         {
             if (order != null)
@@ -163,8 +213,7 @@ internal class Program
             else
                 return false;
         }
-
-        public static bool AskAnotherAction()
+        internal static bool AskAnotherAction()
         {
             while (true)
             {
@@ -177,7 +226,7 @@ internal class Program
                 }
             }
         }
-
+        /*
         internal static string GetOptionFromConsole()
         {
             string? result;
@@ -195,7 +244,7 @@ internal class Program
                     return result;
                 }
             }
-        }
+        }//*/
 
         internal static string GetSymbolFromConsole()
         {
@@ -215,21 +264,19 @@ internal class Program
                 }
             }
         }
-
         internal static TimeSpan GetPeriodFromConsole()
         {
             Console.WriteLine("For retrieving info need period");
             while (true)
             {
                 Console.WriteLine("Input date FROM: ");
-                if (!DateTime.TryParse(Console.ReadLine(), out var dateTimeFrom))
+                if (!DateTime.TryParseExact(Console.ReadLine(), new string[] { "mm.dd.yyyy", "mm-dd-yyyy", "mm/dd/yyyy", "dd.mm.yyyy", "dd-mm-yyyy", "dd/mm/yyyy"}, 
+                                            CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeFrom))
                 {
-                    Console.WriteLine($"Uncorrect date {dateTimeFrom}");
-                }
-                else
-                { 
+                    Console.WriteLine($"Uncorrect date");
                     continue;
                 }
+                
 
                 //Console.WriteLine("Input date TO: ");
                 //if (!DateTime.TryParse(Console.ReadLine(), out var dateTimeTo) || dateTimeTo < dateTimeFrom)
@@ -260,13 +307,13 @@ internal class Program
         }
 
 
-        internal static decimal GetDealPriceFromConsole()
+        internal static decimal GetPriceFromConsole()
         {
             decimal result;
 
             while (true)
             {
-                Console.WriteLine("Input Deal price:");
+                Console.WriteLine("Input Price:");
 
                 if (!decimal.TryParse(Console.ReadLine(), out result))
                 {
@@ -278,22 +325,6 @@ internal class Program
                 }
             }
         }
-
-        internal static DealStatus GetStatusFromConsole()
-        {
-            while (true)
-            {
-                Console.WriteLine($"Input Deal status (1 - {DealStatus.Pending}, 2 - {DealStatus.Completed}, 3 - {DealStatus.Cancelled}):");
-                switch (Console.ReadLine())
-                {
-                    case "1": return DealStatus.Pending;
-                    case "2": return DealStatus.Completed;
-                    case "3": return DealStatus.Cancelled;
-                    default: Console.WriteLine("Unavailable status code"); break;
-                }
-            }
-        }
-
         internal static int GetQuantityFromConsole()
         {
             int result = 0;
@@ -310,7 +341,6 @@ internal class Program
                 }
             }
         }
-
         internal static OrderPriceType GetOrderPriceTypeFromConsole()
         {
             while (true)
@@ -324,7 +354,6 @@ internal class Program
                 }
             }
         }
-
         internal static OrderType GetOrderTypeFromConsole()
         {
             while (true)
@@ -339,13 +368,35 @@ internal class Program
             }
         }
 
+
+        internal static DealStatus GetStatusFromConsole()
+        {
+            while (true)
+            {
+                Console.WriteLine($"Input Deal status (1 - {DealStatus.Pending}, 2 - {DealStatus.Completed}, 3 - {DealStatus.Cancelled}):");
+                switch (Console.ReadLine())
+                {
+                    case "1": return DealStatus.Pending;
+                    case "2": return DealStatus.Completed;
+                    case "3": return DealStatus.Cancelled;
+                    default: Console.WriteLine("Unavailable status code"); break;
+                }
+            }
+        }
+
         internal void ShowMainInfo()
         {
             Console.Clear();
             Console.WriteLine($" Данные {_symbolData.SymbolName}:");
-            Console.WriteLine($" Текущая цена: {_symbolData.Data.Last().Value}");
+            //Console.WriteLine($" Текущая цена: {_symbolData.MarketPrice}"); 
+            Console.WriteLine($" Текущая цена: {_symbolData.Data?.LastOrDefault().Value}");
             Console.WriteLine($" Капитализация: {_symbolData.MarketCap}");
             Console.WriteLine($" Баланс: {_currentBalance}");
+        }
+
+        internal static void ShowExceptionMessage(Exception exception)
+        {
+            Console.WriteLine($"Catch exception during work: {exception.Message}");
         }
     }
 }
