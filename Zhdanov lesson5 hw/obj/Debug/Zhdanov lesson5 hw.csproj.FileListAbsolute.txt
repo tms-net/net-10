@@ -1,8 +1,0 @@
-D:\TMS\Zhdanov lesson5 hw\obj\Debug\Zhdanov lesson5 hw.csproj.AssemblyReference.cache
-D:\TMS\Zhdanov lesson5 hw\obj\Debug\Zhdanov lesson5 hw.csproj.SuggestedBindingRedirects.cache
-D:\TMS\Zhdanov lesson5 hw\obj\Debug\Zhdanov lesson5 hw.csproj.CoreCompileInputs.cache
-D:\TMS\Zhdanov lesson5 hw\bin\Debug\Zhdanov lesson5 hw.exe.config
-D:\TMS\Zhdanov lesson5 hw\bin\Debug\Zhdanov lesson5 hw.exe
-D:\TMS\Zhdanov lesson5 hw\bin\Debug\Zhdanov lesson5 hw.pdb
-D:\TMS\Zhdanov lesson5 hw\obj\Debug\Zhdanov lesson5 hw.exe
-D:\TMS\Zhdanov lesson5 hw\obj\Debug\Zhdanov lesson5 hw.pdb
