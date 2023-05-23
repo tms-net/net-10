@@ -80,7 +80,7 @@ class Program
 
         #region Attributes
 
-        Type jsonClassType = typeof(JsonClass);
+        Type jsonClassType = typeof(TestClass);
         Console.WriteLine("Listing all the attributes of the {0} type", jsonClassType);
         foreach (var attr in jsonClassType.GetCustomAttributes(true))
         {
