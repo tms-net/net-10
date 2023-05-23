@@ -13,28 +13,39 @@ internal class Program
         
         Random random = new Random();
         int a = random.Next();
-        
-        if (a % 2 == 0) 
-        {
-            planeStates.Transition(PlaneState.TakeOff, PlaneState.Land);
-            Console.WriteLine($"{planeStates.Current} to {PlaneState.Land}");
-            planeStates.Moveto(PlaneState.Land);
-            Console.WriteLine("Полёт прошел без происшествий");
-            
-            planeStates.Transition(PlaneState.Land, PlaneState.Refuel);
-            planeStates.Moveto(PlaneState.Refuel);
 
-            planeStates.Transition(PlaneState.Refuel, PlaneState.TakeOff);
-            planeStates.Moveto(PlaneState.TakeOff);
-        }
-        
-        else 
+        try
+
         {
-            planeStates.Transition(PlaneState.TakeOff, PlaneState.Crash);
-            Console.WriteLine($"{planeStates.Current} to {PlaneState.Crash}");
-            planeStates.Moveto(PlaneState.Crash);
-            Console.WriteLine("Самолет потерпел крушение");
+            if (a % 2 == 0)
+            {
+                planeStates.Transition(PlaneState.TakeOff, PlaneState.Land);
+                Console.WriteLine($"{planeStates.Current} to {PlaneState.Land}");
+                planeStates.Moveto(PlaneState.Land);
+                Console.WriteLine("Полёт прошел без происшествий");
+
+                planeStates.Transition(PlaneState.Land, PlaneState.Refuel);
+                planeStates.Moveto(PlaneState.Refuel);
+
+                planeStates.Transition(PlaneState.Refuel, PlaneState.TakeOff);
+                planeStates.Moveto(PlaneState.TakeOff);
+            }
+
+            else
+            {
+                planeStates.Transition(PlaneState.TakeOff, PlaneState.Crash);
+                Console.WriteLine($"{planeStates.Current} to {PlaneState.Crash}");
+                planeStates.Moveto(PlaneState.Crash);
+                Console.WriteLine("Самолет потерпел крушение");
+
+            }
         }
+        catch
+        {
+            throw new Exception("Error");
+        }
+    
+       
         //____________________________________________________________
 
         var canonStates = new UnitStateManager<CanonState>();
