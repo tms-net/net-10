@@ -60,7 +60,7 @@ namespace Zhdanov_Homework_8
        
         public List<Student> GetAllStudents()
         {
-            return students;
+            return new List<Student>(students);
         }
 
     }
