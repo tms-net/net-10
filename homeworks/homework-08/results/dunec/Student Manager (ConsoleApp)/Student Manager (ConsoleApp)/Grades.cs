@@ -23,7 +23,7 @@ namespace Student_Manager__ConsoleApp_
     /// <summary>
     /// Class describe groip info of Grade of a Subject
     /// </summary>
-    internal class GradeOfSubject
+    internal class GradeOfSubject: ICloneable
     {
         /// <summary>
         /// Name of Subject
@@ -47,7 +47,7 @@ namespace Student_Manager__ConsoleApp_
                 throw new ArgumentOutOfRangeException("Inputted grade is out of range of the grades: " + nameof(grade));
             }
 
-            if (subject == null || subject == string.Empty)
+            if (string.IsNullOrEmpty(subject))
             { 
                 throw new ArgumentNullException("Inputted name of the subject is uncorrect: " + nameof(subject));
             }
@@ -61,6 +61,11 @@ namespace Student_Manager__ConsoleApp_
         public override string ToString()
         {
             return Subject + " - " + Grade;
+        }
+
+        public object Clone()
+        {
+            return new GradeOfSubject(Subject, (int)Grade);
         }
 
         //*/

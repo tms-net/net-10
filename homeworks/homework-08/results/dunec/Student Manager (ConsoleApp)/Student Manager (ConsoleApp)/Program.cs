@@ -5,6 +5,7 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        
         StudentManager studentManagers = new StudentManager ();
         Console.WriteLine(studentManagers.ToString());
         studentManagers.AddStudent("Oba", 69, "compensator"); 
@@ -35,7 +36,7 @@ internal class Program
         studentManagers.RemoveStudent("PavelNTD");
         Console.WriteLine(studentManagers.ToString());
         studentManagers.RollBack();
-        Console.WriteLine(studentManagers.ToString());
+        Console.WriteLine(studentManagers.ToString());//*/
 
         Console.ReadLine();
     }

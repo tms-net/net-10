@@ -20,13 +20,13 @@ namespace Student_Manager__ConsoleApp_
         {
             to.Clear();
             foreach (Student student in from.Keys)
-            {
-                Student copyStudent = new Student(student.StudentName, student.Age, student.Gender);
+            {               
+                Student copyStudent = (Student)student.Clone();
                 copyStudent.CopyStudentID(student.ID);
                 List<GradeOfSubject>? copyList = new List<GradeOfSubject>();
                 for (int i = 0; i < from[student].Count - 1; i++)
                 {
-                    copyList.Add(new GradeOfSubject(from[student][i].Subject, (int)from[student][i].Grade));
+                    copyList.Add((GradeOfSubject)from[student][i].Clone());
                 }
                 to.Add(copyStudent, copyList);
             }
@@ -102,7 +102,7 @@ namespace Student_Manager__ConsoleApp_
         /// <returns>'true' if student's information was updated succesfully; otherwise, 'false'</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public bool UpdateStudentInfo(string studentNameOrId, string newStudentName = "EmptyField", int newAge = 666, string newGender = "EmptyField")
+        public bool UpdateStudentInfo(string studentNameOrId, string newStudentName = Helpers.defaultString, int newAge = Helpers.defaultInt, string newGender = Helpers.defaultString)
         {
             foreach (Student student in GradesOfStudent.Keys)
             {
@@ -112,7 +112,7 @@ namespace Student_Manager__ConsoleApp_
                     {
                         throw new ArgumentNullException($"Empty student's info: {nameof(newStudentName)}");
                     }
-                    if (newAge < 5 && newAge != 666)
+                    if (newAge < 5 && newAge != Helpers.defaultInt)
                     {
                         throw new ArgumentOutOfRangeException($"Uncorrect student's info: {nameof(newAge)}");
                     }
@@ -120,15 +120,9 @@ namespace Student_Manager__ConsoleApp_
                     {
                         throw new ArgumentNullException($"Empty student's info: {nameof(newGender)}");
                     }
-                    if (newStudentName != "EmptyField" || newAge != 666 || newGender != "EmptyField")
-                    {
-                        SaveBackUp();
-                        student.UpdateInfo(newStudentName, newAge, newGender);
-                        return true;
-                    }
-                    else
-                        return false;
-                    
+                    SaveBackUp();
+                    student.UpdateInfo(newStudentName, newAge, newGender);
+                    return true;                
                 }               
             }
             return false;
@@ -161,20 +155,7 @@ namespace Student_Manager__ConsoleApp_
             {
                 if (student.EqualsName(studentNameOrId) || student.EqualsID(studentNameOrId))
                 {
-                    GradesOfStudent.TryGetValue(student, out List<GradeOfSubject>? bufferList);
-                    if (bufferList != null && bufferList.Count > 0)
-                    {
-                        string stringOfGrades = "";
-                        foreach(GradeOfSubject gradeOfSubject in bufferList)
-                        {
-                            stringOfGrades += $"\n{gradeOfSubject}";
-                        }    
-                        return $"\nStudent: {student}\nGrades of Subjects: {stringOfGrades}\n";
-                    }
-                    else
-                    {
-                        return $"\nStudent: {student}\nGrades of Subjects are not found\n";
-                    }                    
+                    return GetGradesByStudent(student);
                 }
             }            
                 /*
@@ -187,6 +168,24 @@ namespace Student_Manager__ConsoleApp_
                 }//*/
             return "Not found\n";
         }
+
+        public string GetGradesByStudent(Student student)
+        {
+            GradesOfStudent.TryGetValue(student, out List<GradeOfSubject>? bufferList);
+            if (bufferList != null && bufferList.Count > 0)
+            {
+                string stringOfGrades = "";
+                foreach (GradeOfSubject gradeOfSubject in bufferList)
+                {
+                    stringOfGrades += $"\n{gradeOfSubject}";
+                }
+                return $"\nStudent: {student}\nGrades of Subjects: {stringOfGrades}\n";
+            }
+            else
+            {
+                return $"\nStudent: {student}\nGrades of Subjects are not found\n";
+            }
+        }
         /// <summary>
         /// Return full info about Students from a StudenManager
         /// </summary>
@@ -196,14 +195,13 @@ namespace Student_Manager__ConsoleApp_
             string result = "";
             if (GradesOfStudent.Count != 0)
             {
-                foreach (Student student in GradesOfStudent.Keys)
-                {
-                    result += GetStudent(student.ID);
-                }
+                return "Non students\n";
             }
-            else
-                result = "Non students\n";
-            
+
+            foreach (Student student in GradesOfStudent.Keys)
+            {
+                result += GetGradesByStudent(student);
+            }
             return result;
         }
         public void SaveBackUp()
