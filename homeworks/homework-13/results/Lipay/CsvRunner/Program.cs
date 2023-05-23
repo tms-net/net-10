@@ -22,11 +22,11 @@ public class Program
         csvData.Add(headerLine);
         csvData.AddRange(dataLines);
 
+
+        // 3. Вывести результат / сохранить в файл
         string csvFilePath = @"D:\Visual Studio\newFile.csv";
         File.WriteAllLines(csvFilePath, csvData);
         Console.WriteLine(csvData);
         Console.ReadLine();
-        // 3. Вывести результат / сохранить в файл
-
     }
 }
