@@ -14,10 +14,6 @@
         public bool WithdrawMoney(long amount)
         {
             bool result = false;
-            if (amount < 0)
-            {
-                throw new ArgumentException("Can't withdraw \"negative\" amount of money");
-            }
 
             var args = new TransactionEventArgs();
 
@@ -47,11 +43,7 @@
         public void TopUpMoney(long amount)
         {
             var args = new TransactionEventArgs();
-            if (amount < 0)
-            {
-                throw new ArgumentException("Can't top up \"negative\" amount of money");
-            }
-
+            
             args.TransactionStatus = TransactionStatus.Succeeded;
             args.BalanceBefore = _cacheAmount;
             _cacheAmount += amount;

@@ -26,7 +26,8 @@ namespace Banking
         /// </summary>
         /// <param name="amount">сумма для снятия</param>
         public void Withdraw(long amount)
-        {            
+        {
+            AmountCheck(amount);
             if (_atm.WithdrawMoney(amount))
             {
                 _accountBalance -= amount;
@@ -39,6 +40,7 @@ namespace Banking
         /// <param name="amount">сумма пополнения</param>
         public void TopUp(long amount)
         {
+            AmountCheck(amount);
             if (_accountBalance < amount)
             {
                 _atm.TopUpMoney(amount);
@@ -52,6 +54,14 @@ namespace Banking
         public string ViewBalance()
         {
             return $"Acount balanse: {_accountBalance}";
+        }
+
+        private void AmountCheck(long amount)
+        {
+            if (amount < 0)
+            {
+                throw new ArgumentException("Can't do operation with \"negative\" amount of money");
+            }
         }
     }
 }
