@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppForBankoOperatons.Accounts
 {
-    internal abstract class BankAccount : Owner, IAccountOperations
+    internal abstract class BankAccount : IAccountOperations
     {
         private string CashCurrencyCode { get; }
         internal BankAccount(string backID, string bankName, string ownersName, string ownersAdress, double cash = 0, double overdrive = 0)
@@ -15,11 +15,12 @@ namespace ConsoleAppForBankoOperatons.Accounts
             _accountID = Guid.NewGuid().ToString();
             BankId = backID;
             BankName = bankName;
-            OwnersAdress = ownersAdress;
-            OwnersName = ownersName;
+            Owner = new Owner(ownersAdress, ownersName);
             amountOfCash = cash;
             CashCurrencyCode = "BYN";
         }
+
+        protected Owner Owner { get; }
 
         protected readonly string _accountID;
         protected string blockReason = "";
@@ -50,7 +51,7 @@ namespace ConsoleAppForBankoOperatons.Accounts
 
         public override string ToString()
         {
-            string result = $"Status activity: {IsActive}\nAccount ID: {_accountID}\nBank Id: {BankId}\nBank's Name: {BankName}\nOwner's name: {OwnersName}\nOwner's address: {OwnersAdress}\nAmount of cash: {String.Format("{0:0.##}", amountOfCash)}";
+            string result = $"Status activity: {IsActive}\nAccount ID: {_accountID}\nBank Id: {BankId}\nBank's Name: {BankName}\nOwner's name: {Owner.OwnersName}\nOwner's address: {Owner.OwnersAdress}\nAmount of cash: {String.Format("{0:0.##}", amountOfCash)}";
             if (IsActive)
                 return result;
             else

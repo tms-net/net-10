@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppForBankoOperatons
 {
-    public static class Different_functions
+    public static class Helper
     {
         public static bool IsDigitsOnly(string str)
         {

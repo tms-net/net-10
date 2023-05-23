@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppForBankoOperatons
 {
-    internal abstract class Owner
+    internal class Owner
     {
-        protected string? OwnersAdress { get; set; }
-        protected string? OwnersName { get; set; }
+        public string? OwnersAdress { get; set; }
+        public string? OwnersName { get; set; }
+
+        public Owner(string adress, string name) 
+        {
+            OwnersAdress = adress;
+            OwnersName = name;
+        }
     }
 }

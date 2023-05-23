@@ -15,7 +15,7 @@ namespace ConsoleAppForBankoOperatons.Accounts
 
         internal EntityBankAccount(string backID, string bankName, string organization, string ownersName, string ownersAdress, string unp, double cash = 0) : base(backID, bankName, ownersName, ownersAdress, cash)
         {
-            if (unp.Length != 9 || !Different_functions.IsDigitsOnly(unp))
+            if (unp.Length != 9 || !Helper.IsDigitsOnly(unp))
                 throw new ArgumentException("Uncorrect UNP");
             _unp = unp;
             TypeOfOrganization = organization;

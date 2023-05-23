@@ -29,14 +29,14 @@ internal class Program
         Console.ReadLine();
         Console.Clear();
 
-        Tranceaction traceacrion1 = new Tranceaction("2010", 500, "840");
-        Console.WriteLine(traceacrion1.DoTranceaction(persona, envy, converter));
+        Transeaction transeaction1 = new Transeaction("2010", 500, "840");
+        Console.WriteLine(transeaction1.Dotranseaction(persona, envy, converter));
         Console.WriteLine($"Personal account:\n{persona}\n\nEnvy account: \n{envy}");
 
         Console.ReadLine();
         Console.Clear();
-        Tranceaction traceacrion2 = new Tranceaction("1010", 50, "978");
-        Console.WriteLine(traceacrion2.DoTranceaction(envy, persona, converter));
+        Transeaction transeaction2 = new Transeaction("1010", 50, "978");
+        Console.WriteLine(transeaction2.Dotranseaction(envy, persona, converter));
         persona.TakeOffOverdrive();
         Console.WriteLine($"Personal account:\n{persona}\n\nEnvy account: \n{envy}");
 

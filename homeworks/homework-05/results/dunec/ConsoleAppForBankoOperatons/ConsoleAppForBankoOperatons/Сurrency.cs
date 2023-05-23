@@ -13,11 +13,11 @@ namespace ConsoleAppForBankoOperatons
 
         public Сurrency(string number, string code)
         {
-            if (number.Length != 3 || !Different_functions.IsUpperEnglishOnly(number))
+            if (number.Length != 3 || !Helper.IsUpperEnglishOnly(number))
             {
                 throw new ArgumentException("Uncorrect Сurrency number: " + number.ToString());
             }
-            if (code.Length != 3 || !Different_functions.IsDigitsOnly(code))
+            if (code.Length != 3 || !Helper.IsDigitsOnly(code))
             {
                 throw new ArgumentException("Uncorrect Сurrency code: " + code.ToString());
             }
@@ -39,7 +39,7 @@ namespace ConsoleAppForBankoOperatons
 
         public СurrencyConverter(string code, double coefficient, DateTime dateOn, DateTime dateOff = default)
         {
-            if (code.Length != 3 || !Different_functions.IsDigitsOnly(code))
+            if (code.Length != 3 || !Helper.IsDigitsOnly(code))
             {
                 throw new ArgumentException("Uncorrect Сurrency code: " + code.ToString());
             }
