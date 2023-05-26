@@ -4,9 +4,13 @@
     {
         public string HeaderName { get; set; }
 
+        
+
         public CsvHeaderAttribute(string headerName)
         {
             HeaderName = headerName;
+           
         }
     }
+  
 }

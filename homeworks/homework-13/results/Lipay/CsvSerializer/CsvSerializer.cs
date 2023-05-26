@@ -10,23 +10,36 @@ namespace CsvSerializer
         {
             var type = typeof(T);
 
+
             var properties = type.GetProperties();
 
+            List<string> namesOfPropertis = new List<string>();
+            string propertis;
             foreach (var property in properties)
             {
-                var attr = property.GetCustomAttribute<CsvHeaderAttribute>();
+                var properti = property.Name;
+                namesOfPropertis.Add(properti);
             }
+            propertis = string.Join(",", namesOfPropertis);
+            Console.WriteLine(propertis);
+
 
             // 1. Заголовок
             //   - Определить колонки
             //      - Свойства класса
             //      - .......
 
-            
+
 
             // 2. Строки
             //   - Получить значения нужных свойств
             //      - форматирование
+
+            foreach (var property in properties)
+            {
+                
+            }
+
 
             return string.Empty;
         }
