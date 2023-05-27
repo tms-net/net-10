@@ -1,21 +1,16 @@
 ﻿internal class Truck : Vehicle
 {
-    private bool _tripodEjected;
-
-    public Truck(int year, string make, string model) : base(year, make, model)
-    { } 
+    private readonly int _boxVolume;
+    public Truck(int year, string make, string model, int boxVolume) : base(year, make, model)
+    {
+        _boxVolume = boxVolume;
+    } 
     public override void Start()
     {
         _currentSpeed = 70; // устанавливаем скорость движения
     }
-
-    public override void Stop()
-    {
-        base.Stop(); // сбрасываем скорость движения
-        _tripodEjected = false;
-    }
     public override string Info()
     {
-        return $"Truck model: {Model}, make {Make}, year: {Year}";
+        return $"Truck model: {Model}, make {Make}, year: {Year}, Box Volume: {_boxVolume} m^3";
     }
 }

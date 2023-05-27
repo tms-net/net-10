@@ -4,9 +4,9 @@
     {
         Car car1 = new Car(2005, "BMW", "X5");
  
-        Motorcycle motorcycle1 = new Motorcycle(2010, "MAISTO ", "20-11108");
+        Motorcycle motorcycle1 = new Motorcycle(2010, "MAISTO ", "20-11108", 180);
 
-        Truck truck1 = new Truck(1981, "Sod Buster", "MPC Models");
+        Truck truck1 = new Truck(1981, "Sod Buster", "MPC Models", 20);
 
 
         Console.WriteLine(car1.Info());
