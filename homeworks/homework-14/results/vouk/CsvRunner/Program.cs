@@ -1,7 +1,6 @@
-﻿using System.Data;
-using System.Text;
-using CsvRunner;
+﻿using CsvRunner;
 using CsvSerializer;
+using System.Text;
 
 public class Program
 {
