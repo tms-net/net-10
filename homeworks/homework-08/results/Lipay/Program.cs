@@ -7,7 +7,7 @@ internal partial class Program
     {
         Console.WriteLine("Программа: Менеджер студентов");
 
-        List<Student> students = new List<Student>();
+       
         StudentManager studentManager= new StudentManager();
         
         
@@ -40,7 +40,6 @@ internal partial class Program
             switch (options)
             {
                 case 1:
-                    students.Add(new Student());
 
                     Console.Write("Введите имя: ");
                     string? firstName = Console.ReadLine();
@@ -84,11 +83,11 @@ internal partial class Program
                     double rating = double.Parse(Console.ReadLine());
 
      
-                    studentManager.AddInfo(students[students.Count - 1],firstName, lastName, age, rating, gender);
+                    studentManager.AddInfo(firstName, lastName, age, rating, gender);
 
                     break;
                 case 2:
-                    int resultSearch;
+                    int? resultSearch;
                     Console.WriteLine("Найдите студента, информацию о котором Вы хотите обновить");
                     Console.WriteLine("Выберите режим поиска:\n1 - по ID\n2 - по Имени и Фамилии");
                     while (true)
@@ -108,9 +107,10 @@ internal partial class Program
                     {
                         Console.Write("Введите ID для поиска: ");
                         int SerchID = int.Parse(Console.ReadLine());
-                        if (students.Exists(x => x.ID == SerchID))
+                        resultSearch = studentManager.SerchStudent(SerchID);
+                        if (resultSearch != null)
                         {
-                            resultSearch = students.FindIndex(x => x.ID == SerchID);
+                            
                             Console.Write("Введите имя: ");
                             firstName = Console.ReadLine();
                             Console.Write("Введите фамилию: ");
@@ -152,7 +152,7 @@ internal partial class Program
                             Console.Write("Введите рейтинг студента: ");
                             rating = double.Parse(Console.ReadLine());
 
-                            studentManager.AddInfo(students[resultSearch], firstName, lastName, age, rating, gender);
+                            studentManager.AddInfo((int)resultSearch, firstName, lastName, age, rating, gender);
                         }
                         else
                             Console.WriteLine($"Такого ID: {SerchID} не найдено.");
@@ -163,9 +163,9 @@ internal partial class Program
                         firstName = Console.ReadLine();
                         Console.Write("Введите фамилию для поиска: ");
                         lastName = Console.ReadLine();
-                        if (students.Exists(x => x.FirstName == firstName && x.LastName == lastName))
+                        resultSearch = studentManager.SerchStudent(firstName, lastName);
+                        if (resultSearch != null)
                         {
-                            resultSearch = students.FindIndex(x => x.FirstName == firstName && x.LastName == lastName);
                             Console.Write("Введите имя: ");
                             firstName = Console.ReadLine();
                             Console.Write("Введите фамилию: ");
@@ -207,13 +207,14 @@ internal partial class Program
                             Console.Write("Введите рейтинг студента: ");
                             rating = double.Parse(Console.ReadLine());
 
-                            studentManager.AddInfo(students[resultSearch], firstName, lastName, age, rating, gender);
+                            studentManager.AddInfo((int)resultSearch, firstName, lastName, age, rating, gender);
                         }
                         else
                             Console.WriteLine($"Студента {firstName} {lastName} не найдено.");
                     }
                     break;
                 case 3:
+                    
                     Console.WriteLine("Найдите студента, информацию о котором Вы хотите удалить");
                     Console.WriteLine("Выберите режим поиска:\n1 - по ID\n2 - по Имени и Фамилии");
                     while (true)
@@ -233,9 +234,10 @@ internal partial class Program
                     {
                         Console.Write("Введите ID для поиска: ");
                         int SerchID = int.Parse(Console.ReadLine());
-                        if (students.Exists(x => x.ID == SerchID))
+                        resultSearch = studentManager.SerchStudent(SerchID);
+                        if (resultSearch != 0)
                         {
-                            studentManager.DeleteInfo(students, SerchID);
+                            studentManager.DeleteInfo((int)resultSearch);
                         }
                         else
                             Console.WriteLine($"Такого ID: {SerchID} не найдено.");
@@ -246,55 +248,59 @@ internal partial class Program
                         firstName = Console.ReadLine();
                         Console.Write("Введите имя для поиска: ");
                         lastName = Console.ReadLine();
-                        if (students.Exists(x => x.FirstName == firstName && x.LastName == lastName))
+                        resultSearch = studentManager.SerchStudent(firstName, lastName);
+                        if (resultSearch != null)
                         {
-                            studentManager.DeleteInfo(students, firstName,lastName);
+                            studentManager.DeleteInfo(firstName,lastName);
                         }
                         else
                             Console.WriteLine($"Студента {firstName} {lastName} не найдено.");
                     }
                         break;
                 case 4:
+                    
                     Console.Write("Введите ID для поиска: ");
                     int ID = int.Parse(Console.ReadLine());
-                    if (students.Exists(x => x.ID == ID))
+                    resultSearch = studentManager.SerchStudent(ID);
+                    if (resultSearch != null)
                     {
-                        int resultID = students.FindIndex(x => x.ID == ID);
+                        var student = studentManager.GetStudent((int)resultSearch);
                         Console.WriteLine("Информация о найденом студенте:");
-                        Console.WriteLine($"Имя: {students[resultID].FirstName}\n" +
-                                $"Фамилия: {students[resultID].LastName}\n" +
-                                $"Возраст: {students[resultID].Age}\n" +
-                                $"Пол: {students[resultID].Gender}\n" +
-                                $"Рейтинг: {students[resultID].Rating}\n" +
-                                $"ID: {students[resultID].ID}\n");
+                        Console.WriteLine($"Имя: {student.FirstName}\n" +
+                                $"Фамилия: {student.LastName}\n" +
+                                $"Возраст: {student.Age}\n" +
+                                $"Пол: {student.Gender}\n" +
+                                $"Рейтинг: {student.Rating}\n" +
+                                $"ID: {student.ID}\n");
                     }
                     else
                         Console.WriteLine($"Такого ID: {ID} не найдено.");
                     break;
                 case 5:
                     Console.Write("Введите имя для поиска: ");
-                    string? SearchFirstName = Console.ReadLine();
+                    firstName = Console.ReadLine();
                     Console.Write("Введите фамилию для поиска: ");
-                    string? SearchLastName = Console.ReadLine();
-                    if (students.Exists(x => x.FirstName == SearchFirstName && x.LastName == SearchLastName))
+                    lastName = Console.ReadLine();
+                    resultSearch = studentManager.SerchStudent(firstName, lastName);
+                    if (resultSearch != null)
                     {
-                        int resultName = students.FindIndex(x => x.FirstName == SearchFirstName && x.LastName == SearchLastName);
-
+                        var student = studentManager.GetStudent((int)resultSearch);
                         Console.WriteLine("Информация о найденом студенте:");
-                        Console.WriteLine($"Имя: {students[resultName].FirstName}\n" +
-                                $"Фамилия: {students[resultName].LastName}\n" +
-                                $"Возраст: {students[resultName].Age}\n" +
-                                $"Пол: {students[resultName].Gender}\n" +
-                                $"Рейтинг: {students[resultName].Rating}\n" +
-                                $"ID: {students[resultName].ID}\n");
+                        Console.WriteLine($"Имя: {student.FirstName}\n" +
+                                $"Фамилия: {student.LastName}\n" +
+                                $"Возраст: {student.Age}\n" +
+                                $"Пол: {student.Gender}\n" +
+                                $"Рейтинг: {student.Rating}\n" +
+                                $"ID: {student.ID}\n");
                     }
                     else
-                        Console.WriteLine($"Студента {SearchFirstName} {SearchLastName} не найдено.");
+                        Console.WriteLine($"Студента {firstName} {lastName} не найдено.");
                     break;
                 case 6:
                     Console.WriteLine("Информации о всех студентах:");
                     Console.WriteLine("------------------------");
                     int i;
+                    var students = studentManager.GetAllStudents();
                     for (i = 0; i < students.Count; i++)
                     {
                         Console.WriteLine($"Имя: {students[i].FirstName}\n" +

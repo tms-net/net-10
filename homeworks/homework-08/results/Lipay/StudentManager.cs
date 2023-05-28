@@ -5,28 +5,71 @@ internal partial class Program
 {
     internal class StudentManager : IStudentManager
     {
-
+        List<Student> students = new List<Student>();
         public StudentManager()
         {
-
+            
         }
 
-        public void AddInfo(Student student, string firstName, string lastName, int age, double rating, string gender)
+        public void AddInfo( string firstName, string lastName, int age, double rating, string gender)
         {
-            student.FirstName = firstName;
-            student.LastName = lastName;
-            student.Age = age;
-            student.Rating = rating;
-            student.Gender = gender;
+            students.Add(new Student());
+            students[students.Count - 1].FirstName = firstName;
+            students[students.Count - 1].LastName = lastName;
+            students[students.Count - 1].Age = age;
+            students[students.Count - 1].Rating = rating;
+            students[students.Count - 1].Gender = gender;
+        }
+        public void AddInfo(int index, string firstName, string lastName, int age, double rating, string gender)
+        {
+            
+            students[index].FirstName = firstName;
+            students[index].LastName = lastName;
+            students[index].Age = age;
+            students[index].Rating = rating;
+            students[index].Gender = gender;
+        }
+        public void DeleteInfo(int SerchID)
+        {
+            students.RemoveAt(students.FindIndex(x => x.ID == SerchID));
+        }
+        public void DeleteInfo(string firstName, string lastName)
+        {
+            students.RemoveAt(students.FindIndex(x => x.FirstName == firstName && x.LastName == lastName));
         }
 
-        public void DeleteInfo(List<Student> student, int SerchID)
+        public int? SerchStudent(int serchID) 
         {
-            student.RemoveAt(student.FindIndex(x => x.ID == SerchID));
+            int _resultSearch;
+            if (students.Exists(x => x.ID == serchID))
+            {
+                return _resultSearch = students.FindIndex(x => x.ID == serchID);
+            }
+            else
+            {
+                return null;
+            }
         }
-        public void DeleteInfo(List<Student> student, string firstName, string lastName)
+        public int? SerchStudent(string firstName, string lastName)
         {
-            student.RemoveAt(student.FindIndex(x => x.FirstName == firstName && x.LastName == lastName));
+            int _resultSearch;
+            if (students.Exists(x => x.FirstName == firstName && x.LastName == lastName))
+            {
+                return _resultSearch = students.FindIndex(x => x.FirstName == firstName && x.LastName == lastName);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public Student GetStudent(int index)
+        {
+            return students[index];
+        }
+        public List<Student> GetAllStudents()
+        {
+            return students;
         }
     }
 }
