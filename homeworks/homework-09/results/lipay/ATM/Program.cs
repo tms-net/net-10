@@ -23,7 +23,7 @@ for (int i = 0; i < 10; i++)
     }
     else
     {
-        Console.WriteLine(client._cardStatus);
+        Console.WriteLine("Not enough money on card");
     }
 
   

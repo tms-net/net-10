@@ -2,10 +2,9 @@
 {
     internal class ATMClient
     {
-        private ATM _atm;
-        private decimal? _accountBalance; // Nullable Value Type
-        public string _cardStatus;
-        public CardStatus cardStatus = CardStatus.Failed;
+        ATM _atm { get; set; }
+        decimal? _accountBalance { get; set; } // Nullable Value Type
+        public Undefined cardStatus = Undefined.Failed;
         
 
         public ATMClient(ATM atm)
@@ -29,16 +28,16 @@
         public void Withdraw(long amount)
         {
             // TODO: Выполнить валидацию проведения операции
+           
             if (_accountBalance >= amount)
             {
                 _atm.WithdrawMoney(amount);
                 _accountBalance -= amount;
-                cardStatus = CardStatus.Succeeded;
+                cardStatus = Undefined.Succeeded;
             }
             else
             {
-                cardStatus = CardStatus.Failed;
-                _cardStatus = "Not enough money on card";
+                cardStatus = Undefined.Failed;
             }
          
         }
@@ -50,8 +49,16 @@
         public void TopUp(long amount)
         {
             // TODO: Реализовать пополнение баланса
-            _accountBalance += amount;
-            _atm.TopUpMoney(amount);
+            if (_accountBalance == null)
+            {
+                _accountBalance = null;
+            }
+            else
+            {
+                _accountBalance += amount;
+                _atm.TopUpMoney(amount);
+            }
+         
         }
 
         /// <summary>
@@ -70,7 +77,7 @@
                 return null;
             }
         }
-        public enum CardStatus
+        public enum Undefined
         {
             Succeeded,
             Failed
