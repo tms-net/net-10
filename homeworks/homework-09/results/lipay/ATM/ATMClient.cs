@@ -4,7 +4,7 @@
     {
         ATM _atm { get; set; }
         decimal? _accountBalance { get; set; } // Nullable Value Type
-        public Undefined cardStatus = Undefined.Failed;
+        public CardStatus cardStatus = CardStatus.Undefined;
         
 
         public ATMClient(ATM atm)
@@ -33,17 +33,17 @@
             {
                 _atm.WithdrawMoney(amount);
                 _accountBalance -= amount;
-                cardStatus = Undefined.Succeeded;
+                cardStatus = CardStatus.Succeeded;
             }
             else
             {
-                cardStatus = Undefined.Failed;
+                cardStatus = CardStatus.Undefined;
             }
          
         }
 
         /// <summary>
-        /// .Пополнить банкомат средствами
+        /// Пополнить банкомат средствами
         /// </summary>
         /// <param name="amount">сумма пополнения</param>
         public void TopUp(long amount)
@@ -51,12 +51,13 @@
             // TODO: Реализовать пополнение баланса
             if (_accountBalance == null)
             {
-                _accountBalance = null;
+                cardStatus = CardStatus.Undefined;
             }
             else
             {
                 _accountBalance += amount;
                 _atm.TopUpMoney(amount);
+                cardStatus = CardStatus.Succeeded;
             }
          
         }
@@ -77,10 +78,10 @@
                 return null;
             }
         }
-        public enum Undefined
+        public enum CardStatus
         {
             Succeeded,
-            Failed
+            Undefined
         }
     }
 }
