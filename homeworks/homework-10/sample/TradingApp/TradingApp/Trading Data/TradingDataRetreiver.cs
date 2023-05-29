@@ -16,7 +16,7 @@ namespace TradingApp
     }
 
     public class SymbolInfo
-    {
+    {       
         public string SymbolName { get; } //Символ компании на бирже
         public decimal MarketCap { get; } //Словарь с датой и значением
         public IDictionary<DateTime, decimal> Data { get; set; }
@@ -36,11 +36,16 @@ namespace TradingApp
 
     internal class TradingDataRetreiver : ITradingDataRetreiver
     {
+        private readonly string dataMSFTFileName = "dataMSFTF.json";
+        private readonly string dataAAPLFileName = "dataAAPL.json";
+
         const int MinimalGranularityMs = 5 * 60 * 1000;
 
         private readonly Random _random = new Random();
-        private readonly Dictionary<DateTime, decimal> _dataMSFT = new Dictionary<DateTime, decimal>();
-        private readonly Dictionary<DateTime, decimal> _dataAAPL = new Dictionary<DateTime, decimal>();
+        private  Dictionary<DateTime, decimal> _dataMSFT = new Dictionary<DateTime, decimal>();
+        private  Dictionary<DateTime, decimal> _dataAAPL = new Dictionary<DateTime, decimal>();
+
+        public object WriteIndented { get; private set; }
 
         public TradingDataRetreiver()
         {
@@ -79,7 +84,7 @@ namespace TradingApp
             // Дополнение текущими данными
             //  - Каждые 5 мин
 
-            Timer timer = new Timer(UpdateData, null, MinimalGranularityMs, MinimalGranularityMs);
+            //Timer timer = new Timer(UpdateData, null, MinimalGranularityMs, MinimalGranularityMs);
         }
 
         public SymbolInfo RetreiveInfo(string symbolName, TimeSpan period, TimeSpan granularity)
@@ -94,11 +99,11 @@ namespace TradingApp
 
             // 0    5m  10m   15m    20m     25m   30m   35m  - 15 min granularity
             // {                  }{                   }{   } 
-            
+
             // 15:00 <-       15:15 <-            15:30 <- - now 15:35 -> 15:45
             // [start ->       end]                        - average
 
-            
+
 
             // Получение данных
             var symbolData = symbolName switch
@@ -119,7 +124,7 @@ namespace TradingApp
 
             // index * minGranularity % granularity
 
-            var groupping = ((long) granularity.TotalMilliseconds) / MinimalGranularityMs;
+            var groupping = ((long)granularity.TotalMilliseconds) / MinimalGranularityMs;
 
             // LINQ to Objects
             // LINQ = Language Intergated Query
@@ -131,13 +136,13 @@ namespace TradingApp
 
             IDictionary<DateTime, decimal> data = symbolData
                 .Where(dataPoint => dataPoint.Key > start) // filter
-                // анонимный класс
+                                                           // анонимный класс
                 .Select((dataPoint, index) => new { index, dataPoint }) // map / проекция
                 .ToLookup(dataIndex => dataIndex.index / groupping) // group
                 .ToDictionary( // reduce материализация
                     group => group.Min(dataIndex => dataIndex.dataPoint.Key), // аггрегация для ключа
                     group => group.Average(dataIndex => dataIndex.dataPoint.Value) // аггрегация для значения
-                ); 
+                );
 
             return new SymbolInfo(symbolName)
             {
@@ -164,10 +169,12 @@ namespace TradingApp
                 _dataAAPL.Add(dateNow, aaplStartPrice + aaplStartPrice * (decimal)_random.NextDouble());
             }
 
+            SaveMSFTDateToJson();
+            SaveAAPLDateToJson();
             // сохранить в файл
 
             // объект -> данные (бинарные, текстовые) -> текстовые -> формат данных
-            
+
             // бинарные -> в виде как объекты
 
             // .txt -> текст
@@ -187,23 +194,69 @@ namespace TradingApp
             const int msftStartPrice = 308;
             const int aaplStartPrice = 200;
 
-            var dateNow = DateTime.UtcNow;
-            var startDate = dateNow.AddDays(-1);
+            bool saveddataMSFT = GetMSFTDateFromJson();
+            bool saveddataAAPL = GetAAPLDateFromJson();
 
-            for (var date = startDate; date <= dateNow; date = date.AddMilliseconds(MinimalGranularityMs))
-            {
-                count++;
-                if (count % 2 == 0)
+            if (!saveddataMSFT || !saveddataAAPL)
+            { 
+                var dateNow = DateTime.UtcNow;
+                var startDate = dateNow.AddDays(-1);
+
+                for (var date = startDate; date <= dateNow; date = date.AddMilliseconds(MinimalGranularityMs))
                 {
-                    _dataMSFT.Add(date, msftStartPrice - msftStartPrice * (decimal)_random.NextDouble());
-                    _dataAAPL.Add(date, aaplStartPrice - aaplStartPrice * (decimal)_random.NextDouble());
+                    count++;
+                    if (count % 2 == 0)
+                    {
+                        if (!saveddataMSFT) _dataMSFT.Add(date, msftStartPrice - msftStartPrice * (decimal)_random.NextDouble());
+                        if (!saveddataAAPL) _dataAAPL.Add(date, aaplStartPrice - aaplStartPrice * (decimal)_random.NextDouble());
+                    }
+                    else
+                    {
+                        if (!saveddataMSFT) _dataMSFT.Add(date, msftStartPrice + msftStartPrice * (decimal)_random.NextDouble());
+                        if (!saveddataAAPL) _dataAAPL.Add(date, aaplStartPrice + aaplStartPrice * (decimal)_random.NextDouble());
+                    }
                 }
-                else
-                {
-                    _dataMSFT.Add(date, msftStartPrice + msftStartPrice * (decimal)_random.NextDouble());
-                    _dataAAPL.Add(date, aaplStartPrice + aaplStartPrice * (decimal)_random.NextDouble());
-                }
+                SaveMSFTDateToJson();
+                SaveAAPLDateToJson();
             }
+        }
+
+        private void SaveMSFTDateToJson()
+        {            
+            var MSFTFileName = @$"{Directory.GetCurrentDirectory()}\{dataMSFTFileName}";
+            var jsonMSFT = JsonSerializer.Serialize(_dataMSFT, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(MSFTFileName, jsonMSFT);
+        }
+
+        private void SaveAAPLDateToJson()
+        {
+            var AAPLFileName = @$"{Directory.GetCurrentDirectory()}\{dataAAPLFileName}";
+            var jsonAAPL = JsonSerializer.Serialize(_dataAAPL, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(AAPLFileName, jsonAAPL);
+        }
+
+        private bool GetMSFTDateFromJson()
+        {
+            var MSFTFileName = @$"{Directory.GetCurrentDirectory()}\{dataMSFTFileName}";
+
+            if (!File.Exists(MSFTFileName))
+                return false;
+
+            _dataMSFT = JsonSerializer.Deserialize<Dictionary<DateTime, decimal>>(File.ReadAllText(MSFTFileName));
+
+            return true;
+        }
+
+        private bool GetAAPLDateFromJson()
+        {
+            var AAPLFileName = @$"{Directory.GetCurrentDirectory()}\{dataAAPLFileName}";
+
+            if (!File.Exists(AAPLFileName))
+                return false;
+
+            _dataAAPL = JsonSerializer.Deserialize<Dictionary<DateTime, decimal>>(File.ReadAllText(AAPLFileName));
+
+            return true;
         }
     }
 }

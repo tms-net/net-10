@@ -19,7 +19,6 @@ namespace TradingApp.Data
         public TradingMedatata MetaData { get; set; }
 
         [JsonPropertyName("data")]
-        [XmlElement(ElementName = "data")]
         public PriceData Data { get; set; }
 
         // циклические ссылки
@@ -30,6 +29,7 @@ namespace TradingApp.Data
 
     public class TradingMedatata
     {
+
     }
 
     public class PriceData
