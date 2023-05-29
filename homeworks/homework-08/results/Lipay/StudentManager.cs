@@ -1,10 +1,12 @@
 ﻿using static Program;
 using System.Reflection;
+using System;
 
 internal partial class Program
 {
     internal class StudentManager : IStudentManager
     {
+        ActionState actionState = new ActionState();
         List<Student> students = new List<Student>();
         public StudentManager()
         {
@@ -31,7 +33,13 @@ internal partial class Program
         }
         public void DeleteInfo(int SerchID)
         {
-            students.RemoveAt(students.FindIndex(x => x.ID == SerchID));
+            if (students.Exists(x => x.ID == SerchID))
+            {
+                students.RemoveAt(students.FindIndex(x => x.ID == SerchID));
+                actionState = ActionState.Succeeded; 
+            }
+            else actionState = ActionState.Failed;
+
         }
         public void DeleteInfo(string firstName, string lastName)
         {
@@ -62,14 +70,22 @@ internal partial class Program
                 return null;
             }
         }
-
+        
         public Student GetStudent(int index)
         {
-            return students[index];
+            List<Student> allStudents = students.ToList();
+            Student student = allStudents[index];
+            return student;
         }
         public List<Student> GetAllStudents()
         {
-            return students;
+            List<Student> allStudents = students.ToList();
+            return allStudents;
         }
+    }
+    enum ActionState
+    {
+        Succeeded,
+        Failed
     }
 }
