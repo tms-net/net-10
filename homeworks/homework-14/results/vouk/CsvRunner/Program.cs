@@ -1,5 +1,5 @@
 ﻿using CsvRunner;
-using CsvSerializer;
+using Serialization;
 using System.Text;
 
 public class Program
@@ -66,7 +66,7 @@ public class Program
 
         CsvSerializerSettings settings = new CsvSerializerSettings
         {
-            Delimiter = ";",
+            Delimiter = ",",
             Encoding = Encoding.UTF8,
             HasHeader = true,
             Quote = '"',
@@ -82,17 +82,19 @@ public class Program
         };
 
         // Serialize data to CSV file
-        string csvSerialized = CsvSerializer<Stock>.Serialize(settings, list);
-        string strExeFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-        string strWorkPath = Path.GetDirectoryName(strExeFilePath);
-        string strFullPath = Path.Combine(strWorkPath, "stocks.csv");
-        File.WriteAllText(strFullPath, csvSerialized);
+        //string csvSerialized = CsvSerializer.Serialize<Stock>(settings, list);
+        //string strExeFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+        //string strWorkPath = Path.GetDirectoryName(strExeFilePath);
+        //string strFullPath = Path.Combine(strWorkPath, "stocks.csv");
+        //File.WriteAllText(strFullPath, csvSerialized);
 
         // Write data in console
-        Console.WriteLine(csvSerialized);
+        //Console.WriteLine(csvSerialized);
 
         // Deserialize data from CSV file
-        string csvDeserialized = File.ReadAllText(strFullPath);
-        Stock[] arrayCollection = CsvSerializer<Stock>.Deserialize(settings, csvDeserialized).ToArray();
+        //string csvDeserialized = File.ReadAllText(strFullPath);
+        //Stock[] arrayCollection = CsvSerializer.Deserialize<Stock>(settings, csvDeserialized).ToArray();
+
+        Stock[] arrayCollection = CsvSerializer.Deserialize<Stock>(settings, "Name,Report_Rating,Report_Bank_Name,CurrentPrice\nMSFT,Buy,CITY,300\nAAPL,Sell,SnP,500").ToArray();
     }
 }

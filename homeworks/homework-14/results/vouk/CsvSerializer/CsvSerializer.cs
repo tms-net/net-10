@@ -1,9 +1,10 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace CsvSerializer
+namespace Serialization
 {
     public abstract class CsvSerializerAbstraction<TEntity>
         where TEntity : class
@@ -19,31 +20,47 @@ namespace CsvSerializer
         }
     }
 
-    public sealed class CsvSerializer : CsvSerializerAbstraction<DataRow>
+    // Создание объектов сериализатора
+    // вызов внутренних методов
+    public sealed class CsvSerializer //: CsvSerializerAbstraction<DataRow>
     {
-        private CsvSerializer(CsvSerializerSettings csvSerializerSettings) : base(csvSerializerSettings)
+        public static string Serialize<TEntity>(CsvSerializerSettings csvSerializerSettings, List<TEntity> collection)
+            where TEntity : class
         {
+            // ADO.NET
+
+            // Table
+            //  - Scheme
+            // DataRow
+
+            var serializer = new CsvSerializer<TEntity>(csvSerializerSettings);
+
+            return serializer.Serialize(collection.ToArray());
+        }
+        
+        public static List<TEntity> Deserialize<TEntity>(CsvSerializerSettings csvSerializerSettings, string collection)
+            where TEntity : class
+        {
+            var serializer = new CsvSerializer<TEntity>(csvSerializerSettings);
+            return serializer.Deserialize(collection).ToList();
         }
     }
 
-    public sealed class CsvSerializer<TEntity> : CsvSerializerAbstraction<TEntity>
+    internal sealed class CsvSerializer<TEntity> : CsvSerializerAbstraction<TEntity>
         where TEntity : class
     {
-        private CsvSerializer(CsvSerializerSettings csvSerializerSettings) : base(csvSerializerSettings)
+        private readonly CsvSerializerSettings _csvSerializerSettings = new();
+
+        internal CsvSerializer() : this(new CsvSerializerSettings())
         {
         }
 
-        public static string Serialize(CsvSerializerSettings csvSerializerSettings, List<TEntity> collection)
+        internal CsvSerializer(CsvSerializerSettings csvSerializerSettings) : base(csvSerializerSettings)
         {
-            return Serialize(csvSerializerSettings, collection.ToArray());
+            _csvSerializerSettings = csvSerializerSettings;
         }
 
-        public static string Serialize(CsvSerializerSettings csvSerializerSettings, params TEntity[] collection)
-        {
-            return (new CsvSerializer<TEntity>(csvSerializerSettings)).CustomSerialize(collection);
-        }
-
-        protected string CustomSerialize(params TEntity[] collection)
+        protected internal string Serialize(params TEntity[] collection)
         {
             StringBuilder sbColumns = new StringBuilder();
             StringBuilder sbRows = new StringBuilder();
@@ -60,6 +77,151 @@ namespace CsvSerializer
                 this.MountCsvRows(ref sbRows, collection[j], pairs);
             }
             return sbColumns.ToString() + sbRows.ToString();
+        }
+
+        protected internal IEnumerable<TEntity> Deserialize(string csvString)
+        {
+            string[] arrayLinesCsv = csvString.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            string[] columnsName = arrayLinesCsv[0].Split(_csvSerializerSettings.Delimiter);
+
+            Type tp = typeof(TEntity);
+
+            PropertyInfo[] props = tp.GetProperties();
+
+            var propMapping = GetPropertyMapping();
+
+            //if (propMapping.Count < columnsName.Length)
+            //{
+            //    MapArrayColumns(propMapping.Count);
+            //}
+
+            // header => setValue(value)
+
+            for (int i = 1; i < arrayLinesCsv.Length; i++)
+            {
+                var propInstances = new Dictionary<PropertyInfo, object>();
+                var instance = Activator.CreateInstance<TEntity>();
+
+                string[] columnsValue = arrayLinesCsv[i].Split(_csvSerializerSettings.Delimiter);
+
+                // props.Count == columnsValue.Count
+
+                // Validate row entry
+
+                for (int j = 0; j < propMapping.Count; j++)
+                {
+                    var prop = propMapping[j];
+                    prop.SetProperty(instance, columnsValue[j]);
+                }
+
+                yield return instance;
+            }
+        }
+
+
+        private List<PropertyMapping> GetPropertyMapping()
+        {
+            var list = new List<PropertyMapping>();
+            GetPropertyMapping(list, typeof(TEntity));
+            return list;
+        }
+
+        private void GetPropertyMapping(
+            List<PropertyMapping> propMapping,
+            Type type,
+            PropertyMapping parentProperty = null)
+        {
+            object GetInstance(PropertyMapping property, object rootInstance)
+            {
+                if (property == null)
+                {
+                    return rootInstance;
+                }
+
+                var instance = GetInstance(property.ParentProperty, rootInstance);
+                var propValue = property.PropertyInfo.GetValue(instance);
+                if (propValue == null)
+                {
+                    propValue = Activator.CreateInstance(property.PropertyInfo.PropertyType);
+                    property.PropertyInfo.SetValue(instance, propValue);
+                }
+
+                return propValue;
+            }
+
+            PropertyInfo[] props = type.GetProperties();
+            for (int i = 0; i < props.Length; i++)
+            {
+                var prop = props[i];
+                DataMemberAttribute att = prop.GetCustomAttribute<DataMemberAttribute>();
+                if (att != null)
+                {
+                    switch (prop.PropertyType)
+                    {
+                        case var stringType when stringType == typeof(string):
+                            propMapping.Add(new PropertyMapping
+                            {
+                                SetProperty = (rootInstance, value) => prop.SetValue(GetInstance(parentProperty, rootInstance), value.ToString(), null),
+                                ParentProperty = parentProperty,
+                                PropertyInfo = prop
+                            });
+                            break;
+
+                        case var enumType when enumType.IsEnum:
+                            propMapping.Add(new PropertyMapping
+                            {
+                                SetProperty = (rootInstance, value) => prop.SetValue(GetInstance(parentProperty, rootInstance), Enum.Parse(enumType, value.ToString()), null),
+                                ParentProperty = parentProperty,
+                                PropertyInfo = prop
+                            });
+                            break;
+
+                        // посмотрели все свойства и засетили примитивные
+                        case var primitivetype when primitivetype.IsValueType || primitivetype.IsPrimitive:
+                            propMapping.Add(new PropertyMapping
+                            {
+                                SetProperty = (rootInstance, value) => prop.SetValue(GetInstance(parentProperty, rootInstance), Convert.ChangeType(value, Type.GetTypeCode(primitivetype)), null),
+                                ParentProperty = parentProperty,
+                                PropertyInfo = prop
+                            });
+                            break;
+
+                        case var refType when !refType.IsValueType:
+                            // Create instance of Property Type
+                            // Set fields
+                            GetPropertyMapping(propMapping, refType, new PropertyMapping
+                            {
+                                ParentProperty = parentProperty,
+                                PropertyInfo = prop,
+                                SetProperty = (instance, value) => throw new NotSupportedException()
+                            });
+                            break;
+
+                        //IEnumerable<string> en;
+                        //List<string> list;
+                        //en = list;
+
+
+                        //bool IsCollection(Type t)
+                        //{
+                        //    var genType = typeof(IEnumerable<>);
+                        //     if (t.IsGenericType)
+                        //     {
+                        //        var types = t.GetGenericArguments();
+                        //        genType.MakeGenericType(genType);
+                        //     }
+
+                        //    return t.IsAssignableTo(genType);
+                        //}
+
+                        //case var arrayType when IsCollection(arrayType)//.IsAssignableTo():
+                        //    // Create instance of Property Type
+                        //    // Set fields
+                        //    GetPropertyMapping(propMapping, refType);
+                        //    break;
+                    }
+                }
+            }
         }
 
         private void MountCsvColumns(ref StringBuilder sbColumns, params KeyValuePair<PropertyInfo, DataMemberAttribute>[] pairs)
@@ -94,41 +256,6 @@ namespace CsvSerializer
                     sbRows.Append(result).Append(CsvSeparator);
                 }
             }
-        }
-
-        public static IEnumerable<TEntity> Deserialize(CsvSerializerSettings csvSerializerSettings, string csvString)
-        {
-            return (new CsvSerializer<TEntity>(csvSerializerSettings)).CustomDeserialize(csvString);
-        }
-
-        protected IEnumerable<TEntity> CustomDeserialize(string csvString)
-        {
-            string[] arrayLinesCsv = csvString.Split('\n');
-            string[] columnsName = arrayLinesCsv[0].Split(base._csvSeparator);
-            Type tp = typeof(TEntity);
-            PropertyInfo[] props = tp.GetProperties();
-            for (int i = 1; i < arrayLinesCsv.Length - 1; i++)
-            {
-                object instance = Activator.CreateInstance(tp);
-                string[] columnsValue = arrayLinesCsv[i].Split(base._csvSeparator);
-                for (int j = 0; j < columnsValue.Length - 1; j++)
-                {
-                    PropertyInfo prop = null;
-                    for (int x = 0; x < props.Length; x++)
-                    {
-                        DataMemberAttribute att = props[x].GetCustomAttribute(typeof(DataMemberAttribute)) as DataMemberAttribute;
-                        if ((null != att && att.Name == columnsName[j]) || columnsName[j] == props[x].Name)
-                        {
-                            prop = props[x];
-                        }
-                        if (null != prop)
-                        {
-                            prop.SetValue(instance, Convert.ChangeType(columnsValue[j], Type.GetTypeCode(prop.PropertyType)), null);
-                        }
-                    }
-                }
-                yield return (instance as TEntity);
-            }
-        }
+        }     
     }
 }

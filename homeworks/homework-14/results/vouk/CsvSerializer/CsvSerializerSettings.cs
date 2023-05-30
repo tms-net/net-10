@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace CsvSerializer
+namespace Serialization
 {
     public class CsvSerializerSettings
     {
@@ -9,7 +9,7 @@ namespace CsvSerializer
 
         }
 
-        public string Delimiter { get; set; }
+        public string Delimiter { get; set; } = ",";
         public Encoding Encoding { get; set; }
         public bool HasHeader { get; set; }
         public char Quote { get; set; }
