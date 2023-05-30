@@ -3,21 +3,19 @@ using System.Diagnostics.Metrics;
 using System.IO;
 using System.Reflection;
 using System.Xml.Linq;
-
+using Microsoft.VisualBasic;
 
 namespace CSVSerializer
 {
     public static class CsvSerializer<TCollection, TElement> where TCollection : IEnumerable<TElement>
     {
-        private static PropertyInfo[] _propertyInfos;
-
         public static string Serialize(TCollection objectToSerialize)
         {
-            GeneratePropertyInfos();
-            var maxLengthProperties = CheckIfCollection(_propertyInfos, objectToSerialize);
+            var propertyInfos = GeneratePropertyInfos();
+            var maxLengthProperties = CheckIfArray(propertyInfos, objectToSerialize);
 
-            string header = GenerateHeader(objectToSerialize, maxLengthProperties);
-            string propertyValues = GetData(objectToSerialize, maxLengthProperties);
+            string header = GenerateHeader(objectToSerialize, propertyInfos, maxLengthProperties);
+            string propertyValues = GetData(objectToSerialize, propertyInfos, maxLengthProperties);
             string path = FileManager.SaveString(GetClassName(objectToSerialize), header + "\n" + propertyValues);
 
             return path;
@@ -31,7 +29,7 @@ namespace CSVSerializer
             Array.Copy(lines, 1, linesWithoutHeader, 0, lines.Length - 1);
 
             PropertyInfo[] propertyInfo = GeneratePropertyInfos();
-            var arrayAndCollectionLength = GetLengthOfProperties(lines[0]);
+            var arrayLength = GetLengthOfProperties(lines[0]);
 
             foreach (string line in linesWithoutHeader)
             {
@@ -46,7 +44,7 @@ namespace CSVSerializer
                     {
                         if (propertyInfo[i].PropertyType.IsArray)
                         {
-                            int length = arrayAndCollectionLength[propertyInfo[i].Name];
+                            int length = arrayLength[propertyInfo[i].Name];
                             List<object> propertyList = new List<object>();
 
                             for (int j = 0; j < length; j++)
@@ -62,15 +60,8 @@ namespace CSVSerializer
                             Type elementType = ((Array)propertyInfo[i].GetValue(instance)).GetType().GetElementType();
                             Array resultArray = Array.CreateInstance(elementType, propertyList.ToArray().Length);
                             propertyList.ToArray().CopyTo(resultArray, 0);
-
                             propertyInfo[i].SetValue(instance, resultArray);
                         }
-
-                        else if (propertyInfo[i].PropertyType.GetInterface("IEnumerable") != null && propertyInfo[i].PropertyType != typeof(string))
-                        {
-                           
-                        }
-
                         else
                         {
                             var value = Convert.ChangeType(values[i + valueIndex], propertyInfo[i].PropertyType);
@@ -83,7 +74,7 @@ namespace CSVSerializer
             }
         }
 
-        //based on header dictionary contains how many items of the same name is presented in the file (made for arrays and collections)
+        //based on header dictionary contains how many items of the same name is presented in the file (made for arrays)
         private static Dictionary<string, int> GetLengthOfProperties(string header)
         {
             var lengthOfProperties = new Dictionary<string, int>();
@@ -110,11 +101,11 @@ namespace CSVSerializer
         }
 
         //generate header based on names of properties, separated by ","
-        private static string GenerateHeader(TCollection objectToSerialize, Dictionary<PropertyInfo, int> maxLength)
+        private static string GenerateHeader(TCollection objectToSerialize, PropertyInfo[] propertyInfos, Dictionary<PropertyInfo, int> maxLength)
         {
             string propertyiesNames = string.Empty;
 
-            foreach (var propertyInfo in _propertyInfos)
+            foreach (var propertyInfo in propertyInfos)
             {
 
                 if (!maxLength.ContainsKey(propertyInfo))
@@ -135,16 +126,16 @@ namespace CSVSerializer
             return propertyiesNames;
         }
 
-        //prepares string of values ready for CSV
-        private static string GetData(TCollection objectToSerialize, Dictionary<PropertyInfo, int> maxLength)
+        //prepare string of values ready for CSV
+        private static string GetData(TCollection objectToSerialize, PropertyInfo[] propertyInfos, Dictionary<PropertyInfo, int> maxLength)
         {
             string propertyValues = string.Empty;
 
             foreach (var curObject in objectToSerialize)
             {
-                foreach (var propertyInfo in _propertyInfos)
+                foreach (var propertyInfo in propertyInfos)
                 {
-                    if (!maxLength.ContainsKey(propertyInfo)) //if property non-array and non-collection type
+                    if (!maxLength.ContainsKey(propertyInfo)) //if property non-array
                     {
                         propertyValues += propertyInfo.GetValue(curObject) + ",";
                     }
@@ -152,48 +143,8 @@ namespace CSVSerializer
                     {
                         if (propertyInfo.PropertyType.IsArray)
                         {
-                            Array array = (Array)propertyInfo.GetValue(curObject);
-                            int counter = 0;
-
-                            foreach (object element in array)
-                            {
-                                propertyValues += element + ",";
-                                counter++;
-                            }
-
-                            if (counter < maxLength[propertyInfo])
-                            {
-                                for (int i = counter; i < maxLength[propertyInfo]; i++)
-                                {
-                                    propertyValues += ",";
-                                }
-                            }
+                            propertyValues += PrepareArrayData(propertyInfo, curObject, maxLength[propertyInfo]);
                         }
-                        else
-                        {
-                            var collectionTemp = (System.Collections.IEnumerable)propertyInfo.GetValue(curObject);
-                            var collection = collectionTemp.Cast<object>();
-                            int counter = 0;
-
-                            if (collection != null)
-                            {
-                                foreach (object element in collection)
-                                {
-                                    propertyValues += element + ",";
-                                    counter++;
-                                }
-                            }
-
-                            if (counter < maxLength[propertyInfo])
-                            {
-                                for (int i = counter; i < maxLength[propertyInfo]; i++)
-                                {
-                                    propertyValues += ",";
-                                }
-                            }
-
-                        }
-
                     }
                 }
 
@@ -201,6 +152,29 @@ namespace CSVSerializer
             }
 
             return propertyValues;
+        }
+
+        //get data from propertyInfo if the Type is Array
+        private static string PrepareArrayData(PropertyInfo propertyInfo, TElement curObject, int maxLength)
+        {
+            Array array = (Array)propertyInfo.GetValue(curObject);
+            int counter = 0;
+            string preparedArrayData = string.Empty;
+
+            foreach (object element in array)
+            {
+                preparedArrayData += element + ",";
+                counter++;
+            }
+
+            if (counter < maxLength)
+            {
+                for (int i = counter; i < maxLength; i++)
+                {
+                    preparedArrayData += ",";
+                }
+            }
+            return preparedArrayData;
         }
 
         private static string GetClassName(TCollection objectToSerialize)
@@ -214,15 +188,14 @@ namespace CSVSerializer
         private static PropertyInfo[] GeneratePropertyInfos()
         {
             Type typeOfObject = typeof(TElement);
+            var propertyInfos = typeOfObject.GetProperties();
 
-            _propertyInfos = typeOfObject.GetProperties();
-
-            return _propertyInfos;
+            return propertyInfos;
         }
 
-        private static Dictionary<PropertyInfo, int> CheckIfCollection(PropertyInfo[] propertyInfos, TCollection objectToSerialize)
+        private static Dictionary<PropertyInfo, int> CheckIfArray(PropertyInfo[] propertyInfos, TCollection objectToSerialize)
         {
-            Dictionary<PropertyInfo, int> maxCollectionLength = new Dictionary<PropertyInfo, int>();
+            Dictionary<PropertyInfo, int> maxArrayLength = new Dictionary<PropertyInfo, int>();
 
             foreach (PropertyInfo propertyInfo in propertyInfos)
             {
@@ -237,50 +210,20 @@ namespace CSVSerializer
                             Array array = (Array)propertyInfo.GetValue(element);
                             int length = array.Length;
 
-                            if (!maxCollectionLength.ContainsKey(propertyInfo))
+                            if (!maxArrayLength.ContainsKey(propertyInfo))
                             {
-                                maxCollectionLength.Add(propertyInfo, length);
+                                maxArrayLength.Add(propertyInfo, length);
                             }
-                            else if ((maxCollectionLength.ContainsKey(propertyInfo) && maxCollectionLength[propertyInfo] < length))
+                            else if ((maxArrayLength.ContainsKey(propertyInfo) && maxArrayLength[propertyInfo] < length))
                             {
-                                maxCollectionLength[propertyInfo] = length;
-                            }
-                        }
-                    }
-                }
-                else if (propertyType.GetInterface("IEnumerable") != null && propertyType != typeof(string))
-                {
-                    foreach (var element in objectToSerialize)
-                    {
-                        if (element != null)
-                        {
-                            var collectionTemp = (System.Collections.IEnumerable)propertyInfo.GetValue(element);
-                            var collection = collectionTemp.Cast<object>();
-
-                            int length = 0;
-
-                            if (collection != null)
-                            {
-                                length = collection.Count();
-                            }
-
-                            if (!maxCollectionLength.ContainsKey(propertyInfo))
-                            {
-                                maxCollectionLength.Add(propertyInfo, length);
-                            }
-                            else if ((maxCollectionLength.ContainsKey(propertyInfo) && maxCollectionLength[propertyInfo] < length))
-                            {
-                                maxCollectionLength[propertyInfo] = length;
+                                maxArrayLength[propertyInfo] = length;
                             }
                         }
                     }
-                }
+                }             
             }
 
-            return maxCollectionLength;
+            return maxArrayLength;
         }
     }
 }
-
-
-

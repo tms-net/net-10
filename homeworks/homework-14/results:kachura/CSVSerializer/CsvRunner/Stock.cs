@@ -4,9 +4,8 @@
     {
         public string Symbol { get; set; }
         public decimal Price { get; set; }
-        //public DateTime Date { get; set; }
+        public DateTime Date { get; set; }
         public int[] Indexes { get; init; } = Array.Empty<int>();
-        public List<int> Prior { get; init; } = new List<int>();
 
         public Stock()
         {
@@ -26,15 +25,17 @@
             {
                 foreach (int index in Indexes)
                 {
-                    indexes += $" {index}";
+                    indexes += $" {index}, ";
                 }
+
+                indexes.Remove(indexes.Length - 1);
             }
             else
             {
                 indexes = string.Empty;
             }
 
-            return Symbol + " - " + Price + indexes;// + " - " + Date;
+            return Symbol + " - " + Price + indexes + " " + Date;
         }
     }
 }

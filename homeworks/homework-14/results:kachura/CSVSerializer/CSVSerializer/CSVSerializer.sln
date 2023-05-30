@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1705.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSVSerializer", "CSVSerializer.csproj", "{5F979376-D513-4C05-9195-5C73013ED3AB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5F979376-D513-4C05-9195-5C73013ED3AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F979376-D513-4C05-9195-5C73013ED3AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F979376-D513-4C05-9195-5C73013ED3AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F979376-D513-4C05-9195-5C73013ED3AB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7A69ED58-3614-465E-BA6B-81FFA4642F8B}
+	EndGlobalSection
+EndGlobal
