@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CsvSerializer.PropertyTree;
+using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -49,7 +50,8 @@ namespace Serialization
     internal sealed class CsvSerializer<TEntity> : CsvSerializerAbstraction<TEntity>
         where TEntity : class
     {
-        private readonly CsvSerializerSettings _csvSerializerSettings = new();
+        private readonly CsvSerializerSettings _csvSerializerSettings;
+        private readonly NTree<ClassProperty> _propertyTree;
 
         internal CsvSerializer() : this(new CsvSerializerSettings())
         {
@@ -58,6 +60,7 @@ namespace Serialization
         internal CsvSerializer(CsvSerializerSettings csvSerializerSettings) : base(csvSerializerSettings)
         {
             _csvSerializerSettings = csvSerializerSettings;
+            _propertyTree = PropertyTreeBuilder.BuildPropertyTree(typeof(TEntity));
         }
 
         protected internal string Serialize(params TEntity[] collection)
@@ -102,7 +105,10 @@ namespace Serialization
                 var propInstances = new Dictionary<PropertyInfo, object>();
                 var instance = Activator.CreateInstance<TEntity>();
 
-                string[] columnsValue = arrayLinesCsv[i].Split(_csvSerializerSettings.Delimiter);
+                string[] columnsValues = arrayLinesCsv[i].Split(_csvSerializerSettings.Delimiter);
+                var deserializationVisitor = new DeserializationVisitor(instance, columnsValues);
+
+                _propertyTree.TraversePropertyTreeDFS(deserializationVisitor);
 
                 // props.Count == columnsValue.Count
 
@@ -111,13 +117,12 @@ namespace Serialization
                 for (int j = 0; j < propMapping.Count; j++)
                 {
                     var prop = propMapping[j];
-                    prop.SetProperty(instance, columnsValue[j]);
+                    prop.SetProperty(instance, columnsValues[j]);
                 }
 
                 yield return instance;
             }
         }
-
 
         private List<PropertyMapping> GetPropertyMapping()
         {
