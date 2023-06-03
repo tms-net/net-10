@@ -182,8 +182,8 @@ namespace TradingApp
             // сохранить в файл
 
             //  Сериализация JSON 
-            string fileNameMSFT = @"C:\Visual Studio\DataMSFT.json";
-            string fileNameAAPL = @"C:\Visual Studio\DataAAPL.json";
+            string fileNameMSFT = @"\DataMSFT.json";
+            string fileNameAAPL = @"\DataAAPL.json";
             string jsonStringMSFT = JsonSerializer.Serialize(_dataMSFT);
             string jsonStringAAPL = JsonSerializer.Serialize(_dataAAPL);
 
