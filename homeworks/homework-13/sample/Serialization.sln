@@ -11,6 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvSerializer", "CsvSeriali
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvRunner", "CsvRunner\CsvRunner.csproj", "{45760508-598E-4FF7-A685-5BE274FAC196}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{41D2F61D-94A8-431B-A3B3-BA315EE9B6C4}"
+	ProjectSection(SolutionItems) = preProject
+		files\trading.csv = files\trading.csv
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
