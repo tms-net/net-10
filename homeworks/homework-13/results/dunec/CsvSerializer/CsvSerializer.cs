@@ -22,12 +22,9 @@ namespace CsvSerializer
 
             var properties = type.GetProperties();
 
+            var fileAsString = string.Empty;
+
             foreach (var property in properties)
-<<<<<<< Updated upstream
-            {
-                var attr = property.GetCustomAttribute<CsvHeaderAttribute>();
-            }
-=======
             {                
                 var attr = property.GetCustomAttribute<CsvHeaderAttribute>();
                 if (attr == null)
@@ -64,14 +61,13 @@ namespace CsvSerializer
             }//*/
 
             return fileAsString;
->>>>>>> Stashed changes
 
             // 1. Заголовок
             //   - Определить колонки
             //      - Свойства класса
             //      - .......
 
-            
+
 
             // 2. Строки
             //   - Получить значения нужных свойств
@@ -121,6 +117,20 @@ namespace CsvSerializer
             //   - Установить значения нужных свойств
 
             yield break;
+        }
+
+        private static void AddCSVElementInLine(ref string file, string line)
+        {
+            if (file.Equals(string.Empty))
+                file = line;
+            else
+            {
+                if (file.EndsWith("\n"))
+                    file = $"{file}{line}";
+                else
+                    file = $"{file},{line}";
+            }
+                
         }
     }
 }
