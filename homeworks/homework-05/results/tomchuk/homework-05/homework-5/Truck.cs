@@ -1,6 +1,6 @@
 ﻿internal class Truck : Vehicle
 {
-    private readonly int _boxVolume;
+    readonly int _boxVolume;
     public Truck(int year, string make, string model, int boxVolume) : base(year, make, model)
     {
         _boxVolume = boxVolume;
