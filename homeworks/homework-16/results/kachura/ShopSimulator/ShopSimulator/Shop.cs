@@ -31,8 +31,10 @@ namespace ShopSimulator
 
         public void Enter(Person person)
         {
+            if(_isShopOpen) {
             Console.WriteLine($"{person.Name} вошел в магазин");
             _peopleQueue.Enqueue(person);
+            }
 
         }
 
