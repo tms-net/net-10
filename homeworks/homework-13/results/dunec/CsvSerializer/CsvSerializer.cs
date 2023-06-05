@@ -23,9 +23,48 @@ namespace CsvSerializer
             var properties = type.GetProperties();
 
             foreach (var property in properties)
+<<<<<<< Updated upstream
             {
                 var attr = property.GetCustomAttribute<CsvHeaderAttribute>();
             }
+=======
+            {                
+                var attr = property.GetCustomAttribute<CsvHeaderAttribute>();
+                if (attr == null)
+                {
+                    throw new ArgumentNullException("For serializetion class has to have Csv Header Attributes" + nameof(attr));
+                }
+                AddCSVElementInLine(ref fileAsString, attr.HeaderName);               
+            }
+
+            fileAsString += "\n";
+            
+            foreach (var item in lines)
+            {
+                var fields = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                foreach (var field in fields)
+                {
+                    try
+                    {
+                        
+                        //PropertyInfo stringLengthField = typeof(string).GetProperty("Length", BindingFlags.Instance | BindingFlags.Public);
+                        MethodInfo getMethod = field.GetGetMethod();
+                        //var pars = new object[0];
+
+                        var length = getMethod.Invoke(item, null);
+
+                        AddCSVElementInLine(ref fileAsString, );
+                        // Вызов метода с определенным кол-вом параметров
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }                
+            }//*/
+
+            return fileAsString;
+>>>>>>> Stashed changes
 
             // 1. Заголовок
             //   - Определить колонки

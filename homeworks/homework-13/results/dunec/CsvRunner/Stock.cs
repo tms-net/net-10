@@ -16,6 +16,11 @@ namespace CsvRunner
 
         public BankReport Report { get; set; }
 
+<<<<<<< Updated upstream
+=======
+
+        [CsvHeader("Retard")]
+>>>>>>> Stashed changes
         public decimal[] Prices { get; set; }
     }
 
