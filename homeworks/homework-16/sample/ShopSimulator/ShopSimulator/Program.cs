@@ -1,6 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using ShopSimulator;
 
+Console.InputEncoding = System.Text.Encoding.UTF8;
+Console.OutputEncoding = System.Text.Encoding.UTF8;
+
 Console.WriteLine("Hello, Shop!");
 
 var random = new Random();
