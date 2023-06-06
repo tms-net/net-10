@@ -1,50 +1,52 @@
+﻿using System;
+
 namespace ShopSimulator
 {
-    public class Shop
+    public class ShopWithThreadPool
     {
-        // Что синхронизировать?
-        //  - 
-
-        private const int IdleTime = 100;
-
-        private Thread[] _cahierThreads;
         private Queue<Person> _peopleQueue; // Эмуляция очереди клиентов
+        private bool _isShopOpen;
+        private object locker = new();        
+        private int _cashierCount;
+        private readonly int WAITINGTIME = 100;
 
-        public Shop(int cahierCount)
+        public ShopWithThreadPool(int cashierCount)
         {
             _peopleQueue = new Queue<Person>();
-            _peopleQueueCuncurrent = new ConcurrentQueue<Person>();
-            _cahierThreads = new Thread[cahierCount];
-
-            for (int i = 0; i < cahierCount; i++)
-            {
-                _cahierThreads[i] = new Thread(ServeCustomers);
-            }
+            _cashierCount = cashierCount;
         }
 
         public void Open()
         {
             _isShopOpen = true;
-            Array.ForEach(_cahierThreads, thread => thread.Start());
+            for (int i = 0; i < _cashierCount; i++)
+            {
+                ThreadPool.QueueUserWorkItem(RunServing);
+            }
 
-            Console.WriteLine($"Добро пожаловать, вас обслуживает {_cahierThreads.Length} касс(ы)");
+            Console.WriteLine($"Добро пожаловать");
         }
 
         public void Enter(Person person)
         {
             Console.WriteLine($"{person.Name} вошел в магазин");
             _peopleQueue.Enqueue(person);
-
         }
 
         public void Close()
         {
-            // TODO: Реализовать гарантированное обслуживание всех клиентов после закрытия
+            _isShopOpen = false;
         }
 
-        private void ServeCustomers()
+        private void RunServing(object state)
         {
-            while(_isShopOpen || _peopleQueue.Count() > 0)
+            Thread.CurrentThread.IsBackground = false;
+            ServeCustomer();
+        }
+
+        private void ServeCustomer()
+        {
+            while (_isShopOpen || _peopleQueue.Count() > 0)
             {
                 Person curPerson = null;
 
@@ -56,7 +58,7 @@ namespace ShopSimulator
                     }
                 }
 
-                if(curPerson != null)
+                if (curPerson != null)
                 {
                     Console.WriteLine($"{curPerson.Name} обслуживается сейчас");
                     Thread.Sleep(curPerson.ProcessingTime);
@@ -64,10 +66,10 @@ namespace ShopSimulator
                 }
                 else
                 {
-                    Console.WriteLine("Queue is empty. Waiting..."); //
+                    Console.WriteLine("Queue is empty. Waiting...");
                     Thread.Sleep(WAITINGTIME);
-                }                
-            }
+                }
+            }           
         }
     }
 }

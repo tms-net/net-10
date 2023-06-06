@@ -1,0 +1,18 @@
+﻿using ShopSimulator;
+
+Console.WriteLine("Hello, Shop!");
+
+var random = new Random();
+var shop = new ShopWithThreadPool(3);
+
+shop.Open();
+
+for (int i = 0; i < 100; i++)
+{
+    var person = new Person(random.Next(100, 1000), i + 1);
+    shop.Enter(person);
+
+    Thread.Sleep(100);
+}
+
+shop.Close();
