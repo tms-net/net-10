@@ -1,4 +1,5 @@
 ﻿using CsvSerializer;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CsvRunner
 {
@@ -14,13 +15,23 @@ namespace CsvRunner
 
         [CsvHeader("Autism")]
         public decimal CurrentPrice { get; set; }
+        /*
+        [CsvHeader("Dissociative identity disorder")] 
+        public BankReport Report { get; set; }//*/
+
 
         [CsvHeader("Schizophrenia")]
-        public BankReport Report { get; set; }
-
-
-        [CsvHeader("Retard")]
         public decimal[] Prices { get; set; }
+
+        public void InputStockData(string ticker, decimal currentPrice, int rating, DateTime dateTime, decimal[] prices, decimal capitalization)
+        {
+            Ticker = ticker;
+            CurrentPrice = currentPrice;/*
+            Report = new BankReport();
+            Report.InputBankReportData(rating, dateTime);//*/
+            Prices = prices;
+            Capitalization = capitalization;
+        }
     }
 
     public class BaseStock
@@ -43,6 +54,7 @@ namespace CsvRunner
             Date = dateTime;
         }
     }
+
 
     public enum Rating
     {

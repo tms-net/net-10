@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Metadata;
 
 namespace CsvSerializer
 {
@@ -24,43 +26,14 @@ namespace CsvSerializer
 
             var fileAsString = string.Empty;
 
-            foreach (var property in properties)
-            {                
-                var attr = property.GetCustomAttribute<CsvHeaderAttribute>();
-                if (attr == null)
-                {
-                    throw new ArgumentNullException("For serializetion class has to have Csv Header Attributes" + nameof(attr));
-                }
-                AddCSVElementInLine(ref fileAsString, attr.HeaderName);               
-            }
+            fileAsString = GetHeaderAttribute(properties, lines) + "\n";
 
-            fileAsString += "\n";
-            
-            foreach (var item in lines)
-            {
-                var fields = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                foreach (var field in fields)
-                {
-                    try
-                    {
-                        
-                        //PropertyInfo stringLengthField = typeof(string).GetProperty("Length", BindingFlags.Instance | BindingFlags.Public);
-                        MethodInfo getMethod = field.GetGetMethod();
-                        //var pars = new object[0];
-
-                        var length = getMethod.Invoke(item, null);
-
-                        AddCSVElementInLine(ref fileAsString, );
-                        // Вызов метода с определенным кол-вом параметров
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                }                
-            }//*/
+            fileAsString += GetSCVData(properties, lines) + "\n";
 
             return fileAsString;
+
+
+            //*/
 
             // 1. Заголовок
             //   - Определить колонки
@@ -74,6 +47,99 @@ namespace CsvSerializer
             //      - форматирование
 
             return string.Empty;
+        }
+
+        private static string GetHeaderAttribute<T>(PropertyInfo[]? properties, IEnumerable<T>? lines, string complexName = "")
+        {
+            var headerLine = string.Empty;            
+
+            foreach (var property in properties)
+            {
+                var headerName = string.Empty;
+                var attr = property.GetCustomAttribute<CsvHeaderAttribute>();
+                if (attr != null)
+                {
+                    if (complexName.Equals(""))
+                        headerName = attr.HeaderName;
+                    else
+                        headerName = $"{complexName}_{attr.HeaderName}";
+                }
+                else
+                {
+                    if (complexName.Equals(""))
+                        headerName = property.Name;
+                    else
+                        headerName = $"{complexName}_{property.Name}";
+                }
+                /*
+                if (!property.PropertyType.IsSerializable)
+                {
+                    AddCSVElementInLine(ref headerLine, GetHeaderAttribute(property.PropertyType.GetProperties(), lines, false, headerName)) ;
+                }
+                else//*/
+                if (property.PropertyType.IsArray)
+                {
+                    var arrayMax = MaxArrayLenght(lines, property);
+                    for (var i = 0; i < arrayMax; i++)
+                        AddCSVElementInLine(ref headerLine, $"{headerName}_{i}");
+                }
+                else
+                    AddCSVElementInLine(ref headerLine, headerName);
+
+                //*/
+            }
+            return headerLine;
+        }
+
+        public static string GetSCVData<T>(PropertyInfo[]? properties, IEnumerable<T>? lines)
+        {
+            var dataLine = string.Empty;
+            foreach (var item in lines)
+            {
+                foreach (var property in properties)
+                {
+                    /*
+                    if (!property.PropertyType.IsSerializable)
+                    {                    
+                        AddCSVElementInLine(ref dataLine, GetSCVData(property.PropertyType.GetProperties(), lines, item, false));
+                    }
+                    else//*/
+                    if (property.PropertyType.IsArray)
+                    {
+                        var array = (Array)property.GetValue(item);
+                        foreach (var arrauItem in array)
+                        {
+                            AddCSVElementInLine(ref dataLine, arrauItem.ToString());
+                        }
+                        var arrayMax = MaxArrayLenght(lines, property);
+                        if (array.Length < arrayMax)
+                        {
+                            for (var i = array.Length; i < arrayMax; i++)
+                            {
+                                AddCSVElementInLine(ref dataLine, string.Empty);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        AddCSVElementInLine(ref dataLine, property.GetValue(item).ToString());
+                    }
+                }
+                dataLine += "\n";
+            }
+            return dataLine;
+        }
+
+        public static int MaxArrayLenght<T>(IEnumerable<T> lines, PropertyInfo? property)
+        {
+            var max = 0;
+            foreach (var item in lines)
+            {
+                var length = ((Array)property.GetValue(item)).Length;
+                if (length > max)
+                    max = length;
+            }
+            return max;
         }
 
         public static IEnumerable<T> Deserialize<T>(string csv, CsvSerializerSettings settings = null) where T: new()
