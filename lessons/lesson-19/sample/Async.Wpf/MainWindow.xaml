@@ -1,0 +1,47 @@
+﻿<Window x:Class="Async.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Async.Wpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        MouseDoubleClick="Window_MouseDoubleClick">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="100"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <TextBlock x:Name="TxtDbl" Background="White"></TextBlock>
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Button x:Name="MainButton" Content="Click Me"
+            Width="100" Height="50"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" Click="MainButton_Click"/>
+
+    <Button Grid.Column="1" x:Name="MainButton1" Content="Click More"
+            Width="100" Height="50"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" Click="MainButton1_Click"/>
+      
+    <Button Grid.Row="1" x:Name="MainButton2" Content="Click Me Too"
+            Width="100" Height="50"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" Click="MainButton2_Click"/>
+
+    <Button Grid.Column="1" Grid.Row="1" x:Name="MainButton3" Content="Click More Too"
+            Width="100" Height="50"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" Click="MainButton3_Click"/>
+
+      </Grid>
+  </Grid>
+</Window>
