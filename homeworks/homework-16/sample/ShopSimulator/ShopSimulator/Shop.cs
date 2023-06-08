@@ -1,36 +1,51 @@
 ﻿using System;
+using System.Collections.Concurrent;
 
 namespace ShopSimulator
 {
     public class Shop
     {
-        private Thread[] _cahierThreads;
-        private Queue<Person> _peopleQueue; // Эмуляция очереди клиентов
-        private bool _isShopOpen;
-        private object locker = new();
-        private readonly int WAITINGTIME = 100;
+        private bool _isOpened = false;
+        private int _cashierCount;
+        private SemaphoreSlim _semaphore;
+        private ConcurrentBag<Task> _tasks;
+
+        private int _customerCount = 0;
 
         public Shop(int cahierCount)
         {
-            _peopleQueue = new Queue<Person>();
-            _cahierThreads = new Thread[cahierCount];
+            _cashierCount = cahierCount;
+            _semaphore = new SemaphoreSlim(cahierCount, cahierCount);
 
-            for (int i = 0; i < cahierCount; i++)
-            {
-                _cahierThreads[i] = new Thread(ServeCustomer);
-            }
+            _tasks = new ConcurrentBag<Task>();
+
+            //_cashiers = new Cashier[cahierCount];
         }
 
         public void Open()
         {
-            _isShopOpen = true;
-            Array.ForEach(_cahierThreads, thread => thread.Start());
+            _isOpened = true;
 
-            Console.WriteLine($"Добро пожаловать, вас обслуживает {_cahierThreads.Length} касс(ы)");
+            Console.WriteLine($"Добро пожаловать, вас обслуживает {_cashierCount} касс(ы)");
         }
 
         public void Enter(Person person)
         {
+            // TODO: Реализовать логику постановки клиента в очередь
+
+            if (!_isOpened)
+            {
+                return;
+            }
+
+            // ждем освобождения потока
+
+            Interlocked.Increment(ref _customerCount);
+
+            _tasks.Add(Task.Run(() => ServeCustomer(person)));
+
+            //_tasks.Add(ServeCustomer(person));
+
             Console.WriteLine($"{person.Name} вошел в магазин");
             _peopleQueue.Enqueue(person);
 
@@ -38,35 +53,60 @@ namespace ShopSimulator
 
         public void Close()
         {
-            _isShopOpen = false;
+            // TODO:
+
+            _isOpened = false;
+
+            //var original = Interlocked.CompareExchange(ref _customerCount, -1, 0);
+
+            //while (_customerCount == -1)
+            //{
+            //    Thread.Sleep(100);
+            //}
+
+            Task.WaitAll(_tasks.ToArray());
         }
 
-        private void ServeCustomer()
+        // task1 -> task2 -> task3
+
+        private async Task ServeCustomer(Person person)
         {
-            while(_isShopOpen || _peopleQueue.Count() > 0)
+            _semaphore.Wait(); // одна очередь
+
+            //                       1,1m,1m,1h
+            // []                    2,1m,1m,1h
+            //                       3,1m,1m,1h
+
+            // n objects
+
+            // выбрать равномерно/случайно
+
+            // lock(cashier)
+
+            // n очередей
+
+            if (person != null)
             {
-                Person curPerson = null;
+                //Thread.Sleep(person.ProcessingTime); // ждать 1 секунду
 
-                lock (locker)
-                {
-                    if (_peopleQueue.Count() > 0)
-                    {
-                        curPerson = _peopleQueue.Dequeue();
-                    }
-                }
+                // асинхронность НЕ БЛОКИРУЕТ
+                // выполнить следующий код через 1 секунду
 
-                if(curPerson != null)
-                {
-                    Console.WriteLine($"{curPerson.Name} обслуживается сейчас");
-                    Thread.Sleep(curPerson.ProcessingTime);
-                    Console.WriteLine($"{curPerson.Name} обслужен");
-                }
-                else
-                {
-                    Console.WriteLine("Queue is empty. Waiting..."); //
-                    Thread.Sleep(WAITINGTIME);
-                }                
+                await Task.Delay(person.ProcessingTime);
+
+                Console.WriteLine($"Обслужили клиента {person.Name}");
             }
+
+            //lock (_locker)
+            {
+                //Interlocked.Decrement(ref _customerCount);
+
+                //_customerCount--; // получение значения -> вычитание -> сохранение значения
+            }
+
+            _semaphore.Release();
+
+            //return Task.CompletedTask;
         }
     }
 }
