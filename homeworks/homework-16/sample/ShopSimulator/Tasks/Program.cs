@@ -1,4 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using System.Threading;
+
 Console.WriteLine("Hello, World!");
 
 // Tasks == ThreadPool
@@ -8,6 +10,8 @@ var task1 = Task.Run(VoidMethod);
 var task2 = Task.Run(BoolMethod);
 
 var task3 = Task.Run(ExceptionMethod);
+
+ThreadPool.QueueUserWorkItem(ReadAndProcessFileAsync);
 
 //Console.WriteLine(task2.Result);
 
@@ -60,21 +64,20 @@ void ReadAndProcessFile()
 {
     // долгий процесс
     // не использует CPU
-    var content = ReadFile();
+    var content = ReadFile().Result;
 
     ProcessFile(content);
 }
 
-task1.ContinueWith(t => ReadFile()).ContinueWith(t => ProcessFile(t.Result));
+task1.ContinueWith(t => ReadFile().Result).ContinueWith(t => ProcessFile(t.Result));
 
 // async/await
 
 // АСИНХРОННЫЙ МЕТОД ВЫПОЛНЯЕТСЯ НА РАЗНЫХ ПОТОКАХ (!!!)
 
+//await ReadAndProcessFileAsync(); // НЕЛЬЗЯ
 
-await ReadAndProcessFileAsync(); // НЕЛЬЗЯ
-
-async void ReadAndProcessFileAsync()
+async void ReadAndProcessFileAsync(object state)
 {
     await task1;
 
@@ -85,17 +88,16 @@ async void ReadAndProcessFileAsync()
 
 async Task<string> ReadFile()
 {
-    var filePath = Configuration.GetFilePath();
+    var filePath = "path"; //Configuration.GetFilePath();
 
     var reader = new StreamReader(filePath);
-    await reader.ReadToEndAsync();
+    return await reader.ReadToEndAsync();
 }
 
-void ProcessFile(string content)
+Task ProcessFile(string content)
 {
-
+    return Task.CompletedTask;
 }
-
 
 Console.WriteLine("All completed");
 

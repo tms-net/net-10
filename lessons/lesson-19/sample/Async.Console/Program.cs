@@ -24,7 +24,7 @@ class Program
         }
     }
 
-    //[STAThread]
+    [STAThread]
     public static void Main()
     {
         ThreadPool.SetMaxThreads(10, 10);
@@ -63,7 +63,7 @@ class Program
         Interlocked.Increment(ref counter);
     }
 
-    void RunApp()
+    static void RunApp()
     {
         // run windowed
         App app = new App();

@@ -53,7 +53,7 @@ namespace Async.Wpf
         {
             WriteToOutputAfter(100, "DoMoreAsync");
 
-            var count = (await _service.DoMoreAsyncWork()).Count();
+            var count = (await _service.DoMoreWorkAsync()).Count();
 
             TxtDbl.Text += $"{count} ";
         }

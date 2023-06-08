@@ -1,38 +1,32 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 
 namespace ShopSimulator
 {
     public class Shop
     {
-        // Что синхронизировать?
-        //  - 
-
-        private const int IdleTime = 100;
-
-        private Thread[] _cahierThreads;
-        private Queue<Person> _peopleQueue; // Эмуляция очереди клиентов
-        private ConcurrentQueue<Person> _peopleQueueCuncurrent;
-
         private bool _isOpened = false;
+        private int _cashierCount;
+        private SemaphoreSlim _semaphore;
+        private ConcurrentBag<Task> _tasks;
+
+        private int _customerCount = 0;
 
         public Shop(int cahierCount)
         {
-            _peopleQueue = new Queue<Person>();
-            _peopleQueueCuncurrent = new ConcurrentQueue<Person>();
-            _cahierThreads = new Thread[cahierCount];
+            _cashierCount = cahierCount;
+            _semaphore = new SemaphoreSlim(cahierCount, cahierCount);
 
-            for (int i = 0; i < cahierCount; i++)
-            {
-                _cahierThreads[i] = new Thread(ServeCustomers);
-            }
+            _tasks = new ConcurrentBag<Task>();
+
+            //_cashiers = new Cashier[cahierCount];
         }
 
         public void Open()
         {
             _isOpened = true;
-            Array.ForEach(_cahierThreads, thread => thread.Start());
 
-            Console.WriteLine($"Добро пожаловать, вас обслуживает {_cahierThreads.Length} касс(ы)");
+            Console.WriteLine($"Добро пожаловать, вас обслуживает {_cashierCount} касс(ы)");
         }
 
         public void Enter(Person person)
@@ -44,141 +38,73 @@ namespace ShopSimulator
                 return;
             }
 
-            // Синхронизируем
+            // ждем освобождения потока
 
-            // lock (Monitor)
-            // mutex
-            // semaphore
-            // eventHandle
+            Interlocked.Increment(ref _customerCount);
 
+            _tasks.Add(Task.Run(() => ServeCustomer(person)));
 
-            //1: enqueue
-            //2:        enqueue
-            //3:               enqueue
-
-            lock (_peopleQueue)
-            {
-                _peopleQueue.Enqueue(person); // [1,2,3,,,,,,] -> [1,2,3,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,]
-            }
-
-            //1:1
-            //2:1
-            //3:1
-            //if (_peopleQueue.Count > 0)
-            {
-                // 1
-                // 0
-                // 0
-                //if (_peopleQueue.TryDequeue(out var person))
-                {
-
-                };
-            }
+            //_tasks.Add(ServeCustomer(person));
 
             Console.WriteLine($"{person.Name} вошел в магазин");
         }
 
         public void Close()
         {
-            // TODO: Реализовать [гарантированное] обслуживание всех клиентов после закрытия
-
-            // 1
-            // 1
-            // 0
-
-            while (_peopleQueue.Count() > 0)
-            {
-                Console.WriteLine("Ждем завершения");
-                Thread.Sleep(1000);
-            }
+            // TODO:
 
             _isOpened = false;
+
+            //var original = Interlocked.CompareExchange(ref _customerCount, -1, 0);
+
+            //while (_customerCount == -1)
+            //{
+            //    Thread.Sleep(100);
+            //}
+
+            Task.WaitAll(_tasks.ToArray());
         }
 
-        private void ServeCustomers()
+        // task1 -> task2 -> task3
+
+        private async Task ServeCustomer(Person person)
         {
-            // TODO: Реализовать логику обслуживания клиента из очереди
-            // Использовать свойство клиента для эмуляции времени обслуживания с помощью Thread.Sleep()
+            _semaphore.Wait(); // одна очередь
 
-            void doWork()
+            //                       1,1m,1m,1h
+            // []                    2,1m,1m,1h
+            //                       3,1m,1m,1h
+
+            // n objects
+
+            // выбрать равномерно/случайно
+
+            // lock(cashier)
+
+            // n очередей
+
+            if (person != null)
             {
-                if (hasCustomer())
-                {
-                    var person = getCustomer();
-                    serveCustomer(person);
-                }
-                else
-                {
-                    Console.WriteLine("Waiting...");
-                    wait();
-                }
+                //Thread.Sleep(person.ProcessingTime); // ждать 1 секунду
+
+                // асинхронность НЕ БЛОКИРУЕТ
+                // выполнить следующий код через 1 секунду
+
+                await Task.Delay(person.ProcessingTime);
+
+                Console.WriteLine($"Обслужили клиента {person.Name}");
             }
 
-            void serveCustomer(Person person)
+            //lock (_locker)
             {
-                if (person != null)
-                {
-                    Thread.Sleep(person.ProcessingTime);
-                    Console.WriteLine($"Обслужили клиента {person.Name}");
-                }
+                //Interlocked.Decrement(ref _customerCount);
+
+                //_customerCount--; // получение значения -> вычитание -> сохранение значения
             }
 
-            void wait()
-            {
-                Thread.Sleep(IdleTime);
-            }
+            _semaphore.Release();
 
-            bool hasCustomer()
-            {
-                // синхронизация == БЛОКИРОВКА
-
-                // 3
-                // 2
-                // 0
-
-                return _peopleQueue.Count() > 0;
-            }
-
-            Person getCustomer()
-            {
-                // Синхронизация
-
-                //1:Dequeue
-                //2:              Dequeue
-                //3:                     Dequeue
-
-                //4:       Enqueue
-                //5:                             Enqueue
-                //6:                                    Enqueue
-
-                lock (_peopleQueue)
-                {
-                    _peopleQueue.TryDequeue(out var person);
-
-                    return person;
-
-                    // Monitor.Enter(_peopleQueue); == Wait();
-
-                    // Dequeue/Enqueue
-
-                    // Monitor.Exit(_peopleQueue)
-                }
-
-                // Потокобезопасность
-
-                // Enqueue
-                // Dequeue
-            }
-
-            bool isOpened()
-            {
-                return _isOpened;
-            }
-
-            while (isOpened() || hasCustomer())
-            {
-                doWork();
-            }
+            //return Task.CompletedTask;
         }
     }
 }
