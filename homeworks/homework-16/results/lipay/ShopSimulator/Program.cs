@@ -8,7 +8,7 @@ var shop = new Shop(3);
 
 shop.Open();
 
-for (int i = 0; i < 10; i++)
+for (int i = 0; i < 100; i++)
 {
     var person = new Person(random.Next(100, 1000), i + 1);
     shop.Enter(person);
@@ -18,4 +18,4 @@ for (int i = 0; i < 10; i++)
 }
 
 shop.Close();
-Console.ReadLine();
+

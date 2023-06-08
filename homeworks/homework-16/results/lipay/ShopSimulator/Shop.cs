@@ -4,19 +4,16 @@
     {
         private Thread[] _cahierThreads;
         private Queue<Person> _peopleQueue; // Эмуляция очереди клиентов
-        static SemaphoreSlim _sem = new SemaphoreSlim(3);
-
-        public delegate void MethodContainer();
-        public event MethodContainer _action;
+        private bool _isOpened = true;
+        object locker = new();
 
         public Shop(int cahierCount)
         {
             _peopleQueue = new Queue<Person>();
             _cahierThreads = new Thread[cahierCount];
-            _action += ServeCustomer;
             for (int i = 0; i < cahierCount; i++)
             {
-                _cahierThreads[i] = new Thread(ServeCustomer);
+                _cahierThreads[i] = new Thread(ServeCustomers);
             }
         }
 
@@ -25,57 +22,78 @@
             Array.ForEach(_cahierThreads, thread => thread.Start());
 
             Console.WriteLine($"Добро пожаловать, вас обслуживает {_cahierThreads.Length} касс(ы)");
+            _isOpened = true;
         }
 
         public void Enter(Person person)
         {
             // TODO: Реализовать логику постановки клиента в очередь
-
+            if (!_isOpened)
+            {
+                return;
+            }
             Console.WriteLine($"{person.Name} вошел в магазин");
 
-            _peopleQueue.Enqueue(person);
-            _action();
+            lock (_peopleQueue)
+            {
+                _peopleQueue.Enqueue(person);
+            }
+
+
         }
         public void Close()
         {
             // TODO: Реализовать гарантированное обслуживание всех клиентов после закрытия
-            if (_peopleQueue.Count == 0)
+
+            while (_peopleQueue.Count() > 0)
             {
-                Console.WriteLine("Клиентов нет. Магазин закрыт");
+                Thread.Sleep(100);
             }
-            else { Console.WriteLine($"В магазине осталось {_peopleQueue.Count} клиентов") ; }
+            _isOpened = false;
         }
 
-        private void ServeCustomer()
+        private void ServeCustomers()
         {
             // TODO: Реализовать логику обслуживания клиента из очереди
             // Использовать свойство клиента для эмуляции времени обслуживания с помощью Thread.Sleep()
-            
-            var rnd = new Random();
-            var ProductBag = rnd.Next(1, 4);
-             _sem.Wait();
-                if (_peopleQueue.Count > 0)
+            Person _client = null;
+            while (_isOpened || _peopleQueue.Count() > 0)
+            {
+                doWork();
+            }
+            void doWork()
+            {
+
+                if (_peopleQueue.Count() > 0)
                 {
-                    var klient = _peopleQueue.Peek();
-                    switch (ProductBag)
-                    {
-                        case 1:
-                            Console.WriteLine($"Клиент {klient.Name} купил маленькую корзину продуктов");
-                            Thread.Sleep(klient.ProcessingTime);
-                            break;
-                        case 2:
-                            Console.WriteLine($"Клиент {klient.Name} купил среднюю корзину продуктов");
-                            Thread.Sleep(klient.ProcessingTime);
-                            break;
-                        case 3:
-                            Console.WriteLine($"Клиент {klient.Name} купил большую корзину продуктов");
-                            Thread.Sleep(klient.ProcessingTime);
-                            break;
-                    }
-                    _peopleQueue.Dequeue();
+                    ServeCustomer();
+                }
+                else
+                {
+                    Wait();
                 }
 
-                _sem.Release();
+
+            }
+            void ServeCustomer()
+            {
+                lock (locker)
+                {
+                    _peopleQueue.TryDequeue(out _client);
+                }
+
+                if (_client != null)
+                {
+                    Console.WriteLine($"Клиент {_client.Name} обслуживается");
+                    Thread.Sleep(_client.ProcessingTime);
+                    Console.WriteLine($"Клиент {_client.Name} вышел из магазина");
+                }
+               
+            }
+            void Wait()
+            {
+                Thread.Sleep(100);
+            }
         }
     }
 }
