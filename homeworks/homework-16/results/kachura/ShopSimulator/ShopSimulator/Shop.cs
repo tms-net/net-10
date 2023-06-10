@@ -19,12 +19,13 @@ namespace ShopSimulator
             {
                 _cahierThreads[i] = new Thread(ServeCustomer);
             }
+
+            Array.ForEach(_cahierThreads, thread => thread.Start());
         }
 
         public void Open()
         {
             _isShopOpen = true;
-            Array.ForEach(_cahierThreads, thread => thread.Start());
 
             Console.WriteLine($"Добро пожаловать, вас обслуживает {_cahierThreads.Length} касс(ы)");
         }
