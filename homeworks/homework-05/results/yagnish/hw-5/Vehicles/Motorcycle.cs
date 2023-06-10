@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace hw_5.Vehicles
 {
-    internal class Motorcycle : Base
+    internal class Motorcycle : Vehicle
     {
         private bool _trypodEjected;
         public Motorcycle(string year, string model, string mark, string maxSpeed) : base(year, model, mark, maxSpeed)
