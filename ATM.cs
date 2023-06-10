@@ -6,29 +6,23 @@ using System.Threading.Tasks;
 
 namespace Zhdannov_hw9
 {
-    internal class ATM: IATMInterface
+    internal class ATM
     {
         private decimal balance;
-        public event Action<decimal>? BalanceChanged;
-
-        public void InsertCard(string? cardNumber, decimal initialBalance)
+        public ATM(decimal initialBalance)
         {
-            Console.WriteLine("Card inserted: " + cardNumber);
             balance = initialBalance;
         }
 
-        public void ViewBalance()
-        {
-            BalanceChanged?.Invoke(balance);
-        }
+       
+        public decimal GetBalance() => balance;
+        
 
         public void Withdraw(decimal amount)
         {
             if (amount <= balance)
             {
                 balance -= amount;
-                Console.WriteLine("Withdrawn amount: " + amount);
-                Console.WriteLine("Remaining balance: " + balance);
             }
             else
             {
@@ -36,11 +30,7 @@ namespace Zhdannov_hw9
             }
         }
 
-        public void TopUp(decimal amount)
-        {
-            balance += amount;
-            Console.WriteLine("Top-up amount: " + amount);
-            Console.WriteLine("New balance: " + balance);
-        }
+        public void TopUp(decimal amount) => balance += amount;
+        
     }
 }

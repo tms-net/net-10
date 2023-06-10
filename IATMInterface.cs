@@ -8,9 +8,9 @@ namespace Zhdannov_hw9
 {
     internal interface IATMInterface
     {
-        event Action<decimal>? BalanceChanged;
+        event Action BalanceChanged;
         void InsertCard(string? cardNumber, decimal initialBalance);
-        void ViewBalance();
+        decimal GetBalance();
         void Withdraw(decimal amount);
         void TopUp(decimal amount);
     }

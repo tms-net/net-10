@@ -5,21 +5,19 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        
-        ATM atm = new ATM();
+        ATM atm = new ATM(1000);
+            ATMClient client = new ATMClient(atm);
 
-        
-        ATMClient client = new ATMClient(atm);
+            client.InsertCard("1234567890", 500);
+            client.ViewBalance();
 
-        
-        atm.BalanceChanged += newBalance => Console.WriteLine("New balance received: " + newBalance);
+            client.Withdraw(200);
+            client.ViewBalance();
 
-        
-        client.InsertCard("1111111111", 1000);
-        client.ViewBalance();
-        client.Withdraw(500);
-        client.TopUp(200);
+            client.TopUp(100);
+            client.ViewBalance();
 
-        Console.ReadLine();
+            Console.ReadLine();
+        
     }
 }
