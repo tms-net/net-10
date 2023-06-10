@@ -16,7 +16,6 @@ namespace ShopSimulator
 
             _tasks = new ConcurrentBag<Task>();
 
-            //_cashiers = new Cashier[cahierCount];
         }
 
         public void Open()
@@ -35,8 +34,6 @@ namespace ShopSimulator
 
             _tasks.Add(Task.Run(() => ServeCustomer(person)));
 
-            //_tasks.Add(ServeCustomer(person));
-
             Console.WriteLine($"{person.Name} вошел в магазин");
         }
 
@@ -47,27 +44,16 @@ namespace ShopSimulator
             Task.WaitAll(_tasks.ToArray());
         }
 
-        // task1 -> task2 -> task3
-
         private async Task ServeCustomer(Person person)
         {
-            _semaphore.Wait(); // одна очередь
+            _semaphore.Wait();
 
-            if (person != null)
-            {
-                //Thread.Sleep(person.ProcessingTime); // ждать 1 секунду
-
-                // асинхронность НЕ БЛОКИРУЕТ
-                // выполнить следующий код через 1 секунду
-
-                await Task.Delay(person.ProcessingTime);
+            await Task.Delay(person.ProcessingTime);
 
                 Console.WriteLine($"Обслужили клиента {person.Name}");
-            }
-
+            
             _semaphore.Release();
-
-            //return Task.CompletedTask;
+            
         }
     }
 }
