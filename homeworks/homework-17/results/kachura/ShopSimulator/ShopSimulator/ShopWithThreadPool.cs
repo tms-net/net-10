@@ -29,19 +29,18 @@ namespace ShopSimulator
             {
                 Console.WriteLine($"{person.Name} вошел в магазин");
                 _peopleQueue.Enqueue(person);
-                ThreadPool.QueueUserWorkItem(RunServing);
+                ThreadPool.QueueUserWorkItem(state => ServeCustomer());
             }
         }
 
         public void Close()
         {
             _isShopOpen = false;
-        }
 
-        private void RunServing(object state)
-        {
-            Thread.CurrentThread.IsBackground = false;
-            ServeCustomer();
+            while(_peopleQueue.Count() > 0)
+            {
+                Thread.Sleep(WAITINGTIME);
+            }
         }
 
         private void ServeCustomer()
