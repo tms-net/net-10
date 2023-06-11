@@ -20,22 +20,60 @@ internal partial class Program
             students[students.Count - 1].Rating = rating;
             students[students.Count - 1].Gender = gender;
         }
-        public void AddInfo(int index, string firstName, string lastName, int age, double rating, string gender)
+        public void AddInfo(string firstNameOld, string lastNameOld, string firstNameNew, string lastNameNew, int age, double rating, string gender)
         {
-            
-            students[index].FirstName = firstName;
-            students[index].LastName = lastName;
-            students[index].Age = age;
-            students[index].Rating = rating;
-            students[index].Gender = gender;
+
+            if (SerchStudent(firstNameOld, lastNameOld) != null)
+            {
+                int _searcgIndex = (int)SerchStudent(firstNameOld, lastNameOld);
+                students[_searcgIndex].FirstName = firstNameNew;
+                students[_searcgIndex].LastName = lastNameNew;
+                students[_searcgIndex].Age = age;
+                students[_searcgIndex].Rating = rating;
+                students[_searcgIndex].Gender = gender;
+            }
+            else
+            {
+                throw new ArgumentNullException();
+            }
+        }
+        public void AddInfo(int SearchID, string firstName, string lastName, int age, double rating, string gender)
+        {
+            if (SerchStudent(SearchID) != null)
+            {
+                int _searcgIndex = (int)SerchStudent(SearchID);
+                students[_searcgIndex].FirstName = firstName;
+                students[_searcgIndex].LastName = lastName;
+                students[_searcgIndex].Age = age;
+                students[_searcgIndex].Rating = rating;
+                students[_searcgIndex].Gender = gender;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(SearchID));
+            }
         }
         public void DeleteInfo(int SerchID)
         {
-            students.RemoveAt(students.FindIndex(x => x.ID == SerchID));
+            if (students.Exists(x => x.ID == SerchID))
+            {
+                students.RemoveAt(students.FindIndex(x => x.ID == SerchID));
+            }
+            else
+            {
+                throw new Exception($"Студента c ID:{SerchID} не существует");
+            }
         }
         public void DeleteInfo(string firstName, string lastName)
         {
-            students.RemoveAt(students.FindIndex(x => x.FirstName == firstName && x.LastName == lastName));
+            if (students.Exists(x => x.FirstName == firstName && x.LastName == lastName))
+            {
+                students.RemoveAt(students.FindIndex(x => x.FirstName == firstName && x.LastName == lastName));
+            }
+            else
+            {
+                throw new Exception($"Студента {firstName} {lastName} не существует");
+            }
         }
 
         public int? SerchStudent(int serchID) 
