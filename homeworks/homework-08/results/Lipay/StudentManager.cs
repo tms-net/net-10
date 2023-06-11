@@ -1,5 +1,6 @@
 ﻿using static Program;
 using System.Reflection;
+using System;
 
 internal partial class Program
 {
@@ -63,6 +64,7 @@ internal partial class Program
             {
                 throw new Exception($"Студента c ID:{SerchID} не существует");
             }
+
         }
         public void DeleteInfo(string firstName, string lastName)
         {
@@ -100,14 +102,22 @@ internal partial class Program
                 return null;
             }
         }
-
+        
         public Student GetStudent(int index)
         {
-            return students[index];
+            List<Student> allStudents = students.ToList();
+            Student student = allStudents[index];
+            return student;
         }
         public List<Student> GetAllStudents()
         {
-            return students;
+            List<Student> allStudents = students.ToList();
+            return allStudents;
         }
+    }
+    enum ActionState
+    {
+        Succeeded,
+        Failed
     }
 }
