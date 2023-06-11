@@ -9,7 +9,6 @@
         {
             tasks.Add(WriteFile($"file-{i}.txt", content));
         }
-
         await Task.WhenAll(tasks);
     }
 
@@ -17,11 +16,12 @@
     {
         // TODO: Записать данные в файл
 
-        using (StreamWriter writer = File.CreateText(path))
+        using (StreamWriter outputFile = new StreamWriter(Path.Combine(path)))
         {
-            await writer.WriteAsync(content);
+            await outputFile.WriteAsync(content);
         }
     }
+
 
     private static string CreateFileContent()
     {
