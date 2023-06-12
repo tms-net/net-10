@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 
 namespace ShopSimulator
 {
-    public class Shop
+    internal class ShopWithTasks
     {
         private bool _isOpened = false;
         private int _cashierCount;
         private SemaphoreSlim _semaphore;
         private ConcurrentBag<Task> _tasks;
 
-        private int _customerCount = 0;
-
-        public Shop(int cahierCount)
+        public ShopWithTasks(int cahierCount)
         {
             _cashierCount = cahierCount;
             _semaphore = new SemaphoreSlim(cahierCount, cahierCount);
@@ -31,16 +28,10 @@ namespace ShopSimulator
 
         public void Enter(Person person)
         {
-            // TODO: Реализовать логику постановки клиента в очередь
-
             if (!_isOpened)
             {
                 return;
             }
-
-            // ждем освобождения потока
-
-            Interlocked.Increment(ref _customerCount);
 
             _tasks.Add(Task.Run(() => ServeCustomer(person)));
 
@@ -51,16 +42,7 @@ namespace ShopSimulator
 
         public void Close()
         {
-            // TODO:
-
             _isOpened = false;
-
-            //var original = Interlocked.CompareExchange(ref _customerCount, -1, 0);
-
-            //while (_customerCount == -1)
-            //{
-            //    Thread.Sleep(100);
-            //}
 
             Task.WaitAll(_tasks.ToArray());
         }
@@ -70,18 +52,6 @@ namespace ShopSimulator
         private async Task ServeCustomer(Person person)
         {
             _semaphore.Wait(); // одна очередь
-
-            //                       1,1m,1m,1h
-            // []                    2,1m,1m,1h
-            //                       3,1m,1m,1h
-
-            // n objects
-
-            // выбрать равномерно/случайно
-
-            // lock(cashier)
-
-            // n очередей
 
             if (person != null)
             {
@@ -93,13 +63,6 @@ namespace ShopSimulator
                 await Task.Delay(person.ProcessingTime);
 
                 Console.WriteLine($"Обслужили клиента {person.Name}");
-            }
-
-            //lock (_locker)
-            {
-                //Interlocked.Decrement(ref _customerCount);
-
-                //_customerCount--; // получение значения -> вычитание -> сохранение значения
             }
 
             _semaphore.Release();

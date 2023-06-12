@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 
 namespace ShopSimulator
 {
-    public class Shop
+    internal class ShopWithThreadPool
     {
         private bool _isOpened = false;
         private int _cashierCount;
         private SemaphoreSlim _semaphore;
-        private ConcurrentBag<Task> _tasks;
 
         private int _customerCount = 0;
 
-        public Shop(int cahierCount)
+        public ShopWithThreadPool(int cahierCount)
         {
             _cashierCount = cahierCount;
             _semaphore = new SemaphoreSlim(cahierCount, cahierCount);
-
-            _tasks = new ConcurrentBag<Task>();
 
             //_cashiers = new Cashier[cahierCount];
         }
@@ -31,43 +27,31 @@ namespace ShopSimulator
 
         public void Enter(Person person)
         {
-            // TODO: Реализовать логику постановки клиента в очередь
-
             if (!_isOpened)
             {
                 return;
             }
 
-            // ждем освобождения потока
-
             Interlocked.Increment(ref _customerCount);
 
-            _tasks.Add(Task.Run(() => ServeCustomer(person)));
-
-            //_tasks.Add(ServeCustomer(person));
+            ThreadPool.QueueUserWorkItem(state => ServeCustomer(person));
 
             Console.WriteLine($"{person.Name} вошел в магазин");
         }
 
         public void Close()
         {
-            // TODO:
-
             _isOpened = false;
 
             //var original = Interlocked.CompareExchange(ref _customerCount, -1, 0);
 
-            //while (_customerCount == -1)
-            //{
-            //    Thread.Sleep(100);
-            //}
-
-            Task.WaitAll(_tasks.ToArray());
+            while (_customerCount > 0)
+            {
+                Thread.Sleep(100);
+            }
         }
 
-        // task1 -> task2 -> task3
-
-        private async Task ServeCustomer(Person person)
+        private void ServeCustomer(Person person)
         {
             _semaphore.Wait(); // одна очередь
 
@@ -85,26 +69,19 @@ namespace ShopSimulator
 
             if (person != null)
             {
-                //Thread.Sleep(person.ProcessingTime); // ждать 1 секунду
-
-                // асинхронность НЕ БЛОКИРУЕТ
-                // выполнить следующий код через 1 секунду
-
-                await Task.Delay(person.ProcessingTime);
+                Thread.Sleep(person.ProcessingTime);
 
                 Console.WriteLine($"Обслужили клиента {person.Name}");
             }
 
             //lock (_locker)
             {
-                //Interlocked.Decrement(ref _customerCount);
+                Interlocked.Decrement(ref _customerCount);
 
                 //_customerCount--; // получение значения -> вычитание -> сохранение значения
             }
 
             _semaphore.Release();
-
-            //return Task.CompletedTask;
         }
     }
 }
