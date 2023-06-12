@@ -54,45 +54,23 @@
 
         private void ServeCustomers()
         {
-            // TODO: Реализовать логику обслуживания клиента из очереди
-            // Использовать свойство клиента для эмуляции времени обслуживания с помощью Thread.Sleep()
             Person _client = null;
             while (_isOpened || _peopleQueue.Count() > 0)
             {
-                doWork();
-            }
-            void doWork()
-            {
-
                 if (_peopleQueue.Count() > 0)
                 {
-                    ServeCustomer();
+                    lock (locker)
+                    {
+                        _peopleQueue.TryDequeue(out _client);
+                    }
+                        Console.WriteLine($"Клиент {_client.Name} обслуживается");
+                        Thread.Sleep(_client.ProcessingTime);
+                        Console.WriteLine($"Клиент {_client.Name} вышел из магазина");
                 }
                 else
                 {
-                    Wait();
+                    Thread.Sleep(100);
                 }
-
-
-            }
-            void ServeCustomer()
-            {
-                lock (locker)
-                {
-                    _peopleQueue.TryDequeue(out _client);
-                }
-
-                if (_client != null)
-                {
-                    Console.WriteLine($"Клиент {_client.Name} обслуживается");
-                    Thread.Sleep(_client.ProcessingTime);
-                    Console.WriteLine($"Клиент {_client.Name} вышел из магазина");
-                }
-               
-            }
-            void Wait()
-            {
-                Thread.Sleep(100);
             }
         }
     }
