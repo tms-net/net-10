@@ -32,6 +32,14 @@ namespace CsvRunner
             Prices = prices;
             Capitalization = capitalization;
         }
+
+        public override string ToString()
+        {
+            var prices = string.Empty;
+            foreach (var price in Prices)
+                prices += price.ToString();
+            return $"Ticker: {Ticker}, CurrentPrice: {CurrentPrice}, []Prices: {prices}, Capitalization: {Capitalization} \n";
+        }
     }
 
     public class BaseStock

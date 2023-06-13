@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 
 namespace CsvSerializer
 {
@@ -26,9 +28,9 @@ namespace CsvSerializer
 
             var fileAsString = string.Empty;
 
-            fileAsString = GetHeaderAttribute(properties, lines) + "\n";
+            fileAsString = GetHeaderAttribute(properties, lines) + "\r\n";
 
-            fileAsString += GetSCVData(properties, lines) + "\n";
+            fileAsString += GetSCVData(properties, lines);
 
             return fileAsString;
 
@@ -49,9 +51,22 @@ namespace CsvSerializer
             return string.Empty;
         }
 
+        private static void AddCSVElementInLine(ref string file, string line)
+        {
+            if (file.Equals(string.Empty))
+                file = line;
+            else
+            {
+                if (file.EndsWith("\r\n"))
+                    file = $"{file}{line}";
+                else
+                    file = $"{file},{line}";
+            }
+        }
+
         private static string GetHeaderAttribute<T>(PropertyInfo[]? properties, IEnumerable<T>? lines, string complexName = "")
         {
-            var headerLine = string.Empty;            
+            var headerLine = string.Empty;
 
             foreach (var property in properties)
             {
@@ -81,7 +96,7 @@ namespace CsvSerializer
                 {
                     var arrayMax = MaxArrayLenght(lines, property);
                     for (var i = 0; i < arrayMax; i++)
-                        AddCSVElementInLine(ref headerLine, $"{headerName}_{i}");
+                        AddCSVElementInLine(ref headerLine, $"{headerName}[{i}]");
                 }
                 else
                     AddCSVElementInLine(ref headerLine, headerName);
@@ -125,7 +140,7 @@ namespace CsvSerializer
                         AddCSVElementInLine(ref dataLine, property.GetValue(item).ToString());
                     }
                 }
-                dataLine += "\n";
+                dataLine += "\r\n";
             }
             return dataLine;
         }
@@ -142,7 +157,7 @@ namespace CsvSerializer
             return max;
         }
 
-        public static IEnumerable<T> Deserialize<T>(string csv, CsvSerializerSettings settings = null) where T: new()
+        public static IEnumerable<T> Deserialize<T>(string csv, CsvSerializerSettings settings = null) where T : new()
         {
             // [char (byte), char]
 
@@ -157,16 +172,61 @@ namespace CsvSerializer
 
             string[] lines = csv.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (var line in lines)
+            var headers = lines[0].Split(",");
+            for (var i = 1; i < lines.Length - 1; i++)
             {
                 // Проверить заголовок
-
+                var line = lines[i];
                 var instance = new T();
 
-                var prop = typeof(T).GetProperty("Report");
+                var prop = typeof(T).GetProperties();
+                var fields = line.Split(",");
+                var numberOfField = 0;
+                foreach (var property in prop)
+                {                    
+                    var isArray = false;
+                    do
+                    {                        
+                        if (property.PropertyType.IsArray)
+                        {
+                            var massiveName = string.Empty;
+                            var attr = property.GetCustomAttribute<CsvHeaderAttribute>();
+                            if (attr != null)
+                            {
+                                massiveName = attr.HeaderName;
+                            }
+                            else
+                            {
+                                massiveName = property.Name;
+                            }                            
+                            var massiveLength = GetMassiveLength(headers, massiveName);
+                            Type massiveElementType = property.PropertyType.GetElementType();
+                            string[] obama = new string[massiveLength];                            
+                            for (var j = 0; j < massiveLength; j++) 
+                            {
+                                obama[j] = fields[numberOfField];
+                                numberOfField++;
+                            }
+                            //var array = obama.Select(x).ToArray();                            
+                            property.SetValue(instance, array);                            
+                        }
+                        else//*/
+                        {                            
+                            var field = Convert.ChangeType(fields[numberOfField], property.PropertyType);
+                            property.SetValue(instance, field);
+                        }
+                    }
+                    while (isArray);
+                    numberOfField++;                   
+                }
+                /*
+                foreach (var field in fields)
+                {
+                    
+                }//*/
                 // prop.PropertyType == BankReport
 
-                var report = Activator.CreateInstance(prop.PropertyType);
+                //var report = Activator.CreateInstance(prop.PropertyType);
 
                 // Заполнить свойства
                 //  - возможно надо создавать другие объекты
@@ -185,18 +245,17 @@ namespace CsvSerializer
             yield break;
         }
 
-        private static void AddCSVElementInLine(ref string file, string line)
+        private static int GetMassiveLength(string[] fields, string massiveName)
         {
-            if (file.Equals(string.Empty))
-                file = line;
-            else
+            var length = 0;
+            foreach (var field in fields)
             {
-                if (file.EndsWith("\n"))
-                    file = $"{file}{line}";
-                else
-                    file = $"{file},{line}";
+                if (field.Contains(massiveName + "["))
+                {
+                    length++;
+                }
             }
-                
+            return length;
         }
     }
 }
