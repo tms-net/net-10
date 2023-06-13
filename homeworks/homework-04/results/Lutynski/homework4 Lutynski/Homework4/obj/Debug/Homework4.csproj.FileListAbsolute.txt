@@ -1,8 +1,0 @@
-D:\Homework\homeworks\homework-04\results\Lutynski\homework4\Homework4\bin\Debug\Homework4.exe.config
-D:\Homework\homeworks\homework-04\results\Lutynski\homework4\Homework4\bin\Debug\Homework4.exe
-D:\Homework\homeworks\homework-04\results\Lutynski\homework4\Homework4\bin\Debug\Homework4.pdb
-D:\Homework\homeworks\homework-04\results\Lutynski\homework4\Homework4\obj\Debug\Homework4.csproj.AssemblyReference.cache
-D:\Homework\homeworks\homework-04\results\Lutynski\homework4\Homework4\obj\Debug\Homework4.csproj.SuggestedBindingRedirects.cache
-D:\Homework\homeworks\homework-04\results\Lutynski\homework4\Homework4\obj\Debug\Homework4.csproj.CoreCompileInputs.cache
-D:\Homework\homeworks\homework-04\results\Lutynski\homework4\Homework4\obj\Debug\Homework4.exe
-D:\Homework\homeworks\homework-04\results\Lutynski\homework4\Homework4\obj\Debug\Homework4.pdb
