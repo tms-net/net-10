@@ -10,17 +10,17 @@ namespace CsvRunner
 
         static Stock Empty => new Stock();
 
-        [CsvHeader("Degeneration")]
+        [CsvHeader("Ticker")]
         public string Ticker { get; set; }
 
-        [CsvHeader("Autism")]
+        [CsvHeader("CurrentPrice")]
         public decimal CurrentPrice { get; set; }
         /*
         [CsvHeader("Dissociative identity disorder")] 
         public BankReport Report { get; set; }//*/
 
 
-        [CsvHeader("Schizophrenia")]
+        [CsvHeader("Prices")]
         public decimal[] Prices { get; set; }
 
         public void InputStockData(string ticker, decimal currentPrice, int rating, DateTime dateTime, decimal[] prices, decimal capitalization)
@@ -44,16 +44,16 @@ namespace CsvRunner
 
     public class BaseStock
     {
-        [CsvHeader("Schizophasia")]
+        [CsvHeader("Capitalization")]
         public decimal Capitalization { get; set; }
     }
     
     public class BankReport
     {
-        [CsvHeader("Delusional disorder")]
+        [CsvHeader("Rating")]
         public Rating Rating { get; set; }
 
-        [CsvHeader("Dementia")]
+        [CsvHeader("Date")]
         public DateTime Date { get; set; }
 
         public void InputBankReportData(int rating, DateTime dateTime)

@@ -34,7 +34,8 @@ public class Program
         Console.ReadLine();
         file = string.Empty;
         file = File.ReadAllText(Directory.GetCurrentDirectory() + "\\data.csv");
-        Console.WriteLine(file);        
+        Console.WriteLine(file);
+        Console.WriteLine();
         var list2 = CsvSerializer.CsvSerializer.Deserialize<Stock>(file);
         foreach (var stock in list2)
         {

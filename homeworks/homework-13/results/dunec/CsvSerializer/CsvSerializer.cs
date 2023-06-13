@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
@@ -199,16 +200,30 @@ namespace CsvSerializer
                             {
                                 massiveName = property.Name;
                             }                            
-                            var massiveLength = GetMassiveLength(headers, massiveName);
-                            Type massiveElementType = property.PropertyType.GetElementType();
-                            string[] obama = new string[massiveLength];                            
-                            for (var j = 0; j < massiveLength; j++) 
+                            var maxMassiveLength = GetMassiveLength(headers, massiveName);
+                            int massiveLength = 0;
+                            
+                            for (var j = numberOfField; j < numberOfField + maxMassiveLength - 1; j++) 
                             {
-                                obama[j] = fields[numberOfField];
-                                numberOfField++;
+                                if (!string.IsNullOrEmpty(fields[j]))
+                                {
+                                    massiveLength++;
+                                }                                
                             }
-                            //var array = obama.Select(x).ToArray();                            
-                            property.SetValue(instance, array);                            
+
+                            string[] obama = new string[massiveLength];
+
+                            var array = Array.CreateInstance(property.PropertyType.GetElementType(), massiveLength);
+                            for (var j = 0; j < massiveLength - 1; j++)
+                            {
+                                if (!string.IsNullOrEmpty(fields[j]))
+                                {
+                                    obama[j] = fields[j + numberOfField];                                    
+                                }
+                            }
+                            //array = (Array)Convert.ChangeType(obama, property.PropertyType);
+                            property.SetValue(instance, array);
+                            numberOfField += maxMassiveLength - 1;
                         }
                         else//*/
                         {                            
