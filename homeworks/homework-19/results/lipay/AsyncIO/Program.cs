@@ -1,7 +1,12 @@
-﻿class Program
+﻿using System.Diagnostics;
+
+class Program
 {
     private static async Task Main()
     {
+        var timer = new Timer(GetSnapshot);
+        timer.Change(0, 100);
+
         var content = CreateFileContent();
         var tasks = new List<Task>(100);
 
@@ -10,6 +15,15 @@
             tasks.Add(WriteFile($"file-{i}.txt", content));
         }
         await Task.WhenAll(tasks);
+
+        
+    }
+
+    private static void GetSnapshot(object? state)
+    {
+        Process progress = Process.GetCurrentProcess();
+        ProcessThreadCollection threads = progress.Threads;
+        Console.WriteLine($"Thread: {threads}");
     }
 
     private static async Task WriteFile(string path, string content)
