@@ -30,7 +30,7 @@ class Program
     {
         // TODO: Записать данные в файл
 
-        using (StreamWriter outputFile = new StreamWriter(Path.Combine(path)))
+        using (StreamWriter outputFile = new StreamWriter(path))
         {
             await outputFile.WriteAsync(content);
         }
