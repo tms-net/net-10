@@ -12,6 +12,14 @@ internal class UnitStateManager<TState> where TState : struct, Enum
 
         _enumValues = Enum.GetValues<TState>();
         _states = new bool[_enumValues.Length, _enumValues.Length];
+        
+        for (int i = 0; i < _enumValues.Length; i++)
+        {
+            if (i < _enumValues.Length - 1)
+                _states[i, i + 1] = true;
+            else
+                _states[i, 0] = true;
+        }
 
         Current = default;
     }
@@ -26,6 +34,9 @@ internal class UnitStateManager<TState> where TState : struct, Enum
         var fromIndex = Array.IndexOf(_enumValues, fromState);
         var toIndex = Array.IndexOf(_enumValues, toState);
 
+        if (fromIndex == -1 | toIndex == -1)
+            throw new IndexOutOfRangeException("Can't allow transition for unexist state.");
+
         _states[fromIndex, toIndex] = true;
     }
 
@@ -39,6 +50,11 @@ internal class UnitStateManager<TState> where TState : struct, Enum
 
         var fromIndex = Array.IndexOf(_enumValues, Current);
         var toIndex = Array.IndexOf(_enumValues, toState);
+
+        if (toIndex == -1)
+        {
+            throw new IndexOutOfRangeException("Can't transite to unexist state.");
+        }
 
         if (!_states[fromIndex, toIndex])
         {
