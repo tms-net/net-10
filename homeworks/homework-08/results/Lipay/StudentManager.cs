@@ -14,12 +14,13 @@ internal partial class Program
 
         public void AddInfo( string firstName, string lastName, int age, double rating, string gender)
         {
-            students.Add(new Student());
-            students[students.Count - 1].FirstName = firstName;
-            students[students.Count - 1].LastName = lastName;
-            students[students.Count - 1].Age = age;
-            students[students.Count - 1].Rating = rating;
-            students[students.Count - 1].Gender = gender;
+            var NewStudent = new Student();
+            NewStudent.FirstName = firstName;
+            NewStudent.LastName = lastName;
+            NewStudent.Age = age;
+            NewStudent.Rating = rating;
+            NewStudent.Gender = gender;
+            students.Add(NewStudent);
         }
         public void AddInfo(string firstNameOld, string lastNameOld, string firstNameNew, string lastNameNew, int age, double rating, string gender)
         {
@@ -40,9 +41,9 @@ internal partial class Program
         }
         public void AddInfo(int SearchID, string firstName, string lastName, int age, double rating, string gender)
         {
-            if (SerchStudent(SearchID) != null)
+            if (IsStudentExists(SearchID) != null)
             {
-                int _searcgIndex = (int)SerchStudent(SearchID);
+                int _searcgIndex = (int)IsStudentExists(SearchID);
                 students[_searcgIndex].FirstName = firstName;
                 students[_searcgIndex].LastName = lastName;
                 students[_searcgIndex].Age = age;
@@ -62,7 +63,7 @@ internal partial class Program
             }
             else
             {
-                throw new Exception($"Студента c ID:{SerchID} не существует");
+                throw new InvalidOperationException($"Студента c ID:{SerchID} не существует");
             }
 
         }
@@ -74,11 +75,11 @@ internal partial class Program
             }
             else
             {
-                throw new Exception($"Студента {firstName} {lastName} не существует");
+                throw new InvalidOperationException($"Студента {firstName} {lastName} не существует");
             }
         }
 
-        public int? SerchStudent(int serchID) 
+        public int? IsStudentExists(int serchID) 
         {
             int _resultSearch;
             if (students.Exists(x => x.ID == serchID))

@@ -107,7 +107,7 @@ internal partial class Program
                     {
                         Console.Write("Введите ID для поиска: ");
                         int SerchID = int.Parse(Console.ReadLine());
-                        resultSearch = studentManager.SerchStudent(SerchID);
+                        resultSearch = studentManager.IsStudentExists(SerchID);
                         if (resultSearch != null)
                         {
                             
@@ -165,7 +165,7 @@ internal partial class Program
                         lastName = Console.ReadLine();
                         resultSearch = studentManager.SerchStudent(firstName, lastName);
                         if (resultSearch != null)
-                        {
+                        { 
                             Console.Write("Введите имя: ");
                             firstName = Console.ReadLine();
                             Console.Write("Введите фамилию: ");
@@ -234,7 +234,7 @@ internal partial class Program
                     {
                         Console.Write("Введите ID для поиска: ");
                         int SerchID = int.Parse(Console.ReadLine());
-                        resultSearch = studentManager.SerchStudent(SerchID);
+                        resultSearch = studentManager.IsStudentExists(SerchID);
                         if (resultSearch != 0)
                         {
                             studentManager.DeleteInfo((int)resultSearch);
@@ -261,7 +261,7 @@ internal partial class Program
                     
                     Console.Write("Введите ID для поиска: ");
                     int ID = int.Parse(Console.ReadLine());
-                    resultSearch = studentManager.SerchStudent(ID);
+                    resultSearch = studentManager.IsStudentExists(ID);
                     if (resultSearch != null)
                     {
                         var student = studentManager.GetStudent((int)resultSearch);
