@@ -17,6 +17,10 @@ namespace TradingApp
 
     public class SymbolInfo
     {
+        // Синхронизация
+        // очередь обработки
+
+
         public string SymbolName { get; } //Символ компании на бирже
         public decimal MarketCap { get; } //Словарь с датой и значением
         public IDictionary<DateTime, decimal> Data { get; set; }
@@ -147,6 +151,8 @@ namespace TradingApp
 
         private void UpdateData(object? state)
         {
+            // TODO: Вычислить рыночную цену исходя из сведенных ордеров и схоранить в исторические данные
+
             var dateNow = DateTime.UtcNow;
 
             var rnd = _random.Next(1);

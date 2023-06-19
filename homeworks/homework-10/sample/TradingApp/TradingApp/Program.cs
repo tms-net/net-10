@@ -1,5 +1,6 @@
 ﻿using System;
 using TradingApp;
+using TradingApp.Trading_Logic;
 
 internal class Program
 {
@@ -7,6 +8,13 @@ internal class Program
     {
         Console.InputEncoding = System.Text.Encoding.UTF8;
         Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        // Имитация работы других трейдеров
+        //  - создание ордеров
+        //  - работа в разных потоках
+
+        var tradingGenerator = new TradingGenerator();
+        tradingGenerator.StartTradingDay();
 
         // Отображение
         //  - Экраны (Screen) ; Страница (Page) ; View
@@ -24,8 +32,9 @@ internal class Program
         var random = new Random();
         var currentBalance = random.Next(1000, 100000);
 
+        var tradingEngine = new TradingEngine();
         var tradingDataRetreiver = new TradingDataRetreiver();
-        var tradingLogic = new TradingLogic(currentBalance, tradingDataRetreiver);        
+        var tradingLogic = new TradingLogic(currentBalance, tradingDataRetreiver, tradingEngine);
 
         // Получить информацию для отображения данных
         var symbolName = TradingDataInConsole.GetSymbolFromConsole();

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using TradingApp.Trading_Logic;
 
 namespace TradingApp
 {
@@ -7,18 +8,27 @@ namespace TradingApp
         private Dictionary<string, int> _stocks;
         private BalanceInfo _balance;
         private ITradingDataRetreiver _tradingDataRetreiver;
+        private ITradingEngine _tradingEngine;
         public event Action<OrderInfo> OrderCompleted;
 
         public event Action<BalanceInfo> BalanceChanged;
 
+        // IoC/DI
+
+        // Dependency Injection
+        // Inversion of Control
+
         public TradingLogic(
             decimal balance,
-            ITradingDataRetreiver tradingDataRetreiver)
+            // из файла, из сервиса            
+            ITradingDataRetreiver tradingDataRetreiver,
+            ITradingEngine tradingEngine)
         {
             // Currency Balance
             _balance = new BalanceInfo(balance);
 
             _tradingDataRetreiver = tradingDataRetreiver;
+            _tradingEngine = tradingEngine;
 
             // Stocks
             _stocks = new Dictionary<string, int>();
@@ -40,27 +50,16 @@ namespace TradingApp
             //decimal? price = null // только для Price OrderType
             )
         {
-            var orderCompleted = new OrderInfo();
-
             ValidateOrder(symbol, quantity, orderPriceType, orderType, price);
 
             IOrder order = orderType switch
             {
-                OrderType.Buy => new BuyOrder(this, symbol, quantity, price, orderPriceType),
-                OrderType.Sell => new SellOrder(this, symbol, quantity, price, orderPriceType),
+                OrderType.Buy => new BuyOrder(symbol, quantity, price ?? default),
+                OrderType.Sell => new SellOrder(symbol, quantity, price ?? default),
                 _ => throw new ArgumentException()
             };
 
             order.OrderApproved += OnOrderApproved;
-
-            if (orderPriceType == OrderPriceType.Market)
-            {
-                order.MakeOrderMarket();
-            }
-            else
-            {
-                order.MakeOrderPrice();
-            }
         }
 
         private /* ValidationResult */ /*bool*/ void ValidateOrder(string symbol, int quantity, OrderPriceType orderPriceType, OrderType orderType, decimal? price)

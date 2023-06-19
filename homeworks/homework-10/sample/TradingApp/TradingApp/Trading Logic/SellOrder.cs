@@ -3,50 +3,23 @@ namespace TradingApp
 {
     public class SellOrder : IOrder
     {
-        private TradingLogic _tl;
-
-        private DealAccommodation _da;
+        public DealStatus DealStatus { get; set; }
         public string Symbol { get; init; }
         public int Quantity { get; init; }
         public decimal Price { get; init; }
 
-        private OrderInfo _orderInfo;
-        public OrderPriceType PriceType { get; init; }
+        public event Action<DealDetails> OrderFullfilled;
 
-        public event Action<OrderInfo> OrderApproved;
-
-        public SellOrder(TradingLogic tradingLogic, string symbol, int quantity, decimal? price, OrderPriceType orderPriceType)
+        public SellOrder(string symbol, int quantity, decimal price)
         {
-            _orderInfo = new OrderInfo();
-            _orderInfo.Symbol = symbol;
-            _orderInfo.DealPrice = (quantity * price) ?? default;
             Symbol = symbol;
             Quantity = quantity;
-            Price = price ?? default;
-            PriceType = orderPriceType;
-            _tl = tradingLogic;
-            _da = new DealAccommodation();
+            Price = price;
         }
 
-        public void MakeOrderMarket()
+        public void CancelOrder()
         {
-            _da.ApproveSellOrder(this);
-            _orderInfo.Status = DealStatus.Completed;
-            OrderApproved?.Invoke(_orderInfo);
-        }
-
-        public void MakeOrderPrice()
-        {
-            _da.ApproveSellOrder(this);
-            _orderInfo.Status = DealStatus.Completed;
-            OrderApproved?.Invoke(_orderInfo);
-        }
-
-
-        public bool CancelOrder()
-        {
-            _orderInfo.Status = DealStatus.Cancelled;
-            return _da.CancelCurrentOrder();
+            DealStatus = DealStatus.Cancelled;
         }
     }
 }
