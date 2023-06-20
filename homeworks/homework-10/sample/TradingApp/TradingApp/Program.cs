@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Text;
 using TradingApp;
 using TradingApp.Trading_Logic;
 
@@ -32,9 +34,61 @@ internal class Program
         var random = new Random();
         var currentBalance = random.Next(1000, 100000);
 
+        var tradingDataRetreiver = TradingDataRetreiver.Instance; //new TradingDataRetreiver();
+
+        // Container.Register<ITradingDataRetreiver, TradingDataRetreiver>(LifeTime.Singleton)
+
+        // TradingDataRetreiverFactory
+
+        // Container.Register<ITradingDataRetreiver, TradingDataRetreiver>(() => new TradingDataRetreiver(), LifeTime.Singleton)
+
+        // Container.Register<ITradingDataRetreiver, TradingDataRetreiver>(
+        //  (ctx) => ctx.Resolve<TradingDataRetreiverFactory>().CreateRetriever(), LifeTime.Singleton)
+
+
+        //var builder = new TradingDataRetreiverBuilder();
+
+        // FluentInterface
+        //var instance =
+        //    builder
+        //        .WithFile("C:file")
+        //        .WithBuffer(400)
+        //        .Build();
+
+        //var sb = new StringBuilder();
+        //sb.Append("")
+        //  .AppendLine("");
+
+        //sb.ToString();
+
+
+        var da = new DealAccommodationService();
         var tradingEngine = new TradingEngine();
-        var tradingDataRetreiver = new TradingDataRetreiver();
-        var tradingLogic = new TradingLogic(currentBalance, tradingDataRetreiver, tradingEngine);
+        var tradingLogic = new TradingLogic(currentBalance, tradingDataRetreiver, da, tradingEngine);
+
+        // Регистрация зависимостей
+
+        // FileTradingDataRetreiver который реализует ITradingDataRetreiver и существует в единственном экземпляре
+        // TradingLogic который реализует ITradingLogic и существует в единственном экземпляре
+
+        // Создание сущностей
+        //  - Определение времени жизни
+        //  - Внедрение зависимостей (Dependency Injection)
+
+        // IoC/DI (Dependency Injection)
+
+        // Container -> Control (создание, управлние сущностями), Injection
+
+        // Interface == Service
+
+        // Container.Resolve<ITradingLogic>()
+        // -> dependencies
+        //    - ITradingDataRetreiver
+        //      - new TradingDataRetreiver()
+        //    - IDealAccommodationService
+        //      - new DealAccommodationService()
+
+        // Container.Register<ITradingLogic, TradingLogic>()
 
         // Получить информацию для отображения данных
         var symbolName = TradingDataInConsole.GetSymbolFromConsole();
@@ -312,6 +366,33 @@ internal class Program
             Console.WriteLine($" Текущая цена: {_symbolData.Data.Last().Value}");
             Console.WriteLine($" Капитализация: {_symbolData.MarketCap}");
             Console.WriteLine($" Баланс: {_currentBalance}");
+        }
+    }
+
+    // Abstract Factory
+    //interface IControlFactory
+    //{
+    //    IButton CreateButton();
+    //    ICheckbox CreateCheckbox();
+    //}
+
+    public class TradingDataRetreiverBuilder
+    {
+        private string _path;
+
+        // Последовательные вызовы
+
+        // Классический
+
+        public TradingDataRetreiverBuilder WithFile(string path)
+        {
+            _path = path;
+            return this;
+        }
+
+        public TradingDataRetreiverBuilder Build() // Create()
+        {
+            return new TradingDataRetreiverBuilder();
         }
     }
 }

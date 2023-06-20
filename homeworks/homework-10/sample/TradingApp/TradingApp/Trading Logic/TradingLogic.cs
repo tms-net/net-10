@@ -8,8 +8,11 @@ namespace TradingApp
         private Dictionary<string, int> _stocks;
         private BalanceInfo _balance;
         private ITradingDataRetreiver _tradingDataRetreiver;
+        private IDealAccommodationService _da;
+
         private ITradingEngine _tradingEngine;
         public event Action<OrderInfo> OrderCompleted;
+
 
         public event Action<BalanceInfo> BalanceChanged;
 
@@ -20,8 +23,8 @@ namespace TradingApp
 
         public TradingLogic(
             decimal balance,
-            // из файла, из сервиса            
             ITradingDataRetreiver tradingDataRetreiver,
+            IDealAccommodationService da,
             ITradingEngine tradingEngine)
         {
             // Currency Balance
@@ -39,6 +42,8 @@ namespace TradingApp
             //test data start
             //AddSymbol("w", 10);
             //test data end
+            _da = da;
+
         }
 
         public void PlaceOrder(
@@ -50,16 +55,26 @@ namespace TradingApp
             //decimal? price = null // только для Price OrderType
             )
         {
+            var orderCompleted = new OrderInfo();
+
+            // Работа с акаунтом пользователя и торговым движком
+
+            // 1. Валидация
+            // 2. Создание сущностей ордеров
+            // 3. Обновить баланс
+
             ValidateOrder(symbol, quantity, orderPriceType, orderType, price);
 
             IOrder order = orderType switch
             {
-                OrderType.Buy => new BuyOrder(symbol, quantity, price ?? default),
-                OrderType.Sell => new SellOrder(symbol, quantity, price ?? default),
+                OrderType.Buy => new BuyOrder(symbol, quantity, price, orderPriceType, _da),
+                OrderType.Sell => new SellOrder(symbol, quantity, price, orderPriceType, _da),
                 _ => throw new ArgumentException()
             };
 
-            order.OrderApproved += OnOrderApproved;
+            order.OrderFullfilled += OnOrderFullfilled;
+
+            _tradingEngine.PlaceOrder(order);
         }
 
         private /* ValidationResult */ /*bool*/ void ValidateOrder(string symbol, int quantity, OrderPriceType orderPriceType, OrderType orderType, decimal? price)
@@ -112,7 +127,7 @@ namespace TradingApp
         /// <summary>
         /// contains actions when status of order is known
         /// </summary>
-        private void OnOrderApproved(OrderInfo orderInfo)
+        private void OnOrderFullfilled(OrderInfo orderInfo, DealDetails dealDetails)
         {
             _balance.UpdateBalance(orderInfo.DealPrice, orderInfo.OrderType);
 

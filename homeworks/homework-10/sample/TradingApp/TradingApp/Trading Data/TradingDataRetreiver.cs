@@ -40,13 +40,28 @@ namespace TradingApp
 
     internal class TradingDataRetreiver : ITradingDataRetreiver
     {
+        static Lazy<TradingDataRetreiver> _instance = new Lazy<TradingDataRetreiver>(CreateInstance);
+
+        public static TradingDataRetreiver Instance => _instance.Value;
+
+        // Инициализатор типа
+        static TradingDataRetreiver()
+        {
+            // _instance = new TradingDataRetreiver();
+        }
+
+        static TradingDataRetreiver CreateInstance()
+        {
+            return new TradingDataRetreiver();
+        }
+
         const int MinimalGranularityMs = 5 * 60 * 1000;
 
         private readonly Random _random = new Random();
         private readonly Dictionary<DateTime, decimal> _dataMSFT = new Dictionary<DateTime, decimal>();
         private readonly Dictionary<DateTime, decimal> _dataAAPL = new Dictionary<DateTime, decimal>();
 
-        public TradingDataRetreiver()
+        private TradingDataRetreiver()
         {
             GenerateData();
 
