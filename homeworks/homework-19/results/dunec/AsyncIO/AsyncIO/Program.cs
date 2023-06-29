@@ -23,20 +23,20 @@ class Program
 
     private static async Task WriteFile(string path, string content, List<string> threadsList)
     {
-       // lock(locker)
-       // {
+        lock(locker)
+        {
             AddNewThreadId(Thread.CurrentThread.ManagedThreadId, ref threadsList);
-       // }
+        }
         
         using (StreamWriter outputFile = new StreamWriter(Path.Combine(Directory.GetCurrentDirectory(), path)))
         {
             await outputFile.WriteAsync(content);
         }
 
-        //lock (locker)
-        //{
+        lock (locker)
+        {
             AddNewThreadId(Thread.CurrentThread.ManagedThreadId, ref threadsList);
-        //}
+        }
             
         Console.WriteLine($"At moment of writing {path} has used {threadsList.Count} threads ({String.Join(",", threadsList)})");
         // TODO: Записать данные в файл
