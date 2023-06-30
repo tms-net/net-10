@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.IO;
+using System.Net.Sockets;
 
 class Program
 {
@@ -16,16 +17,25 @@ class Program
         {
             tasks.Add(WriteFile($"file-{i}.txt", content, threadsList));
         }
+        lock (locker)
+        {
+            AddNewThreadId(Thread.CurrentThread.ManagedThreadId, threadsList);
+        }
 
         await Task.WhenAll(tasks);
-        
+
+        lock (locker)
+        {
+            AddNewThreadId(Thread.CurrentThread.ManagedThreadId, threadsList);
+            Console.WriteLine($"For writing has used {threadsList.Count} threads ({String.Join(",", threadsList)})");
+        }            
     }
 
     private static async Task WriteFile(string path, string content, List<string> threadsList)
     {
         lock(locker)
         {
-            AddNewThreadId(Thread.CurrentThread.ManagedThreadId, ref threadsList);
+            AddNewThreadId(Thread.CurrentThread.ManagedThreadId, threadsList);
         }
         
         using (StreamWriter outputFile = new StreamWriter(Path.Combine(Directory.GetCurrentDirectory(), path)))
@@ -35,7 +45,7 @@ class Program
 
         lock (locker)
         {
-            AddNewThreadId(Thread.CurrentThread.ManagedThreadId, ref threadsList);
+            AddNewThreadId(Thread.CurrentThread.ManagedThreadId, threadsList);
         }
             
         Console.WriteLine($"At moment of writing {path} has used {threadsList.Count} threads ({String.Join(",", threadsList)})");
@@ -59,7 +69,7 @@ class Program
         return System.Text.Encoding.UTF8.GetString(buffer);
     }
 
-    private static void AddNewThreadId(int id, ref List<string> threadsList)
+    private static void AddNewThreadId(int id, List<string> threadsList)
     {
         if (threadsList.IndexOf(id.ToString()) == -1)
         {
