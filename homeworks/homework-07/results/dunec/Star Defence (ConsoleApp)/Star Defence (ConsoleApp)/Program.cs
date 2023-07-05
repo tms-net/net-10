@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
+
 internal class Program
 {
     private static void Main(string[] args)
@@ -86,6 +87,4 @@ internal class Program
         string field = "-------------------------------------------------------------------";
         Console.WriteLine($"{field}\n{unitName}status was successfully changed to {state}\n{field}");
     }
-
-
 }
