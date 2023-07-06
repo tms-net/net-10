@@ -1,17 +1,21 @@
 ﻿using System;
 namespace TradingApp
 {
-	public interface IOrder
+    // COHESION - Связанность по близости/функционалу
+    // HIGH COHESION
+
+    // Utils -> может быть LOW COHESION
+    // ThreadUtils
+    // OrderUtils
+
+    // COUPLING - Связанность по завимости (dependency)
+    // LOW COUPLING
+
+    public interface IOrder
 	{
-        public OrderPriceType PriceType { get; init; }
-
-        public event Action<OrderInfo> OrderApproved;
-
-        public void MakeOrderMarket();
-
-        public void MakeOrderPrice();
-
-		public bool CancelOrder();
+        event Action<OrderInfo, DealDetails> OrderFullfilled;
+        bool FullfillOrder(DealDetails dealDetails);
+        bool CancelOrder();
     }
 }
 

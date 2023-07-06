@@ -2,51 +2,39 @@
 namespace TradingApp
 {
     public class SellOrder : IOrder
-    {
-        private TradingLogic _tl;
-
-        private DealAccommodation _da;
-        public string Symbol { get; init; }
-        public int Quantity { get; init; }
-        public decimal Price { get; init; }
-
+    { 
+        private IDealAccommodationService _da;
         private OrderInfo _orderInfo;
-        public OrderPriceType PriceType { get; init; }
 
-        public event Action<OrderInfo> OrderApproved;
+        public DealStatus DealStatus { get; set; }
+        public event Action<OrderInfo, DealDetails> OrderFullfilled;
 
-        public SellOrder(TradingLogic tradingLogic, string symbol, int quantity, decimal? price, OrderPriceType orderPriceType)
+        public SellOrder(string symbol, int quantity, decimal? price, OrderPriceType orderPriceType, IDealAccommodationService da)
         {
-            _orderInfo = new OrderInfo();
-            _orderInfo.Symbol = symbol;
-            _orderInfo.DealPrice = (quantity * price) ?? default;
-            Symbol = symbol;
-            Quantity = quantity;
-            Price = price ?? default;
-            PriceType = orderPriceType;
-            _tl = tradingLogic;
-            _da = new DealAccommodation();
+            _orderInfo = new OrderInfo
+            {
+                Symbol = symbol,
+                Price = price,
+                OrderType = OrderType.Sell,
+                OrderPriceType = orderPriceType,
+                Quantity = quantity
+            };
+
+            _da = da;
         }
 
-        public void MakeOrderMarket()
+        public bool FullfillOrder(DealDetails dealDetails)
         {
-            _da.ApproveSellOrder(this);
-            _orderInfo.Status = DealStatus.Completed;
-            OrderApproved?.Invoke(_orderInfo);
+            _da.ApproveOrder(_orderInfo.Id);
+            DealStatus = DealStatus.Completed;
+            OrderFullfilled?.Invoke(_orderInfo, dealDetails);
+            return true;
         }
-
-        public void MakeOrderPrice()
-        {
-            _da.ApproveSellOrder(this);
-            _orderInfo.Status = DealStatus.Completed;
-            OrderApproved?.Invoke(_orderInfo);
-        }
-
 
         public bool CancelOrder()
         {
-            _orderInfo.Status = DealStatus.Cancelled;
-            return _da.CancelCurrentOrder();
+            DealStatus = DealStatus.Cancelled;
+            return true;
         }
     }
 }

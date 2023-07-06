@@ -3,59 +3,41 @@ namespace TradingApp
 {
     public class BuyOrder : IOrder
     {
-        private TradingLogic _tl;
-        private DealAccommodation _da;
+        // 1. Управление статусами
 
-        public string Symbol { get; init; }
-        public int Quantity { get; init; }
-        public decimal Price { get; init; }
-
+        private IDealAccommodationService _da;
         private OrderInfo _orderInfo;
-        public OrderPriceType PriceType { get; init; }
 
-        public event Action<OrderInfo> OrderApproved;
+        public DealStatus DealStatus { get; set; }
+        public event Action<OrderInfo, DealDetails> OrderFullfilled;
 
-        public BuyOrder(TradingLogic tradingLogic, string symbol, int quantity, decimal? price, OrderPriceType orderPriceType)
+        public BuyOrder(string symbol, int quantity, decimal? price, OrderPriceType orderPriceType, IDealAccommodationService da)
         {
-            _orderInfo = new OrderInfo();
-            _tl = tradingLogic;
-            _orderInfo.Symbol = symbol;
-            _orderInfo.DealPrice = (quantity * price) ?? default;
-            _da = new DealAccommodation();
-            Symbol = symbol;
-            Quantity = quantity;
-            Price = price ?? default;
-            PriceType = orderPriceType;
+            _orderInfo = new OrderInfo
+            {
+                Symbol = symbol,
+                Price = price ?? default,
+                OrderType = OrderType.Buy,
+                OrderPriceType = orderPriceType,
+                Quantity = quantity
+            };
+
+            _da = da;
         }
 
-        /// <summary>
-        /// make buy order with market price
-        /// fires event OrderApproved based on response from DealAccommodation
-        /// </summary>
-        public void MakeOrderMarket()
+        public bool FullfillOrder(DealDetails dealDetails)
         {
-            _da.ApproveBuyOrder(this);
-            _orderInfo.Status = DealStatus.Completed;
-            OrderApproved?.Invoke(_orderInfo);
-        }//call event
-
-        /// <summary>
-        ///make buy order with market price
-        /// fires event OrderApproved based on response from DealAccommodation
-        /// </summary>   
-        public void MakeOrderPrice()
-        {
-            _da.ApproveBuyOrder(this);
-            _orderInfo.Status = DealStatus.Completed;
-            OrderApproved?.Invoke(_orderInfo);
+            _da.ApproveOrder(_orderInfo.Id);
+            DealStatus = DealStatus.Completed;
+            OrderFullfilled?.Invoke(_orderInfo, dealDetails);
+            return true;
         }
 
         public bool CancelOrder()
         {
-            _orderInfo.Status = DealStatus.Cancelled;
-            return _da.CancelCurrentOrder();
+            DealStatus = DealStatus.Cancelled;
+            return true;
         }
     }
-}/* на входе - параметры с конутруктры
-  * на выход е- event orderinfo*/
+}
 
