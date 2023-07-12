@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 using TradingApp.Data;
 
@@ -10,58 +10,66 @@ namespace TradingApp
     //      - Класс должен получать новые данные каждые X секунд и уведомлять компонент пользовательского интерфейса.
     //   - Получение данных для похожих символов
 
-    public interface ITradingDataRetreiver
+    public interface ITradingDataService
     {
         SymbolInfo RetreiveInfo(string symbolName, TimeSpan period, TimeSpan granularity);
     }
 
     public class SymbolInfo
     {
-        // Синхронизация
-        // очередь обработки
+        /// <summary>
+        /// Символ компании на бирже
+        /// </summary>
+        public string SymbolName { get; }
 
+        /// <summary>
+        /// Количество акций на бирже
+        /// </summary>
+        public decimal Quantity { get; init; }
 
-        public string SymbolName { get; } //Символ компании на бирже
-        public decimal MarketCap { get; } //Словарь с датой и значением
-        public IDictionary<DateTime, decimal> Data { get; set; }
-
-        public event Action<SymbolInfo> SymbolUpdated;
+        /// <summary>
+        /// Словарь с датой и значением рыночной цены с учетом гранулярности
+        /// </summary>
+        public IReadOnlyDictionary<DateTime, decimal> Data { get; init; }
 
         public decimal? MarketPrice()
         {
             return Data?.LastOrDefault().Value; // Enumerable.LastOrDefault
         }
 
-        public SymbolInfo(string symbolName)
+        public decimal? MarketCap()
         {
-            // Сгененрировать объем акций
+            return MarketPrice() * Quantity;
+        }
+
+        public TimeSpan? CurrentPeriod()
+        {
+            return Data?.LastOrDefault().Key - Data?.FirstOrDefault().Key;
+        }
+
+        public TimeSpan? CurrentGranularity()
+        {
+            // TODO: Получить гранулярность данных 
+
+            return default;
+        }
+
+        public SymbolInfo(string symbolName, decimal quantity)
+        {
+            SymbolName = symbolName;
+            Quantity = quantity;
         }
     }
 
-    internal class TradingDataRetreiver : ITradingDataRetreiver
+    internal class TradingDataService : ITradingDataService
     {
-        static Lazy<TradingDataRetreiver> _instance = new Lazy<TradingDataRetreiver>(CreateInstance);
-
-        public static TradingDataRetreiver Instance => _instance.Value;
-
-        // Инициализатор типа
-        static TradingDataRetreiver()
-        {
-            // _instance = new TradingDataRetreiver();
-        }
-
-        static TradingDataRetreiver CreateInstance()
-        {
-            return new TradingDataRetreiver();
-        }
-
         const int MinimalGranularityMs = 5 * 60 * 1000;
 
         private readonly Random _random = new Random();
         private readonly Dictionary<DateTime, decimal> _dataMSFT = new Dictionary<DateTime, decimal>();
         private readonly Dictionary<DateTime, decimal> _dataAAPL = new Dictionary<DateTime, decimal>();
 
-        private TradingDataRetreiver()
+        internal TradingDataService()
         {
             GenerateData();
 
@@ -156,11 +164,12 @@ namespace TradingApp
                 .ToDictionary( // reduce материализация
                     group => group.Min(dataIndex => dataIndex.dataPoint.Key), // аггрегация для ключа
                     group => group.Average(dataIndex => dataIndex.dataPoint.Value) // аггрегация для значения
-                ); 
+                );
 
             return new SymbolInfo(symbolName)
             {
-                Data = data
+                Data = new ReadOnlyDictionary(data),
+                Quantity = 100_000
             };
         }
 

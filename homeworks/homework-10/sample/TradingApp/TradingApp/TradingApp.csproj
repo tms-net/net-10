@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Patterns\Singleton.cs~RF2b314030.TMP" />
+  </ItemGroup>
+
 </Project>

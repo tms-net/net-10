@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingApp", "TradingApp\TradingApp.csproj", "{7011DFDA-C5C8-45EF-AD43-630E2CEB8D6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingEngine", "TradingEngine\TradingEngine.csproj", "{EF961C34-4993-4ACB-80C0-1A95C823375F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingApp.Tests", "TradingApp.Tests\TradingApp.Tests.csproj", "{B0BA1BD9-4201-43A8-9716-7B8E9A4C53A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{7011DFDA-C5C8-45EF-AD43-630E2CEB8D6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7011DFDA-C5C8-45EF-AD43-630E2CEB8D6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7011DFDA-C5C8-45EF-AD43-630E2CEB8D6E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF961C34-4993-4ACB-80C0-1A95C823375F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF961C34-4993-4ACB-80C0-1A95C823375F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF961C34-4993-4ACB-80C0-1A95C823375F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF961C34-4993-4ACB-80C0-1A95C823375F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0BA1BD9-4201-43A8-9716-7B8E9A4C53A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0BA1BD9-4201-43A8-9716-7B8E9A4C53A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0BA1BD9-4201-43A8-9716-7B8E9A4C53A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0BA1BD9-4201-43A8-9716-7B8E9A4C53A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
