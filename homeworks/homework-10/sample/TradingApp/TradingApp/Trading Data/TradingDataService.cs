@@ -49,15 +49,14 @@ namespace TradingApp
 
         public TimeSpan? CurrentGranularity()
         {
-            // TODO: Получить гранулярность данных 
+            // TODO (Вячеслав Жданов): Получить гранулярность данных 
 
             return default;
         }
 
-        public SymbolInfo(string symbolName, decimal quantity)
+        public SymbolInfo(string symbolName)
         {
             SymbolName = symbolName;
-            Quantity = quantity;
         }
     }
 
@@ -168,14 +167,14 @@ namespace TradingApp
 
             return new SymbolInfo(symbolName)
             {
-                Data = new ReadOnlyDictionary(data),
+                Data = new ReadOnlyDictionary<DateTime, decimal>(data),
                 Quantity = 100_000
             };
         }
 
         private void UpdateData(object? state)
         {
-            // TODO: Вычислить рыночную цену исходя из сведенных ордеров и схоранить в исторические данные
+            // TODO (Дмитрий Потапов): Вычислить рыночную цену исходя из сведенных ордеров и схоранить в исторические данные
 
             var dateNow = DateTime.UtcNow;
 

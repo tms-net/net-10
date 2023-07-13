@@ -37,7 +37,7 @@ namespace TradingApp.UI
 
         internal void Order(string symbolName)
         {
-            // TODO: Разработать создание ордера методами MVC
+            // TODO (Данила Волк): Разработать создание ордера методами MVC
         }
     }
 }

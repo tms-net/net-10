@@ -1,7 +1,12 @@
 ﻿namespace TradingApp
 {
-    internal class TradingOrder
+    public class TradingOrder
     {
+        internal static TradingOrder CreateOrderWithStatus(OrderStatus status)
+        {
+            return new TradingOrder { Status = status };
+        }
+
         internal string OrderId { get; }
         internal string Symbol { get; }
         internal OrderSide OrderSide { get; }
@@ -10,25 +15,29 @@
         internal decimal Quantity { get; private set; }
         internal OrderStatus Status { get; private set; }
 
-        internal TradingOrder()
+        public TradingOrder()
         {
         }
 
-        internal void MatchOrder(TradingOrder matchingOrder)
+        public void MatchOrder(TradingOrder matchingOrder)
         {
-            // TODO: проверить валидность сведения
+            // TODO (Евгений Липай): проверить валидность сведения
 
-            // TODO: Изменение параметров ордера
+            // TODO (Евгений Липай): Изменение параметров ордера
 
             //Status = OrderStatus.Completed;
         }
 
-        internal bool CancelOrder()
+        public void CancelOrder()
         {
-            // TODO: проверить валидность отмены
+            // TODO (Анастасия): проверить валидность отмены
 
+            if (Status != OrderStatus.Pending)
+            {
+                throw new InvalidOperationException();
+            }
+            
             Status = OrderStatus.Cancelled;
-            return true;
         }
     }
 }

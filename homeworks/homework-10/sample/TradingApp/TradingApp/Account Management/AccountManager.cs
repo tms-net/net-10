@@ -73,9 +73,9 @@
 
             ValidateOrder(symbol, quantity,  orderType, price);
 
-            // TODO: Создать ордер
+            // TODO (Даниил Ягниш): Создать ордер и сохранить для аккаунта
 
-            var order = _tradingEngine.CreateOrder(new OrderInfo());
+            var orderId = _tradingEngine.CreateOrder(new OrderInfo());
         }
 
         private /* ValidationResult */ /*bool*/ void ValidateOrder(string symbol, int quantity, OrderSide orderType, decimal? price)
@@ -101,7 +101,7 @@
                 throw new InvalidOperationException("Invalid quantity");
             }
 
-            // TODO: Правильно написать логику валидации ордера на покупку по рыночной цене
+            // TODO (Станислав Лютынский): Правильно написать логику валидации ордера на покупку по рыночной цене
 
             if (orderType == OrderSide.Buy && 
                 price.HasValue && GetTotalCash() < price * quantity)
@@ -116,7 +116,7 @@
             }
         }
 
-        private decimal GetTotalCash()
+        public decimal GetTotalCash()
         {
             return _assets.TryGetValue("USD", out var totalCash) ? totalCash : 0;
         }
