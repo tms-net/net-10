@@ -1,4 +1,6 @@
-﻿namespace TradingApp
+﻿using System.Collections.Generic;
+
+namespace TradingApp
 {
     // Тестируемость
 
@@ -17,15 +19,20 @@
         // синхронизация
         // сведение ордеров
         // - параллельное выполнение
-
+        long _ID = 0;
         public string CreateOrder(OrderInfo orderInfo)
         {
             // TODO (Глеб Радывонюк): Определить идентификатор ордера
-
+            _ID++;
             // TODO (Глеб Радывонюк): Добавить в структуру таблицы ордеров
+            Dictionary<long, OrderInfo> orderTable = new Dictionary<long, OrderInfo>();
+            orderTable.Add(_ID,orderInfo);
+
 
             // TODO (Павел Дунец): Организовать сведение ордеров
-
+            
+            var tradingOrder = new TradingOrder(orderInfo);
+            tradingOrder.MatchOrder(tradingOrder);
             return "orderId";
         }
 
