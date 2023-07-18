@@ -9,7 +9,7 @@
         event Action<string, OrderInfo> OrderMatched;
 
         string CreateOrder(OrderInfo orderInfo);
-        void CancelOrder(string orderId);
+        bool CancelOrder(string orderId);
     }
 
     internal class TradingEngine : ITradingEngine
@@ -17,6 +17,14 @@
         // синхронизация
         // сведение ордеров
         // - параллельное выполнение
+
+        //предполагаю, что словарь будет содержать актуальные ордера
+        private Dictionary<string, TradingOrder> _orders;
+
+        public TradingEngine()
+        {
+            _orders = new Dictionary<string, TradingOrder>();
+        }
 
         public string CreateOrder(OrderInfo orderInfo)
         {
@@ -29,9 +37,17 @@
             return "orderId";
         }
 
-        public void CancelOrder(string orderId)
+        public bool CancelOrder(string orderId)
         {
             // TODO (Никита Качура): Найти и отменить ордер
+            if(_orders.ContainsKey(orderId))
+            {
+                _orders[orderId].CancelOrder();
+
+                return true;
+            }
+
+            return false;
         }
 
         public event Action<string, OrderInfo> OrderMatched;
