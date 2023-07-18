@@ -7,10 +7,7 @@
             return new TradingOrder { Status = status };
         }
 
-        internal string OrderId { get; }
-        internal string Symbol { get; }
-        internal OrderSide OrderSide { get; }
-        internal decimal? Price { get; }
+        internal OrderInfo OrderInfo { get; }
 
         internal decimal Quantity { get; private set; }
         internal OrderStatus Status { get; private set; }
