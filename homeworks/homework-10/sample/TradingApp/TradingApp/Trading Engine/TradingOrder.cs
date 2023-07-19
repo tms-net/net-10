@@ -27,7 +27,7 @@
 
         public void CancelOrder()
         {
-            // TODO (Анастасия): проверить валидность отмены
+            // TODO (Анастасия Томчук): проверить валидность отмены
 
             if (Status != OrderStatus.Pending)
             {
