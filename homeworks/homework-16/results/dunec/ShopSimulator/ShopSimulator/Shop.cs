@@ -29,7 +29,7 @@ namespace ShopSimulator
 
         public void Enter(Person person)
         {
-            // TODO: Реализовать логику постановки клиента в очередь
+            
             if (_isOpen)
             {
                 lock (_peopleQueue)
@@ -48,7 +48,7 @@ namespace ShopSimulator
             {
                 Thread.Sleep(100);
             }
-            // TODO: Реализовать гарантированное обслуживание всех клиентов после закрытия
+            
         }
 
         private void ServeCustomer()
@@ -72,7 +72,7 @@ namespace ShopSimulator
                 }                    
                 
             }
-            // TODO: Реализовать логику обслуживания клиента из очереди
+            
             // Использовать свойство клиента для эмуляции времени обслуживания с помощью Thread.Sleep()
         }
     }
