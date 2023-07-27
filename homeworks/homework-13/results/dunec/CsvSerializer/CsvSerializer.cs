@@ -92,14 +92,14 @@ namespace CsvSerializer
                 {
                     AddCSVElementInLine(ref headerLine, GetHeaderAttribute(property.PropertyType.GetProperties(), lines, false, headerName)) ;
                 }
-                else//*/
+                else
                 if (property.PropertyType.IsArray)
                 {
                     var arrayMax = MaxArrayLenght(lines, property);
                     for (var i = 0; i < arrayMax; i++)
                         AddCSVElementInLine(ref headerLine, $"{headerName}[{i}]");
                 }
-                else
+                else//*/
                     AddCSVElementInLine(ref headerLine, headerName);
 
                 //*/
@@ -119,7 +119,7 @@ namespace CsvSerializer
                     {                    
                         AddCSVElementInLine(ref dataLine, GetSCVData(property.PropertyType.GetProperties(), lines, item, false));
                     }
-                    else//*/
+                    else
                     if (property.PropertyType.IsArray)
                     {
                         var array = (Array)property.GetValue(item);
@@ -137,15 +137,15 @@ namespace CsvSerializer
                         }
                     }
                     else
-                    {
+                    {   //*/
                         AddCSVElementInLine(ref dataLine, property.GetValue(item).ToString());
-                    }
+                    //}
                 }
                 dataLine += "\r\n";
             }
             return dataLine;
         }
-
+        /*
         public static int MaxArrayLenght<T>(IEnumerable<T> lines, PropertyInfo? property)
         {
             var max = 0;
@@ -156,7 +156,7 @@ namespace CsvSerializer
                     max = length;
             }
             return max;
-        }
+        }//*/
 
         public static IEnumerable<T> Deserialize<T>(string csv, CsvSerializerSettings settings = null) where T : new()
         {
@@ -174,7 +174,7 @@ namespace CsvSerializer
             string[] lines = csv.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
 
             var headers = lines[0].Split(",");
-            for (var i = 1; i < lines.Length - 1; i++)
+            for (var i = 1; i < lines.Length; i++)
             {
                 // Проверить заголовок
                 var line = lines[i];
@@ -184,8 +184,8 @@ namespace CsvSerializer
                 var fields = line.Split(",");
                 var numberOfField = 0;
                 foreach (var property in prop)
-                {                    
-                    var isArray = false;
+                {
+                    /*var isArray = false;
                     do
                     {                        
                         if (property.PropertyType.IsArray)
@@ -226,12 +226,18 @@ namespace CsvSerializer
                             numberOfField += maxMassiveLength - 1;
                         }
                         else//*/
-                        {                            
-                            var field = Convert.ChangeType(fields[numberOfField], property.PropertyType);
-                            property.SetValue(instance, field);
-                        }
+                    if (property.PropertyType.IsEnum)
+                    {          
+                        var field = Enum.Parse(property.PropertyType, fields[numberOfField]);
+                        property.SetValue(instance, field);
                     }
-                    while (isArray);
+                    else
+                    {
+                        var field = Convert.ChangeType(fields[numberOfField], property.PropertyType);
+                        property.SetValue(instance, field);
+                    }
+                    //}
+                    //while (isArray);
                     numberOfField++;                   
                 }
                 /*

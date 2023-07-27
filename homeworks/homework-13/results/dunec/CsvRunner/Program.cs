@@ -11,19 +11,20 @@ public class Program
 
         var list = new List<Stock>();
 
-        for (int i = 0; i < random.Next(10); i++) 
+        for (int i = 0; i < random.Next(10) + 1; i++) 
         {
-            var stock = new Stock();
+            var stock = new Stock();/*
             var prices = new decimal[random.Next(10)];
             for (int j = 0; j < prices.Length; j++) 
             {
                 prices[j] = (decimal)(random.Next(5) + random.NextDouble());
-            }
-            stock.InputStockData(RandomWord(random.Next(2)), 
-                                            (decimal)(random.Next(5) + random.NextDouble()), 
-                                            random.Next(10), 
-                                            DateTime.Now.AddDays(random.Next(10)-random.Next(10)), prices, 
-                                            (decimal)(random.Next(5) + random.NextDouble()));
+            }//*/
+            stock.InputStockData(RandomWord(random.Next(3)), 
+                                            (decimal)(random.Next(6) + random.NextDouble()), 
+                                            random.Next(3), 
+                                            DateTime.Now.AddDays(random.Next(11)-random.Next(10)), //prices, 
+                                            (decimal)(random.Next(6) + random.NextDouble()),
+                                            random.Next(11));
             list.Add(stock);
         }
        
@@ -37,9 +38,10 @@ public class Program
         Console.WriteLine(file);
         Console.WriteLine();
         var list2 = CsvSerializer.CsvSerializer.Deserialize<Stock>(file);
+        
         foreach (var stock in list2)
         {
-            Console.WriteLine(stock.ToString);
+            Console.WriteLine(stock.ToString());
         }
         
         Console.ReadLine();

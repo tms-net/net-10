@@ -15,30 +15,40 @@ namespace CsvRunner
 
         [CsvHeader("CurrentPrice")]
         public decimal CurrentPrice { get; set; }
+
+        public int JustNumber { get; set; }
+
+        public DateTime SomeDate { get; set; }
+        
+        [CsvHeader("Rating")]
+        public Rating Rating { get; set; }//*/
         /*
         [CsvHeader("Dissociative identity disorder")] 
         public BankReport Report { get; set; }//*/
 
-
+        /*
         [CsvHeader("Prices")]
-        public decimal[] Prices { get; set; }
+        public decimal[] Prices { get; set; }//*/
 
-        public void InputStockData(string ticker, decimal currentPrice, int rating, DateTime dateTime, decimal[] prices, decimal capitalization)
+        public void InputStockData(string ticker, decimal currentPrice, int rating, DateTime dateTime,/* decimal[] prices,*/ decimal capitalization, int number)
         {
             Ticker = ticker;
+            JustNumber = number;
+            SomeDate = dateTime;
+            Rating = (Rating)rating;
             CurrentPrice = currentPrice;/*
             Report = new BankReport();
-            Report.InputBankReportData(rating, dateTime);//*/
-            Prices = prices;
+            Report.InputBankReportData(rating, dateTime);
+            Prices = prices;//*/
             Capitalization = capitalization;
         }
 
         public override string ToString()
-        {
+        {/*
             var prices = string.Empty;
             foreach (var price in Prices)
-                prices += price.ToString();
-            return $"Ticker: {Ticker}, CurrentPrice: {CurrentPrice}, []Prices: {prices}, Capitalization: {Capitalization} \n";
+                prices += price.ToString();//*/
+            return $"Ticker: {Ticker}, CurrentPrice: {CurrentPrice}, JustNumber: {JustNumber}, Somedate: {SomeDate}, Capitalization: {Capitalization}, Rating: {Rating}";
         }
     }
 
