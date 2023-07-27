@@ -45,9 +45,10 @@ namespace ShopSimulator
         public void Close()
         {
             _isOpened = false;
+
+            Thread.Sleep(5000); // Подождали 5 секунд
+            cancelTokenSource.Cancel(); // Прервали операцию
             
-            cancelTokenSource.Cancel();
-            Thread.Sleep(5000);
             Task.WaitAll(_tasks.ToArray());
             cancelTokenSource.Dispose();
         }
