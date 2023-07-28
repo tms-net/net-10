@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333333;
+}
+
+/* selector */
+
+.header {
+    position: relative;
+    margin-bottom: 50px; /* Расстояние 50 пикселей между блоками */
+}
+
+.name-banner {
+    display: inline-block;
+}
+
+.block {
+    margin-bottom: 50px;
+}
+
+.line {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-color: black;
+}
+
+.frame {
+    border: 2px solid black;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.contact, .work {
+    margin-bottom: 50px; /* Расстояние 50 пикселей между блоками */
+}
