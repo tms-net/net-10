@@ -42,8 +42,27 @@ console.log(subItems);
 //var elemSelector = Document.querySelector();
 //var elemByTagName = Document.getElementsByTagName('div');
 
+const element4 = document.querySelector('.info_name');
 const newElement = document.createElement('div');
-div.className = "alert";
-div.innerHTML = "<strong>Всем привет!</strong> Вы прочитали важное сообщение.";
-elementById.append(div);
+newElement.className = 'alert';
+newElement.innerHTML = '<strong>Всем привет!</strong> Вы прочитали важное сообщение.';
+element4.append(newElement);
+setTimeout(() => newElement.remove(), 1000);
+    
 
+
+
+
+//console.log(newElement);
+const element5 = document.querySelector('.side_info');
+const newText = document.createTextNode('Hello!');
+//element5.before(newText);
+console.log(newText);
+
+element4.style.color = "red";
+
+//const cloneNewElement = element1.cloneNode();
+//element4.after(cloneNewElement);
+
+
+//newElement.remove();
