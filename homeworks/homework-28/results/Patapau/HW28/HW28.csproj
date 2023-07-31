@@ -4,7 +4,10 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Lesson_28_App_Net</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="html\" />
+  </ItemGroup>
 
 </Project>
