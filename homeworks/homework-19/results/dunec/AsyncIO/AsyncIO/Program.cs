@@ -4,51 +4,41 @@ using System.Net.Sockets;
 class Program
 {
     static readonly object locker = new object();
-    static int count;
-    static List<string> threadsList = new List<string>();
+    //static int count;
+    //static List<string> threadsList = new List<string>();
     private static async Task Main()
     {
         
         var content = CreateFileContent();
         var tasks = new List<Task>(100);
-        var threadsList = new List<string>();
+        var threadsDictionary = new Dictionary<int, string>();
+        //var threadsList = new List<string>();
 
         for (int i = 0; i < 10; i++)
         {
-            tasks.Add(WriteFile($"file-{i}.txt", content, threadsList));
+            tasks.Add(WriteFile($"file-{i}.txt", content, threadsDictionary));
         }
-        lock (locker)
-        {
-            AddNewThreadId(Thread.CurrentThread.ManagedThreadId, threadsList);
-        }
+        
+        AddNewThreadId(Thread.CurrentThread.ManagedThreadId, threadsDictionary);
 
         await Task.WhenAll(tasks);
 
-        lock (locker)
-        {
-            AddNewThreadId(Thread.CurrentThread.ManagedThreadId, threadsList);
-            Console.WriteLine($"For writing has used {threadsList.Count} threads ({String.Join(",", threadsList)})");
-        }            
+        AddNewThreadId(Thread.CurrentThread.ManagedThreadId, threadsDictionary);
+        Console.WriteLine($"For writing has used {threadsDictionary.Count} threads ({String.Join(",", threadsDictionary.Values)})");            
     }
 
-    private static async Task WriteFile(string path, string content, List<string> threadsList)
+    private static async Task WriteFile(string path, string content, Dictionary<int, string> threadsDictionary)
     {
-        lock(locker)
-        {
-            AddNewThreadId(Thread.CurrentThread.ManagedThreadId, threadsList);
-        }
+        AddNewThreadId(Thread.CurrentThread.ManagedThreadId, threadsDictionary);
         
         using (StreamWriter outputFile = new StreamWriter(Path.Combine(Directory.GetCurrentDirectory(), path)))
         {
             await outputFile.WriteAsync(content);
         }
 
-        lock (locker)
-        {
-            AddNewThreadId(Thread.CurrentThread.ManagedThreadId, threadsList);
-        }
+        AddNewThreadId(Thread.CurrentThread.ManagedThreadId, threadsDictionary);
             
-        Console.WriteLine($"At moment of writing {path} has used {threadsList.Count} threads ({String.Join(",", threadsList)})");
+        Console.WriteLine($"At moment of writing {path} has used {threadsDictionary.Count} threads ({String.Join(",", threadsDictionary.Values)})");
         // TODO: Записать данные в файл
     }
 
@@ -69,12 +59,12 @@ class Program
         return System.Text.Encoding.UTF8.GetString(buffer);
     }
 
-    private static void AddNewThreadId(int id, List<string> threadsList)
+    private static void AddNewThreadId(int id, Dictionary<int, string> threadsDictionary)
     {
-        if (threadsList.IndexOf(id.ToString()) == -1)
+        lock (locker)
         {
-            threadsList.Add(id.ToString());
-        }
+            threadsDictionary.TryAdd(id, id.ToString());
+        }        
     }
 
     
