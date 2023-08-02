@@ -1,10 +1,55 @@
 ﻿// Method Main
 
+using System.Security.Claims;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// 1 - a). IoC/DI Container
+
+// builder.Services.Add<IInterface, Implemetation>();
+
+// builder.Services.AddTransient
+// Transient -> новый для нового компонента
+
+// builder.Services.AddScoped - Per Request
+// CreateScope 1
+// 
+// EndScope 1
+
+// CreateScope 2
+// 
+// EndScope 2
+
+// builder.Services.AddSingleton
+// Singleton - один на приложение
+
+builder.Services.AddExceptionHandler(options =>
+{
+    options.AllowStatusCode404Response = false;
+});
+
+builder.Services.AddLogging(logging => { 
+    logging.SetMinimumLevel(LogLevel.Debug);
+    // logging.Configure()
+});
 
 // Builder pattern
 
 WebApplication app = builder.Build();
+
+// 3) Configuration
+
+// app.Configuration;
+
+// IConfigurationProvider
+
+//1 - b).
+// var implementation = app.Services.GetService<IInterface>();
+
+using (var scope = app.Services.CreateScope()) // CreateScope 1
+{
+    //scope.ServiceProvider.GetService<IInterface>();
+}// EndScope 1
 
 // URL -> (http://host:port/PATH)
 
@@ -16,6 +61,39 @@ app.MapGet("/request", (HttpContext context) =>
     context.Response.WriteAsync("Hello World!");
 });
 
+// 1. удобство/тестирование
+// 2. повторение кода DRY (Do Not Repeat Yourself)
+//   /(*).js, /(*).css, /(FILE_PATH).(EXT) - вернуть содержимое файла
+// 3. Эффективность веб приложения
+//    - .js ~ .cs
+//    - скомбинировать ресурсы для конкретной страницы -> специальный/уникальный URL для набора скриптов
+//
+
+//app.MapGet("/generatedJS.js", () => "comined content");
+//app.MapGet("/resources/{filePath}", async (HttpContext context) =>
+//{
+//    context.Response.StatusCode = 200;
+//    context.Response.ContentType = "text/html";
+
+//    context.Response.WriteAsync(await File.ReadAllTextAsync(filePath));
+//});
+
+// request -> async/await ->
+//          thread 1 -> process request -> response
+//          thread 2 -> process file -> ...
+
+app.MapGet("/resources/{filePath}", (string filePath) =>
+{
+    File.ReadAllText(Path.Combine("resources", filePath));
+});
+
+// HTTP Request -> HTTP Response
+
+app.UseExceptionHandler(new ExceptionHandlerOptions
+{
+    AllowStatusCode404Response = true
+});
+
 app.MapGet("/resume", (HttpContext context) =>
 {
     context.Response.StatusCode = 200;
@@ -25,7 +103,7 @@ app.MapGet("/resume", (HttpContext context) =>
     <title>Профиль Глеба Радывонюка</title>
     <link rel=""stylesheet"" type=""text/css"" href=""styles1.css"">
     
-    <script src=""./resume.js""></script>
+    <script src=""./resources/resume.js""></script>
 
     <script>
 
@@ -174,6 +252,59 @@ app.MapGet("/resume", (HttpContext context) =>
 </body>
 </html>
 ");
+});
+
+// 2) Middleware (ПО промежуточного уровня)
+
+app.UseCors(options =>
+{
+    // настройка правил
+});
+
+// app.Urls.Clear();
+
+// app.Urls.Add("http://localhost:5003");
+
+app.UseStaticFiles();
+
+// /it/is/my/path
+//       |
+//       V
+// { action => it, controller => is  }
+
+app.UseRouting();
+
+// authorization for resources
+// anonimous -> доступ всем
+// User -> Role -> доступ по ролям 
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+app.Use(async (httpContext, next) =>
+{
+    ClaimsPrincipal user = httpContext.User;
+
+    // Principal -> User in the System (Interface)
+
+    // Claims => набор ключ -> значение (ключ: claim type, значение: claim value
+    //        - кто дал разрешение
+    //        - какие права
+    //          "roles": "admin,editor"...
+
+    // httpContext.Request;
+
+    // httpContext.Response; // потоковый
+
+    // httpContext.Response.Headers
+
+    // main logic
+
+    await next(); // circuit breaker
+    // Authenticated? -> next() else -> break
+
+    // after logic
 });
 
 // Status

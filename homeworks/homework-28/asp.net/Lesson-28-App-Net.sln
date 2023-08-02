@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lesson-28-App-Net", "..\..\..\Lesson-28-App-Net\Lesson-28-App-Net.csproj", "{A96F93A5-BFBD-4484-9809-6761E5E77D93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lesson-28-App-Net", "Lesson-28-App-Net\Lesson-28-App-Net.csproj", "{B6318454-C4A8-4C0F-B6CB-567051C7B314}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A96F93A5-BFBD-4484-9809-6761E5E77D93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A96F93A5-BFBD-4484-9809-6761E5E77D93}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A96F93A5-BFBD-4484-9809-6761E5E77D93}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A96F93A5-BFBD-4484-9809-6761E5E77D93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6318454-C4A8-4C0F-B6CB-567051C7B314}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6318454-C4A8-4C0F-B6CB-567051C7B314}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6318454-C4A8-4C0F-B6CB-567051C7B314}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6318454-C4A8-4C0F-B6CB-567051C7B314}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {04F236A2-620D-4170-821C-6C74CAADA7F7}
+		SolutionGuid = {65957FA7-8444-474D-8E36-2F069CCEF25F}
 	EndGlobalSection
 EndGlobal
