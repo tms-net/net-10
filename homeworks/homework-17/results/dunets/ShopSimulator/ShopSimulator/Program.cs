@@ -16,7 +16,7 @@ internal class Program
         var random = new Random();
         //var shop = new Shop(3);
 
-        var shop = new ShopWithThreadPool(13);
+        var shop = new ShopWithQueue(21);
 
         shop.Open();
 
