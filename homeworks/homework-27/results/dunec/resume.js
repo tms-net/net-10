@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function(ev) {
     experienceElement.appendChild(experienceSectionRight);
 
     var experiencetextElement = document.createElement("p");
-    experiencetextElement.innerHTML = "та, которую я закончил<p>тот, из которого я выпустился<p>5 лет как под наркозом я работал <s>говновозом</s> на таможне, ой-ой-ой..., не программистом, не сисадмином, а <s>вонючим говночистом</s> старшим инспектором, ой-ой-ой...";
+    experiencetextElement.innerHTML = "та, которую я закончил<p>тот, из которого я выпустился<p>5 лет я работал на таможне, старшим инспектором";
     experienceSectionRight.appendChild(experiencetextElement);
 
 }
