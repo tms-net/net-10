@@ -1,0 +1,22 @@
+﻿@model BlogPost
+
+@{
+    var customFormat = "yyyy-MM-dd";
+    ViewData["Title"] = "Privacy Policy";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to detail your site's privacy policy.</p>
+
+<span>@Model.PostDate.ToString(customFormat)</span>
+
+@foreach (var tag in Model.Tags)
+{
+    <span class="tag">@tag</span>
+}
+
+@if (Model.IsNew)
+{
+    <span class="new-badge"></span>
+}
+
