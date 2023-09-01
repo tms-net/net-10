@@ -1,8 +1,25 @@
 ﻿// Method Main
 
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
 using System.Security.Claims;
 
+// 4) IHost / IWebHost
+
+
+
+CreateWebHostBuilder(args).Build().Run();
+
+IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+    WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
+
+// 5) Logging / ведение журнала
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.AddConsole();
+
+// ILogger
 
 // 1 - a). IoC/DI Container
 
