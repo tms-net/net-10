@@ -6,10 +6,13 @@
         public string Description { get; set; }
 
         public List<ProductInfo> Products { get; set; }
+
     }
+
 
     public class ProductInfo
     {
+
         public string Title { get; set; }
 
         public decimal Price { get; set; }

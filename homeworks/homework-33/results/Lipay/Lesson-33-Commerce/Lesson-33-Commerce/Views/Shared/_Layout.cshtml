@@ -1,32 +1,10 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta content="Содержимое для поисковика" name="keywords">
-    <meta content="Дополнительное содержимое для поисковика" name="description">
-
-    <title>EShopper - @ViewData["Title"]</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+    @await Html.PartialAsync("MetatagPartial")
+    @await Html.PartialAsync("CssPartial")
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css">
-    <link rel="stylesheet" href="~/lib/owlcarousel/assets/owl.carousel.min.css">
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
-
     @await RenderSectionAsync("Stylesheets", required: false)
-
-    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
-
-    @*
-        <link href="/css/site.css" /> -> изменяем site.css -> перезагружаем страницу
-            - появятся ли изменения? -> нет (кеширование)
-        <link href="/css/site.css?checksum_css_1" />
-        -------- поменялось содержимое --------------
-        <link href="/css/site.css?checksum_css_2" />
-    *@
-    @* View? PartialView? HtmlHelper? UrlHelper? TagHelper? Html? *@
 </head>
 <body>
     <!-- Topbar Start -->
@@ -163,17 +141,7 @@
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/easing/easing.min.js"></script>
-    <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="~/mail/jqBootstrapValidation.min.js"></script>
-    <script src="~/mail/contact.js"></script>
-
-    <script src="~/js/main.js" asp-append-version="true"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
+    @await Html.PartialAsync("ScriptsPartial")
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
