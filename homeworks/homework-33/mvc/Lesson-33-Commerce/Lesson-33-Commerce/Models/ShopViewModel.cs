@@ -4,8 +4,8 @@
     {
         public string Title { get; set; }
         public string Description { get; set; }
-
-        public List<ProductInfo> Products { get; set; }
+        public List<ProductInfo> Products { get; set; } = new();
+        public PaginationViewModel Pagination { get; set; }
     }
 
     public class ProductInfo

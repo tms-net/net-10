@@ -23,14 +23,23 @@ namespace Lesson_33_Commerce.Controllers
             return View();
         }
 
-        public IActionResult Shop()
+        public IActionResult Shop(int? page = null)
         {
-            return View();
+            var viewModel = new ShopViewModel
+            {
+                Pagination = new PaginationViewModel
+                {
+                    CurrentPage = page ?? 1,
+                    PageCount = 3
+                }
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Product(string id)
         {
-
+            return NotFound();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
