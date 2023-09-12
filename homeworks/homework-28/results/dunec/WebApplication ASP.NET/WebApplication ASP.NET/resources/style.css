@@ -1,0 +1,27 @@
+h1 
+{
+    color: red;
+    text-align: center;
+}
+
+h3
+{
+    color: blue;  
+    margin-bottom: 15px;
+}
+
+div
+{
+    margin-bottom: 50px;
+}
+
+b
+{
+    margin-top: auto;
+}
+
+p
+{
+    text-shadow: blueviolet;
+    border: 0px;
+}

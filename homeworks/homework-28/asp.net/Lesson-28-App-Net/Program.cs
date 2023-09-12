@@ -280,7 +280,6 @@ app.UseRouting();
 
 app.UseAuthentication();
 
-app.UseAuthorization();
 
 app.Use(async (httpContext, next) =>
 {
