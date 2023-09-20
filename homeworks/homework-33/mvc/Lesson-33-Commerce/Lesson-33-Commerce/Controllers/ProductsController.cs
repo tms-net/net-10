@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lesson_33_Commerce.Controllers
 {
+    // CRUD / REST
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
@@ -19,22 +20,27 @@ namespace Lesson_33_Commerce.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
-          if (_context.Product == null)
+          if (_context.Products == null)
           {
               return NotFound();
           }
-            return await _context.Product.ToListAsync();
+            return await _context.Products.ToListAsync();
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
+        // HTTP RESPONSE -> JSON(Product)
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-          if (_context.Product == null)
-          {
-              return NotFound();
-          }
-            var product = await _context.Product.FindAsync(id);
+            // _productDict.TryGetValue(id, out var prod) - O(1) Dictionary
+
+            // _categoryDict.TryGetValue(prod.CategoryId, out var category) - O(1) Dictionary
+
+            if (_context.Products == null)
+            {
+                return NotFound();
+            }
+            var product = await _context.Products.FindAsync(id);
 
             if (product == null)
             {

@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Data Provider
+
 builder.Services.AddDbContext<CommerceContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CommerceContext") ?? throw new InvalidOperationException("Connection string 'CommerceContext' not found.")));
 
