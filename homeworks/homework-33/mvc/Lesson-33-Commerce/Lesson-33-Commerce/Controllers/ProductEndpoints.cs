@@ -7,7 +7,7 @@ public static class ProductEndpoints
 {
     public static void MapProductEndpoints(this IEndpointRouteBuilder routes)
     {
-        var group = routes.MapGroup("/api/Products").WithTags(nameof(Product));
+        var group = routes.MapGroup("/api/ProductsEndpoint").WithTags(nameof(Product));
 
         group.MapGet("/", () =>
         {

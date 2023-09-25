@@ -47,6 +47,12 @@ public class CommerceContext : DbContext
         // 3. Attributes
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer();
+        base.OnConfiguring(optionsBuilder);
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Mapping
@@ -57,18 +63,48 @@ public class CommerceContext : DbContext
 
         modelBuilder.Entity<Product>(builder =>
         {
-            builder.Property(x => x.UpdateDate)
-                   .HasColumnType("time(3)");
+            builder.Property(x => x.UpdateDate);
+                   //.HasColumnType("time(3)");
         });
+
+        // Add the shadow property to the model
+        modelBuilder.Entity<Product>()
+            .Property<int>("CategoryId");
+
+        // Add the shadow property to the model
+        // modelBuilder.Entity<ProductDetails>()
+            //.Property<int>("ProductId");
 
         modelBuilder.Entity<Product>()
             .HasOne(p => p.Category)
             .WithMany(c => c.Products)
             .HasForeignKey("CategoryId");
             //.HasForeignKey(p => p.CategoryId);
-        }
+
+        //modelBuilder.Entity<Product>()
+        //    .HasOne(p => p.Details)
+        //    .WithOne(pd => pd.Product)
+        //    .HasForeignKey("ProductId");
+
+        modelBuilder.Entity<Product>()
+            .Property(p => p.Details)
+            .HasConversion(
+                v => System.Text.Json.JsonSerializer.Serialize(v, typeof(ProductDetails), new System.Text.Json.JsonSerializerOptions()),
+                v => System.Text.Json.JsonSerializer.Deserialize<ProductDetails>(v, new System.Text.Json.JsonSerializerOptions()));
+
+        modelBuilder.Entity<Product>()
+            .HasMany(p => p.Tags)
+            .WithMany(t => t.Products)
+            .UsingEntity(j => j.ToTable("HomeworkTag"));
+    }
 
     public DbSet<Product> Products { get; set; } = default!;
 
     public DbSet<Category> Categories { get; set; } = default!;
+
+    // Model First -> EF works with DB -> db generation -> DB seed (Migrations)
+
+    // Mapping/Designer
+
+    // DB First -> Models according to DB structure -> model generation
 }
