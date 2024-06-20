@@ -1,0 +1,15 @@
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\bin\Debug\net7.0\dfcef_dz_4.exe
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\bin\Debug\net7.0\dfcef_dz_4.deps.json
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\bin\Debug\net7.0\dfcef_dz_4.runtimeconfig.json
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\bin\Debug\net7.0\dfcef_dz_4.dll
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\bin\Debug\net7.0\dfcef_dz_4.pdb
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\obj\Debug\net7.0\dfcef_dz_4.csproj.AssemblyReference.cache
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\obj\Debug\net7.0\dfcef_dz_4.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\obj\Debug\net7.0\dfcef_dz_4.AssemblyInfoInputs.cache
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\obj\Debug\net7.0\dfcef_dz_4.AssemblyInfo.cs
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\obj\Debug\net7.0\dfcef_dz_4.csproj.CoreCompileInputs.cache
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\obj\Debug\net7.0\dfcef_dz_4.dll
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\obj\Debug\net7.0\refint\dfcef_dz_4.dll
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\obj\Debug\net7.0\dfcef_dz_4.pdb
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\obj\Debug\net7.0\dfcef_dz_4.genruntimeconfig.cache
+C:\Users\hp\source\repos\dfcef_dz_4\dfcef_dz_4\obj\Debug\net7.0\ref\dfcef_dz_4.dll
