@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace hw_5.Vehicles
 {
-    internal class Plane:Base
+    internal class Plane:Vehicle
     {
         readonly protected int _maxHeight;
         public Plane(string year, string model, string mark, string maxSpeed, int maxHeight) : base(year, model, mark, maxSpeed)
